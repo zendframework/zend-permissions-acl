@@ -1,19 +1,19 @@
 {
     "name": "zendframework/zend-permissions-acl",
-    "description": "Zend\\Permissions\\Acl component",
+    "description": "provides a lightweight and flexible access control list (ACL) implementation for privileges management",
     "license": "BSD-3-Clause",
     "keywords": [
         "zf2",
-        "permissions-acl"
+        "acl"
     ],
     "homepage": "https://github.com/zendframework/zend-permissions-acl",
     "autoload": {
         "psr-4": {
-            "Zend\\Permissions\\Acl\\": "src/"
+            "Zend\\Permissions\\Acl": "src/"
         }
     },
     "require": {
-        "php": ">=5.3.23"
+        "php": ">=5.3.3"
     },
     "suggest": {
         "zendframework/zend-servicemanager": "To support Zend\\Permissions\\Acl\\Assertion\\AssertionManager plugin manager usage"
@@ -24,14 +24,14 @@
             "dev-develop": "2.5-dev"
         }
     },
-    "require-dev": {
-        "fabpot/php-cs-fixer": "1.7.*",
-        "satooshi/php-coveralls": "dev-master",
-        "phpunit/PHPUnit": "~4.0"
-    },
     "autoload-dev": {
         "psr-4": {
             "ZendTest\\Permissions\\Acl\\": "test/"
         }
+    },
+    "require-dev": {
+        "fabpot/php-cs-fixer": "1.7.*",
+        "satooshi/php-coveralls": "dev-master",
+        "phpunit/PHPUnit": "~4.0"
     }
 }
