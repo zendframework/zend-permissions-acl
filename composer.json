@@ -9,7 +9,7 @@
     "homepage": "https://github.com/zendframework/zend-permissions-acl",
     "autoload": {
         "psr-4": {
-            "Zend\\Permissions\\Acl": "src/"
+            "Zend\\Permissions\\Acl\\": "src/"
         }
     },
     "require": {
