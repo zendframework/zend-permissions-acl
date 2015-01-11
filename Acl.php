@@ -3,7 +3,7 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
@@ -107,6 +107,7 @@ class Acl implements AclInterface
                 'addRole() expects $role to be of type Zend\Permissions\Acl\Role\RoleInterface'
             );
         }
+
 
         $this->getRoleRegistry()->add($role, $parents);
 
@@ -521,13 +522,8 @@ class Acl implements AclInterface
      * @throws Exception\InvalidArgumentException
      * @return Acl Provides a fluent interface
      */
-    public function setRule(
-        $operation,
-        $type,
-        $roles = null,
-        $resources = null,
-        $privileges = null,
-        Assertion\AssertionInterface $assert = null
+    public function setRule($operation, $type, $roles = null, $resources = null,
+                            $privileges = null, Assertion\AssertionInterface $assert = null
     ) {
         // ensure that the rule type is valid; normalize input to uppercase
         $type = strtoupper($type);
@@ -636,12 +632,16 @@ class Acl implements AclInterface
                                 continue;
                             }
 
-                            if (isset($rules['allPrivileges']['type']) && $type === $rules['allPrivileges']['type']) {
+                            if (isset($rules['allPrivileges']['type']) &&
+                                $type === $rules['allPrivileges']['type'])
+                            {
                                 unset($rules['allPrivileges']);
                             }
                         } else {
                             foreach ($privileges as $privilege) {
-                                if (isset($rules['byPrivilegeId'][$privilege]) && $type === $rules['byPrivilegeId'][$privilege]['type']) {
+                                if (isset($rules['byPrivilegeId'][$privilege]) &&
+                                    $type === $rules['byPrivilegeId'][$privilege]['type'])
+                                {
                                     unset($rules['byPrivilegeId'][$privilege]);
                                 }
                             }
@@ -756,6 +756,7 @@ class Acl implements AclInterface
 
                 // try next Resource
                 $resource = $this->resources[$resource->getResourceId()]['parent'];
+
             } while (true); // loop terminates at 'allResources' pseudo-parent
         } else {
             $this->isAllowedPrivilege = $privilege;
@@ -778,6 +779,7 @@ class Acl implements AclInterface
 
                 // try next Resource
                 $resource = $this->resources[$resource->getResourceId()]['parent'];
+
             } while (true); // loop terminates at 'allResources' pseudo-parent
         }
     }
@@ -926,11 +928,8 @@ class Acl implements AclInterface
      * @return bool|null
      * @throws Exception\RuntimeException
      */
-    protected function roleDFSVisitOnePrivilege(
-        Role\RoleInterface $role,
-        Resource\ResourceInterface $resource = null,
-        $privilege = null,
-        &$dfs = null
+    protected function roleDFSVisitOnePrivilege(Role\RoleInterface $role, Resource\ResourceInterface $resource = null,
+                                                $privilege = null, &$dfs = null
     ) {
         if (null === $privilege) {
             /**
@@ -1057,6 +1056,7 @@ class Acl implements AclInterface
             }
             $visitor =& $this->rules['byResourceId'][$resourceId];
         } while (false);
+
 
         // follow $role
         if (null === $role) {
