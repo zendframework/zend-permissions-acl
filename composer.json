@@ -34,6 +34,8 @@
     "require-dev": {
         "fabpot/php-cs-fixer": "1.7.*",
         "satooshi/php-coveralls": "dev-master",
-        "phpunit/PHPUnit": "~4.0"
+        "phpunit/PHPUnit": "~4.0",
+        "zendframework/zend-di": "~2.4",
+        "zendframework/zend-servicemanager": "~2.4"
     }
 }
