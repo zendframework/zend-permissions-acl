@@ -1,7 +1,7 @@
 # zend-permissions-acl
 
 [![Build Status](https://secure.travis-ci.org/zendframework/zend-permissions-acl.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-permissions-acl)
-[![Coverage Status](https://coveralls.io/repos/zendframework/zend-permissions-acl/badge.svg?branch=master)](https://coveralls.io/r/zendframework/zend-permissions-acl)
+[![Coverage Status](https://coveralls.io/repos/zendframework/zend-permissions-acl/badge.svg?branch=master)](https://coveralls.io/r/zendframework/zend-permissions-acl?branch=master)
 
 Provides a lightweight and flexible access control list (ACL) implementation for
 privileges management.
