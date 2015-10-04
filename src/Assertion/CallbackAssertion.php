@@ -8,7 +8,7 @@
  */
 namespace Zend\Permissions\Acl\Assertion;
 
-use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\AclInterface;
 use Zend\Permissions\Acl\Exception\InvalidArgumentException;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
@@ -49,7 +49,7 @@ class CallbackAssertion implements AssertionInterface
      * @return bool
      */
     public function assert(
-        Acl $acl,
+        AclInterface $acl,
         RoleInterface $role = null,
         ResourceInterface $resource = null,
         $privilege = null
