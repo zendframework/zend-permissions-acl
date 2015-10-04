@@ -20,7 +20,7 @@ class MockAssertion implements Acl\Assertion\AssertionInterface
         $this->_returnValue = (bool) $returnValue;
     }
 
-    public function assert(Acl\Acl $acl, Acl\Role\RoleInterface $role = null, Acl\Resource\ResourceInterface $resource = null,
+    public function assert(Acl\AclInterface $acl, Acl\Role\RoleInterface $role = null, Acl\Resource\ResourceInterface $resource = null,
                            $privilege = null)
     {
        return $this->_returnValue;
