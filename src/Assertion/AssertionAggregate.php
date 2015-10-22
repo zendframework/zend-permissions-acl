@@ -8,7 +8,6 @@
  */
 namespace Zend\Permissions\Acl\Assertion;
 
-//use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\AclInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
