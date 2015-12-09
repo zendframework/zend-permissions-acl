@@ -9,6 +9,7 @@
 namespace ZendTest\Permissions\Acl\Assertion;
 
 use Zend\Permissions\Acl\Assertion\AssertionManager;
+use Zend\ServiceManager\ServiceManager;
 
 class AssertionManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,17 +17,17 @@ class AssertionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->manager = new AssertionManager();
+        $this->manager = new AssertionManager(new ServiceManager);
     }
 
     public function testValidatePlugin()
     {
         $assertion = $this->getMockForAbstractClass('Zend\Permissions\Acl\Assertion\AssertionInterface');
 
-        $this->assertTrue($this->manager->validatePlugin($assertion));
+        $this->assertNull($this->manager->validate($assertion));
 
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException');
+        $this->setExpectedException('Zend\ServiceManager\Exception\InvalidServiceException');
 
-        $this->manager->validatePlugin('invalid plugin');
+        $this->manager->validate('invalid plugin');
     }
 }
