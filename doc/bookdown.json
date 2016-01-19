@@ -1,0 +1,9 @@
+{
+    "title": "Zend\\Permissions.acl",
+    "target": "html/",
+    "content": [
+        "book/zend.permissions.acl.intro.md",
+        "book/zend.permissions.acl.refining.md",
+        "book/zend.permissions.acl.advanced.md"
+    ]
+}
