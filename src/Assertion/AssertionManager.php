@@ -47,7 +47,7 @@ class AssertionManager extends AbstractPluginManager
             ));
         }
     }
-  
+
     /**
      * Validate the plugin is of the expected type (v2).
      *
