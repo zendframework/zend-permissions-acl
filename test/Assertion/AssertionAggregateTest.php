@@ -8,8 +8,8 @@
  */
 namespace ZendTest\Permissions\Acl\Assertion;
 
+use InvalidArgumentException;
 use Zend\Permissions\Acl\Assertion\AssertionAggregate;
-use Zend\Di\Exception\UndefinedReferenceException;
 
 class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
 {
@@ -163,7 +163,7 @@ class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
         $manager->expects($this->once())
             ->method('get')
             ->with('assertion')
-            ->will($this->throwException(new UndefinedReferenceException()));
+            ->will($this->throwException(new InvalidArgumentException()));
 
         $this->assertionAggregate->setAssertionManager($manager);
 
