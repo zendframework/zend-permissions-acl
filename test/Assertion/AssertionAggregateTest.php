@@ -8,8 +8,8 @@
  */
 namespace ZendTest\Permissions\Acl\Assertion;
 
+use InvalidArgumentException;
 use Zend\Permissions\Acl\Assertion\AssertionAggregate;
-use Zend\Di\Exception\UndefinedReferenceException;
 
 class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
 {
@@ -106,7 +106,9 @@ class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
 
     public function testManagerAccessors()
     {
-        $manager = $this->getMock('Zend\Permissions\Acl\Assertion\AssertionManager');
+        $manager = $this->getMockBuilder('Zend\Permissions\Acl\Assertion\AssertionManager')
+                        ->disableOriginalConstructor()
+                        ->getMock();
 
         $aggregate = $this->assertionAggregate->setAssertionManager($manager);
         $this->assertAttributeEquals($manager, 'assertionManager', $this->assertionAggregate);
@@ -129,9 +131,10 @@ class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
             ->method('assert')
             ->will($this->returnValue(true));
 
-        $manager = $this->getMock('Zend\Permissions\Acl\Assertion\AssertionManager', [
-            'get'
-        ]);
+        $manager = $this->getMockBuilder('Zend\Permissions\Acl\Assertion\AssertionManager')
+                        ->disableOriginalConstructor()
+                        ->getMock();
+
         $manager->expects($this->once())
             ->method('get')
             ->with('assertion')
@@ -153,13 +156,14 @@ class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
             'test.resource'
         ]);
 
-        $manager = $this->getMock('Zend\Permissions\Acl\Assertion\AssertionManager', [
-            'get'
-        ]);
+        $manager = $this->getMockBuilder('Zend\Permissions\Acl\Assertion\AssertionManager')
+                        ->disableOriginalConstructor()
+                        ->getMock();
+
         $manager->expects($this->once())
             ->method('get')
             ->with('assertion')
-            ->will($this->throwException(new UndefinedReferenceException()));
+            ->will($this->throwException(new InvalidArgumentException()));
 
         $this->assertionAggregate->setAssertionManager($manager);
 

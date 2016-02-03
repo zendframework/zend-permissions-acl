@@ -1,19 +1,19 @@
-# Introduction to Zend\\Permissions\\Acl
+# Theory and Usage
 
-The `Zend\Permissions\Acl` component provides a lightweight and flexible access control list (*ACL*)
-implementation for privileges management. In general, an application may utilize such *ACL*'s to
+zend-permissions-acl provides a lightweight and flexible access control list (ACL)
+implementation for privileges management. In general, an application may utilize such ACLs to
 control access to certain protected objects by other requesting objects.
 
 For the purposes of this documentation:
 
 - a **resource** is an object to which access is controlled.
-- a **role** is an object that may request access to a Resource.
+- a **role** is an object that may request access to a resource.
 
 Put simply, **roles request access to resources**. For example, if a parking attendant requests
 access to a car, then the parking attendant is the requesting role, and the car is the resource,
 since access to the car may not be granted to everyone.
 
-Through the specification and use of an *ACL*, an application may control how roles are granted
+Through the specification and use of an AC*, an application may control how roles are granted
 access to resources.
 
 ## Resources
@@ -57,7 +57,7 @@ Though the ability to inherit from multiple roles is very useful, multiple inher
 introduces some degree of complexity. The following example illustrates the ambiguity condition and
 how `Zend\Permissions\Acl\Acl` solves it.
 
-**Multiple Inheritance among Roles**
+### Multiple Inheritance among Roles
 
 The following code defines three base roles - "guest", "member", and "admin" - from which other
 roles may inherit. Then, a role identified by "someUser" is established and inherits from the three
@@ -103,37 +103,46 @@ having inherited conflicting rules from different parent roles.
 rule that is directly applicable to the query. In this case, since the "member" role is examined
 before the "guest" role, the example code would print "allowed".
 
-> ## Note
-When specifying multiple parents for a role, keep in mind that the last parent listed is the first
-one searched for rules applicable to an authorization query.
+> #### LIFO Order for role queries
+>
+> When specifying multiple parents for a role, keep in mind that the last parent listed is the first
+> one searched for rules applicable to an authorization query.
 
 ## Creating the Access Control List
 
-An Access Control List (*ACL*) can represent any set of physical or virtual objects that you wish.
-For the purposes of demonstration, however, we will create a basic Content Management System (*CMS*)
-*ACL* that maintains several tiers of groups over a wide variety of areas. To create a new *ACL*
-object, we instantiate the *ACL* with no parameters:
+An Access Control List (ACL) can represent any set of physical or virtual objects that you wish.
+For the purposes of demonstration, however, we will create a basic Content Management System (CMS)
+ACL that maintains several tiers of groups over a wide variety of areas. To create a new ACL
+object, we instantiate the ACL with no parameters:
 
 ```php
 use Zend\Permissions\Acl\Acl;
 $acl = new Acl();
 ```
 
-> ## Note
-Until a developer specifies an "allow" rule, `Zend\Permissions\Acl\Acl` denies access to every
-privilege upon every resource by every role.
+> ## Denied by default
+>
+> Until a developer specifies an "allow" rule, `Zend\Permissions\Acl\Acl` denies access to every
+> privilege upon every resource by every role.
 
 ## Registering Roles
 
-*CMS*'s will nearly always require a hierarchy of permissions to determine the authoring
+CMS systems will nearly always require a hierarchy of permissions to determine the authoring
 capabilities of its users. There may be a 'Guest' group to allow limited access for demonstrations,
-a 'Staff' group for the majority of *CMS* users who perform most of the day-to-day operations, an
+a 'Staff' group for the majority of CMS users who perform most of the day-to-day operations, an
 'Editor' group for those responsible for publishing, reviewing, archiving and deleting content, and
 finally an 'Administrator' group whose tasks may include all of those of the other groups as well as
 maintenance of sensitive information, user management, back-end configuration data, backup and
 export. This set of permissions can be represented in a role registry, allowing each group to
 inherit privileges from 'parent' groups, as well as providing distinct privileges for their unique
 group only. The permissions may be expressed as follows:
+
+Name | Unique Permissions | Inherit Permissions From
+---- | ------------------ | ------------------------
+Guest | View | N/A
+Staff | Edit, Submit, Revise | Guest
+Editor | Publish, Archive, Delete | Staff
+Administrator | (Granted all access) | N/A
 
 For this example, `Zend\Permissions\Acl\Role\GenericRole` is used, but any object that implements
 `Zend\Permissions\Acl\Role\RoleInterface` is acceptable. These groups can be added to the role
@@ -167,16 +176,17 @@ $acl->addRole(new Role('administrator'));
 
 ## Defining Access Controls
 
-Now that the *ACL* contains the relevant roles, rules can be established that define how resources
+Now that the ACL contains the relevant roles, rules can be established that define how resources
 may be accessed by roles. You may have noticed that we have not defined any particular resources for
 this example, which is simplified to illustrate that the rules apply to all resources.
 `Zend\Permissions\Acl\Acl` provides an implementation whereby rules need only be assigned from
 general to specific, minimizing the number of rules needed, because resources and roles inherit
 rules that are defined upon their ancestors.
 
-> ## Note
-In general, `Zend\Permissions\Acl\Acl` obeys a given rule if and only if a more specific rule does
-not apply.
+> ### Specificity
+>
+> In general, `Zend\Permissions\Acl\Acl` obeys a given rule if and only if a
+> more specific rule does not apply.
 
 Consequently, we can define a reasonably complex set of rules with a minimum amount of code. To
 apply the base permissions as defined above:
@@ -199,7 +209,7 @@ $acl->allow($roleGuest, null, 'view');
 /*
 Alternatively, the above could be written:
 $acl->allow('guest', null, 'view');
-//*/
+ */
 
 // Staff inherits view privilege from guest, but also needs additional
 // privileges
@@ -218,40 +228,48 @@ all resources.
 
 ## Querying an ACL
 
-We now have a flexible *ACL* that can be used to determine whether requesters have permission to
+We now have a flexible ACL that can be used to determine whether requesters have permission to
 perform functions throughout the web application. Performing queries is quite simple using the
 `isAllowed()` method:
 
 ```php
-echo $acl->isAllowed('guest', null, 'view') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('guest', null, 'view')
+    ? 'allowed'
+    : 'denied';
 // allowed
 
-echo $acl->isAllowed('staff', null, 'publish') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('staff', null, 'publish')
+    ? 'allowed'
+    : 'denied';
 // denied
 
-echo $acl->isAllowed('staff', null, 'revise') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('staff', null, 'revise')
+    ? 'allowed'
+    : 'denied';
 // allowed
 
-echo $acl->isAllowed('editor', null, 'view') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('editor', null, 'view')
+    ? 'allowed'
+    : 'denied';
 // allowed because of inheritance from guest
 
-echo $acl->isAllowed('editor', null, 'update') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('editor', null, 'update')
+    ? 'allowed'
+    : 'denied';
 // denied because no allow rule for 'update'
 
-echo $acl->isAllowed('administrator', null, 'view') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('administrator', null, 'view')
+    ? 'allowed'
+    : 'denied';
 // allowed because administrator is allowed all privileges
 
-echo $acl->isAllowed('administrator') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('administrator')
+    ? 'allowed'
+    : 'denied';
 // allowed because administrator is allowed all privileges
 
-echo $acl->isAllowed('administrator', null, 'update') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('administrator', null, 'update')
+    ? 'allowed'
+    : 'denied';
 // allowed because administrator is allowed all privileges
 ```
