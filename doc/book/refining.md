@@ -2,15 +2,15 @@
 
 ## Precise Access Controls
 
-The basic *ACL* as defined in the \[previous section\](zend.permissions.acl.introduction) shows how
-various privileges may be allowed upon the entire *ACL* (all resources). In practice, however,
+The basic ACL as defined in the \[previous section\](zend.permissions.acl.introduction) shows how
+various privileges may be allowed upon the entire ACL (all resources). In practice, however,
 access controls tend to have exceptions and varying degrees of complexity.
 `Zend\Permissions\Acl\Acl` allows to you accomplish these refinements in a straightforward and
 flexible manner.
 
-For the example *CMS*, it has been determined that whilst the 'staff' group covers the needs of the
+For the example CMS, it has been determined that whilst the 'staff' group covers the needs of the
 vast majority of users, there is a need for a new 'marketing' group that requires access to the
-newsletter and latest news in the *CMS*. The group is fairly self-sufficient and will have the
+newsletter and latest news in the CMS. The group is fairly self-sufficient and will have the
 ability to publish and archive both newsletters and the latest news.
 
 In addition, it has also been requested that the 'staff' group be allowed to view news stories but
@@ -51,14 +51,16 @@ $acl->addResource(new Resource('latest'), 'news');
 $acl->addResource(new Resource('announcement'), 'news');
 ```
 
-Then it is simply a matter of defining these more specific rules on the target areas of the *ACL*:
+Then it is simply a matter of defining these more specific rules on the target areas of the ACL:
 
 ```php
 // Marketing must be able to publish and archive newsletters and the
 // latest news
-$acl->allow('marketing',
-            array('newsletter', 'latest'),
-            array('publish', 'archive'));
+$acl->allow(
+    'marketing',
+    ['newsletter', 'latest'],
+    ['publish', 'archive']
+);
 
 // Staff (and marketing, by inheritance), are denied permission to
 // revise the latest news
@@ -69,45 +71,53 @@ $acl->deny('staff', 'latest', 'revise');
 $acl->deny(null, 'announcement', 'archive');
 ```
 
-We can now query the *ACL* with respect to the latest changes:
+We can now query the ACL with respect to the latest changes:
 
 ```php
-echo $acl->isAllowed('staff', 'newsletter', 'publish') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('staff', 'newsletter', 'publish')
+    ? 'allowed'
+    : 'denied';
 // denied
 
-echo $acl->isAllowed('marketing', 'newsletter', 'publish') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('marketing', 'newsletter', 'publish')
+    ? 'allowed'
+    : 'denied';
 // allowed
 
-echo $acl->isAllowed('staff', 'latest', 'publish') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('staff', 'latest', 'publish')
+    ? 'allowed'
+    : 'denied';
 // denied
 
-echo $acl->isAllowed('marketing', 'latest', 'publish') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('marketing', 'latest', 'publish')
+    ? 'allowed'
+    : 'denied';
 // allowed
 
-echo $acl->isAllowed('marketing', 'latest', 'archive') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('marketing', 'latest', 'archive')
+    ? 'allowed'
+    : 'denied';
 // allowed
 
-echo $acl->isAllowed('marketing', 'latest', 'revise') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('marketing', 'latest', 'revise')
+    ? 'allowed'
+    : 'denied';
 // denied
 
-echo $acl->isAllowed('editor', 'announcement', 'archive') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('editor', 'announcement', 'archive')
+    ? 'allowed'
+    : 'denied';
 // denied
 
-echo $acl->isAllowed('administrator', 'announcement', 'archive') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('administrator', 'announcement', 'archive')
+    ? 'allowed'
+    : 'denied';
 // denied
 ```
 
 ## Removing Access Controls
 
-To remove one or more access rules from the *ACL*, simply use the available `removeAllow()` or
+To remove one or more access rules from the ACL, simply use the available `removeAllow()` or
 `removeDeny()` methods. As with `allow()` and `deny()`, you may provide a `NULL` value to indicate
 application to all roles, resources, and/or privileges:
 
@@ -116,22 +126,27 @@ application to all roles, resources, and/or privileges:
 // by inheritance)
 $acl->removeDeny('staff', 'latest', 'revise');
 
-echo $acl->isAllowed('marketing', 'latest', 'revise') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('marketing', 'latest', 'revise')
+    ? 'allowed'
+    : 'denied';
 // allowed
 
 // Remove the allowance of publishing and archiving newsletters to
 // marketing
-$acl->removeAllow('marketing',
-                  'newsletter',
-                  array('publish', 'archive'));
+$acl->removeAllow(
+    'marketing',
+    'newsletter',
+    ['publish', 'archive']
+);
 
-echo $acl->isAllowed('marketing', 'newsletter', 'publish') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('marketing', 'newsletter', 'publish')
+    ? 'allowed'
+    : 'denied';
 // denied
 
-echo $acl->isAllowed('marketing', 'newsletter', 'archive') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('marketing', 'newsletter', 'archive')
+    ? 'allowed'
+    : 'denied';
 // denied
 ```
 
@@ -142,15 +157,18 @@ overrides such incremental changes:
 // Allow marketing all permissions upon the latest news
 $acl->allow('marketing', 'latest');
 
-echo $acl->isAllowed('marketing', 'latest', 'publish') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('marketing', 'latest', 'publish')
+    ? 'allowed'
+    : 'denied';
 // allowed
 
-echo $acl->isAllowed('marketing', 'latest', 'archive') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('marketing', 'latest', 'archive')
+    ? 'allowed'
+    : 'denied';
 // allowed
 
-echo $acl->isAllowed('marketing', 'latest', 'anything') ?
-     "allowed" : "denied";
+echo $acl->isAllowed('marketing', 'latest', 'anything')
+    ? 'allowed'
+    : 'denied';
 // allowed
 ```
