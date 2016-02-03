@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 3.0.0 - TBD
+## 2.6.0 - 2016-02-03
 
 ### Added
 
@@ -18,5 +18,6 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#7](https://github.com/zendframework/zend-permissions-acl/pull/7) updates the
-  component to work with zend-servicemanager v3.
+- [#7](https://github.com/zendframework/zend-permissions-acl/pull/7) and
+  [#14](https://github.com/zendframework/zend-permissions-acl/pull/14) update the
+  component to be forwards-compatible with zend-servicemanager v3.
