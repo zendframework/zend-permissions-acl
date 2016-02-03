@@ -6,7 +6,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#15](https://github.com/zendframework/zend-permissions-acl/pull/15) adds
+  completed documentation, and publishes it to
+  https://zendframework.github.io/zend-permissions-acl/
 
 ### Deprecated
 
