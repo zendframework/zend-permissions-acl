@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    <title>Advanced Usage - zend-permissions-acl</title>
+
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.018/css/hack.min.css">
+    <link href="//fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin-ext,latin" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Libre+Baskerville:400,400italic,700&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="../css/base.css" rel="stylesheet">
+    <link href="../css/zf.css" rel="stylesheet">
+    <link href="../css/prism-zf.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+    <script>
+    WebFont.load({
+        google: {
+            families: ['Open Sans', 'PT Sans']
+        }
+    });
+    </script>
+
+    
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+            <span class="navbar-brand">
+              <a href="http://framework.zend.com"><img src="../img/zf-logo-mark.png" height="28" alt="Zend Framework" /></a>
+              <a href="..">zend-permissions-acl</a>
+            </span>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../usage/">Theory and Usage</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../refining/">Refining ACLs</a>
+                    </li>
+                
+                
+                
+                    <li class="active">
+                        <a href="./">Advanced Usage</a>
+                    </li>
+                
+                
+                </ul>
+            
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                
+                    <li >
+                        <a rel="prev" href="../refining/">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li class="disabled">
+                        <a rel="next" >
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a href="https://github.com/zendframework/zend-permissions-acl">
+                            
+                                <i class="fa fa-github"></i>
+                            
+                            GitHub
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <!-- content:begin -->
+    <div class="container">
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#advanced-usage">Advanced Usage</a></li>
+        
+            <li><a href="#storing-acl-data-for-persistence">Storing ACL Data for Persistence</a></li>
+        
+            <li><a href="#writing-conditional-acl-rules-with-assertions">Writing Conditional ACL Rules with Assertions</a></li>
+        
+    
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<ol class="breadcrumb" role="navigation" aria-label="breadcrumbs navigation">
+  <li><a href="..">Docs</a> &raquo;</li>
+  
+    
+  
+  <li class="active">Advanced Usage</li>
+</ol>
+
+<nav class="hidden-lg">
+  <ul class="pager">
+    <li class="previous">
+      <a rel="prev" href="../refining/"><i class="fa fa-arrow-left"></i> Previous</a>
+    </li>
+    <li class="next disabled ">
+      <a rel="next" >Next <i class="fa fa-arrow-right"></i></a>
+    </li>
+  </ul>
+</nav>
+
+<h1 id="advanced-usage">Advanced Usage</h1>
+<h2 id="storing-acl-data-for-persistence">Storing ACL Data for Persistence</h2>
+<p>zend-permissions-acl was designed in such a way that it does not require any
+particular backend technology such as a database or cache server for storage of the ACL data. Its
+complete PHP implementation enables customized administration tools to be built upon
+<code>Zend\Permissions\Acl\Acl</code> with relative ease and flexibility. Many situations require some form of
+interactive maintenance of the ACL, and <code>Zend\Permissions\Acl\Acl</code> provides methods for setting
+up, and querying against, the access controls of an application.</p>
+<p>Storage of ACL data is therefore left as a task for the developer, since use cases are expected to
+vary widely for various situations. Because <code>Zend\Permissions\Acl\Acl</code> is serializable, ACL
+objects may be serialized with PHP's <a href="http://php.net/serialize">serialize() function</a>, and the
+results may be stored anywhere the developer should desire, such as a file, database, or caching
+mechanism.</p>
+<h2 id="writing-conditional-acl-rules-with-assertions">Writing Conditional ACL Rules with Assertions</h2>
+<p>Sometimes a rule for allowing or denying a role access to a resource should not
+be absolute, but dependent upon various criteria. For example, suppose that
+certain access should be allowed, but only between the hours of 8:00am and
+5:00pm. Another example would be denying access because a request comes from an
+IP address that has been flagged as a source of abuse.
+<code>Zend\Permissions\Acl\Acl</code> has built-in support for implementing rules based
+on whatever conditions the developer needs.</p>
+<p><code>Zend\Permissions\Acl\Acl</code> provides support for conditional rules with
+<code>Zend\Permissions\Acl\Assertion\AssertionInterface</code>. In order to use the rule assertion interface, a
+developer writes a class that implements the <code>assert()</code> method of the interface:</p>
+<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\Assertion\AssertionInterface;
+use Zend\Permissions\Acl\Role\RoleInterface;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
+
+class CleanIPAssertion implements AssertionInterface
+{
+    public function assert(
+        Acl $acl,
+        RoleInterface $role = null,
+        ResourceInterface $resource = null,
+        $privilege = null
+    ) {
+        return $this-&gt;_isCleanIP($_SERVER['REMOTE_ADDR']);
+    }
+
+    protected function _isCleanIP($ip)
+    {
+        // ...
+    }
+}</code></pre>
+
+
+<p>Once an assertion class is available, the developer must supply an instance of
+the assertion class when assigning conditional rules. A rule that is created
+with an assertion only applies when the assertion method returns <code>TRUE</code>.</p>
+<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Acl;
+
+$acl = new Acl();
+$acl-&gt;allow(null, null, null, new CleanIPAssertion());</code></pre>
+
+
+<p>The above code creates a conditional allow rule that allows access to all
+privileges on everything by everyone, except when the requesting IP is
+"blacklisted". If a request comes in from an IP that is not considered "clean",
+then the allow rule does not apply. Since the rule applies to all roles, all
+resources, and all privileges, an "unclean" IP would result in a denial of
+access. This is a special case, however, and it should be understood that in all
+other cases (i.e., where a specific role, resource, or privilege is specified
+for the rule), a failed assertion results in the rule not applying, and other
+rules would be used to determine whether access is allowed or denied.</p>
+<p>The <code>assert()</code> method of an assertion object is passed the ACL, role,
+resource, and privilege to which the authorization query (i.e., <code>isAllowed()</code>)
+applies, in order to provide a context for the assertion class to determine its
+conditions where needed.</p>
+
+<hr />
+
+<nav>
+  <ul class="pager">
+    <li class="previous">
+      <a rel="prev" href="../refining/"><i class="fa fa-arrow-left"></i> Previous</a>
+    </li>
+    <li class="next disabled ">
+      <a rel="next" >Next <i class="fa fa-arrow-right"></i></a>
+    </li>
+  </ul>
+</nav></div>
+        
+    </div>
+    <!-- content:end -->
+
+    <footer class="col-md-12 text-center">
+        <hr>
+        <p>
+        <small>Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a><br></small>
+        </p>
+        <p><small><a href="http://framework.zend.com">Learn more about Zend Framework</a></small></p>
+    </footer>
+
+    <script src="../js/jquery-1.10.2.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+    <script src="../js/prism-zf.js"></script>
+
+    <script>var base_url = '..';</script>
+    <script data-main="../mkdocs/js/search.js" src="../mkdocs/js/require.js"></script>
+    <script src="../js/base.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        From here you can search these documents. Enter your search terms below.
+                    </p>
+                    <form role="form">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                        </div>
+                    </form>
+                    <div id="mkdocs-search-results"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </body>
+
+</html>
