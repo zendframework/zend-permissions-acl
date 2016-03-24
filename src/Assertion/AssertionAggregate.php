@@ -8,7 +8,7 @@
  */
 namespace Zend\Permissions\Acl\Assertion;
 
-use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\AclInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Exception\InvalidArgumentException;
@@ -125,7 +125,7 @@ class AssertionAggregate implements AssertionInterface
      * @throws RuntimeException
      * @return bool
      */
-    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
+    public function assert(AclInterface $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
         // check if assertions are set
         if (! $this->assertions) {
