@@ -9,6 +9,9 @@
 
 namespace ZendTest\Permissions\Acl\TestAsset\UseCase1;
 
+use Zend\Permissions\Acl\Resource\GenericResource;
+use Zend\Permissions\Acl\Role\GenericRole;
+
 class Acl extends \Zend\Permissions\Acl\Acl
 {
 
@@ -18,11 +21,11 @@ class Acl extends \Zend\Permissions\Acl\Acl
     {
         $this->customAssertion = new UserIsBlogPostOwnerAssertion();
 
-        $this->addRole(new \Zend\Permissions\Acl\Role\GenericRole('guest'));                    // $acl->addRole('guest');
-        $this->addRole(new \Zend\Permissions\Acl\Role\GenericRole('contributor'), 'guest');     // $acl->addRole('contributor', 'guest');
-        $this->addRole(new \Zend\Permissions\Acl\Role\GenericRole('publisher'), 'contributor'); // $acl->addRole('publisher', 'contributor');
-        $this->addRole(new \Zend\Permissions\Acl\Role\GenericRole('admin'));                    // $acl->addRole('admin');
-        $this->addResource(new \Zend\Permissions\Acl\Resource\GenericResource('blogPost'));     // $acl->addResource('blogPost');
+        $this->addRole(new GenericRole('guest'));                    // $acl->addRole('guest');
+        $this->addRole(new GenericRole('contributor'), 'guest');     // $acl->addRole('contributor', 'guest');
+        $this->addRole(new GenericRole('publisher'), 'contributor'); // $acl->addRole('publisher', 'contributor');
+        $this->addRole(new GenericRole('admin'));                    // $acl->addRole('admin');
+        $this->addResource(new GenericResource('blogPost'));     // $acl->addResource('blogPost');
         $this->allow('guest', 'blogPost', 'view');
         $this->allow('contributor', 'blogPost', 'contribute');
         $this->allow('contributor', 'blogPost', 'modify', $this->customAssertion);

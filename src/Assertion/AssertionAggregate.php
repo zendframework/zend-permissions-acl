@@ -142,7 +142,9 @@ class AssertionAggregate implements AssertionInterface
                         try {
                             $assertion = $manager->get($assertion);
                         } catch (\Exception $e) {
-                            throw new Exception\InvalidAssertionException('assertion "' . $assertion . '" is not defined in assertion manager');
+                            throw new Exception\InvalidAssertionException(
+                                'assertion "' . $assertion . '" is not defined in assertion manager'
+                            );
                         }
                     } else {
                         throw new RuntimeException('no assertion manager is set - cannot look up for assertions');
