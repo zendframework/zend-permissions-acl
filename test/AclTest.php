@@ -1294,7 +1294,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->_acl->isAllowed('guest', 'blogpost', 'read'));
         $this->assertFalse($this->_acl->isAllowed('guest', 'newsletter', 'read'));
 
-        // ensure allow null/all resoures works
+        // ensure allow null/all resources works
         $this->_acl->allow('guest', null, 'read');
         $this->assertTrue($this->_acl->isAllowed('guest', 'blogpost', 'read'));
         $this->assertTrue($this->_acl->isAllowed('guest', 'newsletter', 'read'));
