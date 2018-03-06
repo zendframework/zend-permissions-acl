@@ -900,7 +900,7 @@ class Acl implements AclInterface
         }
 
         // This comment is needed due to a strange php-cs-fixer bug
-        while (null !== ($role = array_pop($dfs['stack']))) {
+        while (null !== ($role = array_shift($dfs['stack']))) {
             if (!isset($dfs['visited'][$role->getRoleId()])) {
                 if (null !== ($result = $this->roleDFSVisitOnePrivilege($role, $resource, $privilege, $dfs))) {
                     return $result;
