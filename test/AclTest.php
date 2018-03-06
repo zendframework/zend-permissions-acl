@@ -1117,6 +1117,19 @@ class AclTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    // asdf
+    public function testRolesAreEvaluatedFIFO()
+    {
+        $acl = $this->_loadUseCase1();
+
+        $user = new Role\GenericRole('hierarchy-admin');
+        $blogPost = new Resource\GenericResource('hierarchy-resource');
+
+        $this->assertTrue($acl->isAllowed($user, $blogPost, 'assert'));
+
+ //       $this->allow('contributor', 'blogPost', 'contribute');
+
+    }
 
     /**
      * @group ZF-1721
