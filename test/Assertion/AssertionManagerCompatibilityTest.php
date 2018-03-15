@@ -21,7 +21,7 @@ class AssertionManagerCompatibilityTest extends TestCase
 {
     use CommonPluginManagerTrait;
 
-    public function setExpectedException($exception, $message = '', $code = NULL)
+    public function setExpectedException($exception, $message = '', $code = null)
     {
         $this->expectException($exception, $message, $code);
     }
