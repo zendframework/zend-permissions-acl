@@ -8,17 +8,19 @@
  */
 namespace ZendTest\Permissions\Acl\Assertion;
 
+use PHPUnit\Framework\TestCase;
 use Zend\Permissions\Acl;
+use Zend\Permissions\Acl\Exception\InvalidArgumentException;
 
-class CallbackAssertionTest extends \PHPUnit_Framework_TestCase
+class CallbackAssertionTest extends TestCase
 {
     /**
      * Ensures constructor throws InvalidArgumentException if not callable is provided
      */
     public function testConstructorThrowsExceptionIfNotCallable()
     {
-        $this->setExpectedException(
-            'Zend\Permissions\Acl\Exception\InvalidArgumentException',
+        $this->expectException(
+            InvalidArgumentException::class,
             'Invalid callback provided; not callable'
         );
         new Acl\Assertion\CallbackAssertion('I am not callable!');

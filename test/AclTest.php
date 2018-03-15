@@ -9,14 +9,17 @@
 
 namespace ZendTest\Permissions\Acl;
 
+use PHPUnit\Framework\TestCase;
 use Zend\Permissions\Acl;
 use Zend\Permissions\Acl\Role;
 use Zend\Permissions\Acl\Resource;
+use Zend\Permissions\Acl\Exception\InvalidArgumentException;
+use Zend\Permissions\Acl\Exception\ExceptionInterface;
 
 /**
  * @group      Zend_Acl
  */
-class AclTest extends \PHPUnit_Framework_TestCase
+class AclTest extends TestCase
 {
     /**
      * ACL object for each test method
@@ -82,7 +85,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testRoleRegistryRemoveOneNonExistent()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException', 'not found');
+        $this->expectException(InvalidArgumentException::class, 'not found');
         $this->_acl->removeRole('nonexistent');
     }
 
@@ -106,7 +109,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testRoleRegistryAddInheritsNonExistent()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->_acl->addRole(new Role\GenericRole('guest'), 'nonexistent');
     }
 
@@ -117,7 +120,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testRoleRegistryAddNotRole()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException',
+        $this->expectException(InvalidArgumentException::class,
                                     'addRole() expects $role to be of type Zend\Permissions\Acl\Role');
         $this->_acl->addRole(new \stdClass, 'guest');
     }
@@ -249,7 +252,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
     {
         $roleGuest = new Role\GenericRole('guest');
         $roleRegistry = new Role\Registry();
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException', 'already exists');
+        $this->expectException(InvalidArgumentException::class, 'already exists');
         $roleRegistry->add($roleGuest)
                      ->add($roleGuest);
     }
@@ -264,7 +267,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $roleGuest1 = new Role\GenericRole('guest');
         $roleGuest2 = new Role\GenericRole('guest');
         $roleRegistry = new Role\Registry();
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException', 'already exists');
+        $this->expectException(InvalidArgumentException::class, 'already exists');
         $roleRegistry->add($roleGuest1)
                      ->add($roleGuest2);
     }
@@ -330,7 +333,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testResourceRemoveOneNonExistent()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\ExceptionInterface', 'not found');
+        $this->expectException(ExceptionInterface::class, 'not found');
         $this->_acl->removeResource('nonexistent');
     }
 
@@ -354,7 +357,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testResourceAddInheritsNonExistent()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException', 'does not exist');
+        $this->expectException(InvalidArgumentException::class, 'does not exist');
         $this->_acl->addResource(new Resource\GenericResource('area'), 'nonexistent');
     }
 
@@ -365,7 +368,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testResourceRegistryAddNotResource()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\InvalidArgumentException',
+        $this->expectException(InvalidArgumentException::class,
                                     'addResource() expects $resource to be of type Zend\Permissions\Acl\Resource');
         $this->_acl->addResource(new \stdClass);
     }
@@ -423,7 +426,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testResourceDuplicate()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\ExceptionInterface', 'already exists');
+        $this->expectException(ExceptionInterface::class, 'already exists');
         $resourceArea = new Resource\GenericResource('area');
         $this->_acl->addResource($resourceArea)
                    ->addResource($resourceArea);
@@ -436,7 +439,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
      */
     public function testResourceDuplicateId()
     {
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\ExceptionInterface', 'already exists');
+        $this->expectException(ExceptionInterface::class, 'already exists');
         $resourceArea1 = new Resource\GenericResource('area');
         $resourceArea2 = new Resource\GenericResource('area');
         $this->_acl->addResource($resourceArea1)
@@ -1212,6 +1215,8 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $acl->addResource('blog');
         $acl->allow('admin', 'blog', 'read');
         $acl->removeAllow(['admin'], ['blog'], null);
+
+        $this->assertTrue(true);
     }
 
     public function testRoleObjectImplementsToString()
@@ -1364,6 +1369,8 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $this->_acl->addResource($resourceFoo);
 
         $this->_acl->setRule(Acl\Acl::OP_ADD, Acl\Acl::TYPE_ALLOW, $roleGuest, $resourceFoo);
+
+        $this->assertTrue(true);
     }
 
     /**
