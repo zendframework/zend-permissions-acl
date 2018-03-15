@@ -13,16 +13,20 @@ use Zend\Permissions\Acl;
 
 class MockAssertion implements Acl\Assertion\AssertionInterface
 {
-    protected $_returnValue;
+    protected $returnValue;
 
     public function __construct($returnValue)
     {
-        $this->_returnValue = (bool) $returnValue;
+        $this->returnValue = (bool) $returnValue;
     }
 
-    public function assert(Acl\Acl $acl, Acl\Role\RoleInterface $role = null, Acl\Resource\ResourceInterface $resource = null,
-                           $privilege = null)
-    {
-       return $this->_returnValue;
+    public function assert(
+        Acl\Acl $acl,
+        Acl\Role\RoleInterface $role = null,
+        Acl\Resource\ResourceInterface $resource = null,
+        $privilege = null
+    ) {
+
+        return $this->returnValue;
     }
 }

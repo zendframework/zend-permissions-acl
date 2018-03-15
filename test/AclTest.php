@@ -26,7 +26,7 @@ class AclTest extends TestCase
      *
      * @var Acl\Acl
      */
-    protected $_acl;
+    protected $acl;
 
     /**
      * Instantiates a new ACL object and creates internal reference to it for each test method
@@ -35,7 +35,7 @@ class AclTest extends TestCase
      */
     public function setUp()
     {
-        $this->_acl = new Acl\Acl();
+        $this->acl = new Acl\Acl();
     }
 
     /**
@@ -47,10 +47,10 @@ class AclTest extends TestCase
     {
         $roleGuest = new Role\GenericRole('guest');
 
-        $role = $this->_acl->addRole($roleGuest)
+        $role = $this->acl->addRole($roleGuest)
                           ->getRole($roleGuest->getRoleId());
         $this->assertEquals($roleGuest, $role);
-        $role = $this->_acl->getRole($roleGuest);
+        $role = $this->acl->getRole($roleGuest);
         $this->assertEquals($roleGuest, $role);
     }
 
@@ -59,7 +59,7 @@ class AclTest extends TestCase
      */
     public function testRoleAddAndGetOneByString()
     {
-        $role = $this->_acl->addRole('area')
+        $role = $this->acl->addRole('area')
                            ->getRole('area');
         $this->assertInstanceOf('Zend\Permissions\Acl\Role\RoleInterface', $role);
         $this->assertEquals('area', $role->getRoleId());
@@ -73,9 +73,9 @@ class AclTest extends TestCase
     public function testRoleRegistryRemoveOne()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->_acl->addRole($roleGuest)
+        $this->acl->addRole($roleGuest)
                    ->removeRole($roleGuest);
-        $this->assertFalse($this->_acl->hasRole($roleGuest));
+        $this->assertFalse($this->acl->hasRole($roleGuest));
     }
 
     /**
@@ -86,7 +86,7 @@ class AclTest extends TestCase
     public function testRoleRegistryRemoveOneNonExistent()
     {
         $this->expectException(InvalidArgumentException::class, 'not found');
-        $this->_acl->removeRole('nonexistent');
+        $this->acl->removeRole('nonexistent');
     }
 
     /**
@@ -97,9 +97,9 @@ class AclTest extends TestCase
     public function testRoleRegistryRemoveAll()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->_acl->addRole($roleGuest)
+        $this->acl->addRole($roleGuest)
                    ->removeRoleAll();
-        $this->assertFalse($this->_acl->hasRole($roleGuest));
+        $this->assertFalse($this->acl->hasRole($roleGuest));
     }
 
     /**
@@ -110,7 +110,7 @@ class AclTest extends TestCase
     public function testRoleRegistryAddInheritsNonExistent()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->_acl->addRole(new Role\GenericRole('guest'), 'nonexistent');
+        $this->acl->addRole(new Role\GenericRole('guest'), 'nonexistent');
     }
 
     /**
@@ -120,9 +120,11 @@ class AclTest extends TestCase
      */
     public function testRoleRegistryAddNotRole()
     {
-        $this->expectException(InvalidArgumentException::class,
-                                    'addRole() expects $role to be of type Zend\Permissions\Acl\Role');
-        $this->_acl->addRole(new \stdClass, 'guest');
+        $this->expectException(
+            InvalidArgumentException::class,
+            'addRole() expects $role to be of type Zend\Permissions\Acl\Role'
+        );
+        $this->acl->addRole(new \stdClass, 'guest');
     }
 
     /**
@@ -133,16 +135,20 @@ class AclTest extends TestCase
     public function testRoleRegistryInheritsNonExistent()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->_acl->addRole($roleGuest);
+        $this->acl->addRole($roleGuest);
         try {
-            $this->_acl->inheritsRole('nonexistent', $roleGuest);
-            $this->fail('Expected Zend\Permissions\Acl\Role\Exception not thrown upon specifying a non-existent child Role');
+            $this->acl->inheritsRole('nonexistent', $roleGuest);
+            $this->fail(
+                'Expected Zend\Permissions\Acl\Role\Exception not thrown upon specifying a non-existent child Role'
+            );
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertContains('not found', $e->getMessage());
         }
         try {
-            $this->_acl->inheritsRole($roleGuest, 'nonexistent');
-            $this->fail('Expected Zend\Permissions\Acl\Role\Exception not thrown upon specifying a non-existent child Role');
+            $this->acl->inheritsRole($roleGuest, 'nonexistent');
+            $this->fail(
+                'Expected Zend\Permissions\Acl\Role\Exception not thrown upon specifying a non-existent child Role'
+            );
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertContains('not found', $e->getMessage());
         }
@@ -280,10 +286,10 @@ class AclTest extends TestCase
     public function testResourceAddAndGetOne()
     {
         $resourceArea = new Resource\GenericResource('area');
-        $resource = $this->_acl->addResource($resourceArea)
+        $resource = $this->acl->addResource($resourceArea)
                           ->getResource($resourceArea->getResourceId());
         $this->assertEquals($resourceArea, $resource);
-        $resource = $this->_acl->getResource($resourceArea);
+        $resource = $this->acl->getResource($resourceArea);
         $this->assertEquals($resourceArea, $resource);
     }
 
@@ -292,7 +298,7 @@ class AclTest extends TestCase
      */
     public function testResourceAddAndGetOneByString()
     {
-        $resource = $this->_acl->addResource('area')
+        $resource = $this->acl->addResource('area')
                           ->getResource('area');
         $this->assertInstanceOf('Zend\Permissions\Acl\Resource\ResourceInterface', $resource);
         $this->assertEquals('area', $resource->getResourceId());
@@ -306,10 +312,10 @@ class AclTest extends TestCase
     public function testResourceAddAndGetOneWithAddResourceMethod()
     {
         $resourceArea = new Resource\GenericResource('area');
-        $resource = $this->_acl->addResource($resourceArea)
+        $resource = $this->acl->addResource($resourceArea)
                                ->getResource($resourceArea->getResourceId());
         $this->assertEquals($resourceArea, $resource);
-        $resource = $this->_acl->getResource($resourceArea);
+        $resource = $this->acl->getResource($resourceArea);
         $this->assertEquals($resourceArea, $resource);
     }
 
@@ -321,9 +327,9 @@ class AclTest extends TestCase
     public function testResourceRemoveOne()
     {
         $resourceArea = new Resource\GenericResource('area');
-        $this->_acl->addResource($resourceArea)
+        $this->acl->addResource($resourceArea)
                    ->removeResource($resourceArea);
-        $this->assertFalse($this->_acl->hasResource($resourceArea));
+        $this->assertFalse($this->acl->hasResource($resourceArea));
     }
 
     /**
@@ -334,7 +340,7 @@ class AclTest extends TestCase
     public function testResourceRemoveOneNonExistent()
     {
         $this->expectException(ExceptionInterface::class, 'not found');
-        $this->_acl->removeResource('nonexistent');
+        $this->acl->removeResource('nonexistent');
     }
 
     /**
@@ -345,9 +351,9 @@ class AclTest extends TestCase
     public function testResourceRemoveAll()
     {
         $resourceArea = new Resource\GenericResource('area');
-        $this->_acl->addResource($resourceArea)
+        $this->acl->addResource($resourceArea)
                    ->removeResourceAll();
-        $this->assertFalse($this->_acl->hasResource($resourceArea));
+        $this->assertFalse($this->acl->hasResource($resourceArea));
     }
 
     /**
@@ -358,7 +364,7 @@ class AclTest extends TestCase
     public function testResourceAddInheritsNonExistent()
     {
         $this->expectException(InvalidArgumentException::class, 'does not exist');
-        $this->_acl->addResource(new Resource\GenericResource('area'), 'nonexistent');
+        $this->acl->addResource(new Resource\GenericResource('area'), 'nonexistent');
     }
 
     /**
@@ -368,9 +374,11 @@ class AclTest extends TestCase
      */
     public function testResourceRegistryAddNotResource()
     {
-        $this->expectException(InvalidArgumentException::class,
-                                    'addResource() expects $resource to be of type Zend\Permissions\Acl\Resource');
-        $this->_acl->addResource(new \stdClass);
+        $this->expectException(
+            InvalidArgumentException::class,
+            'addResource() expects $resource to be of type Zend\Permissions\Acl\Resource'
+        );
+        $this->acl->addResource(new \stdClass);
     }
 
     /**
@@ -381,16 +389,22 @@ class AclTest extends TestCase
     public function testResourceInheritsNonExistent()
     {
         $resourceArea = new Resource\GenericResource('area');
-        $this->_acl->addResource($resourceArea);
+        $this->acl->addResource($resourceArea);
         try {
-            $this->_acl->inheritsResource('nonexistent', $resourceArea);
-            $this->fail('Expected Zend\Permissions\Acl\Exception\ExceptionInterface not thrown upon specifying a non-existent child Resource');
+            $this->acl->inheritsResource('nonexistent', $resourceArea);
+            $this->fail(
+                'Expected Zend\Permissions\Acl\Exception\ExceptionInterface not '
+                . 'thrown upon specifying a non-existent child Resource'
+            );
         } catch (Acl\Exception\ExceptionInterface $e) {
             $this->assertContains('not found', $e->getMessage());
         }
         try {
-            $this->_acl->inheritsResource($resourceArea, 'nonexistent');
-            $this->fail('Expected Zend\Permissions\Acl\Exception\ExceptionInterface not thrown upon specifying a non-existent parent Resource');
+            $this->acl->inheritsResource($resourceArea, 'nonexistent');
+            $this->fail(
+                'Expected Zend\Permissions\Acl\Exception\ExceptionInterface not thrown '
+                . 'upon specifying a non-existent parent Resource'
+            );
         } catch (Acl\Exception\ExceptionInterface $e) {
             $this->assertContains('not found', $e->getMessage());
         }
@@ -406,17 +420,17 @@ class AclTest extends TestCase
         $resourceCity     = new Resource\GenericResource('city');
         $resourceBuilding = new Resource\GenericResource('building');
         $resourceRoom     = new Resource\GenericResource('room');
-        $this->_acl->addResource($resourceCity)
+        $this->acl->addResource($resourceCity)
                    ->addResource($resourceBuilding, $resourceCity->getResourceId())
                    ->addResource($resourceRoom, $resourceBuilding);
-        $this->assertTrue($this->_acl->inheritsResource($resourceBuilding, $resourceCity, true));
-        $this->assertTrue($this->_acl->inheritsResource($resourceRoom, $resourceBuilding, true));
-        $this->assertTrue($this->_acl->inheritsResource($resourceRoom, $resourceCity));
-        $this->assertFalse($this->_acl->inheritsResource($resourceCity, $resourceBuilding));
-        $this->assertFalse($this->_acl->inheritsResource($resourceBuilding, $resourceRoom));
-        $this->assertFalse($this->_acl->inheritsResource($resourceCity, $resourceRoom));
-        $this->_acl->removeResource($resourceBuilding);
-        $this->assertFalse($this->_acl->hasResource($resourceRoom));
+        $this->assertTrue($this->acl->inheritsResource($resourceBuilding, $resourceCity, true));
+        $this->assertTrue($this->acl->inheritsResource($resourceRoom, $resourceBuilding, true));
+        $this->assertTrue($this->acl->inheritsResource($resourceRoom, $resourceCity));
+        $this->assertFalse($this->acl->inheritsResource($resourceCity, $resourceBuilding));
+        $this->assertFalse($this->acl->inheritsResource($resourceBuilding, $resourceRoom));
+        $this->assertFalse($this->acl->inheritsResource($resourceCity, $resourceRoom));
+        $this->acl->removeResource($resourceBuilding);
+        $this->assertFalse($this->acl->hasResource($resourceRoom));
     }
 
     /**
@@ -428,7 +442,7 @@ class AclTest extends TestCase
     {
         $this->expectException(ExceptionInterface::class, 'already exists');
         $resourceArea = new Resource\GenericResource('area');
-        $this->_acl->addResource($resourceArea)
+        $this->acl->addResource($resourceArea)
                    ->addResource($resourceArea);
     }
 
@@ -442,7 +456,7 @@ class AclTest extends TestCase
         $this->expectException(ExceptionInterface::class, 'already exists');
         $resourceArea1 = new Resource\GenericResource('area');
         $resourceArea2 = new Resource\GenericResource('area');
-        $this->_acl->addResource($resourceArea1)
+        $this->acl->addResource($resourceArea1)
                    ->addResource($resourceArea2);
     }
 
@@ -454,14 +468,18 @@ class AclTest extends TestCase
     public function testIsAllowedNonExistent()
     {
         try {
-            $this->_acl->isAllowed('nonexistent');
-            $this->fail('Expected Zend\Permissions\Acl\Role\Exception\ExceptionInterface not thrown upon non-existent Role');
+            $this->acl->isAllowed('nonexistent');
+            $this->fail(
+                'Expected Zend\Permissions\Acl\Role\Exception\ExceptionInterface not thrown upon non-existent Role'
+            );
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertContains('not found', $e->getMessage());
         }
         try {
-            $this->_acl->isAllowed(null, 'nonexistent');
-            $this->fail('Expected Zend\Permissions\Acl\Exception\ExceptionInterface not thrown upon non-existent Resource');
+            $this->acl->isAllowed(null, 'nonexistent');
+            $this->fail(
+                'Expected Zend\Permissions\Acl\Exception\ExceptionInterface not thrown upon non-existent Resource'
+            );
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertContains('not found', $e->getMessage());
         }
@@ -474,7 +492,7 @@ class AclTest extends TestCase
      */
     public function testDefaultDeny()
     {
-        $this->assertFalse($this->_acl->isAllowed());
+        $this->assertFalse($this->acl->isAllowed());
     }
 
     /**
@@ -484,9 +502,9 @@ class AclTest extends TestCase
      */
     public function testDefaultAssert()
     {
-        $this->_acl->deny(null, null, null, new TestAsset\MockAssertion(false));
-        $this->assertTrue($this->_acl->isAllowed());
-        $this->assertTrue($this->_acl->isAllowed(null, null, 'somePrivilege'));
+        $this->acl->deny(null, null, null, new TestAsset\MockAssertion(false));
+        $this->assertTrue($this->acl->isAllowed());
+        $this->assertTrue($this->acl->isAllowed(null, null, 'somePrivilege'));
     }
 
     /**
@@ -496,10 +514,10 @@ class AclTest extends TestCase
      */
     public function testDefaultRuleSet()
     {
-        $this->_acl->allow();
-        $this->assertTrue($this->_acl->isAllowed());
-        $this->_acl->deny();
-        $this->assertFalse($this->_acl->isAllowed());
+        $this->acl->allow();
+        $this->assertTrue($this->acl->isAllowed());
+        $this->acl->deny();
+        $this->assertFalse($this->acl->isAllowed());
     }
 
     /**
@@ -509,7 +527,7 @@ class AclTest extends TestCase
      */
     public function testDefaultPrivilegeDeny()
     {
-        $this->assertFalse($this->_acl->isAllowed(null, null, 'somePrivilege'));
+        $this->assertFalse($this->acl->isAllowed(null, null, 'somePrivilege'));
     }
 
     /**
@@ -519,10 +537,10 @@ class AclTest extends TestCase
      */
     public function testDefaultRuleSetPrivilege()
     {
-        $this->_acl->allow();
-        $this->assertTrue($this->_acl->isAllowed(null, null, 'somePrivilege'));
-        $this->_acl->deny();
-        $this->assertFalse($this->_acl->isAllowed(null, null, 'somePrivilege'));
+        $this->acl->allow();
+        $this->assertTrue($this->acl->isAllowed(null, null, 'somePrivilege'));
+        $this->acl->deny();
+        $this->assertFalse($this->acl->isAllowed(null, null, 'somePrivilege'));
     }
 
     /**
@@ -532,8 +550,8 @@ class AclTest extends TestCase
      */
     public function testPrivilegeAllow()
     {
-        $this->_acl->allow(null, null, 'somePrivilege');
-        $this->assertTrue($this->_acl->isAllowed(null, null, 'somePrivilege'));
+        $this->acl->allow(null, null, 'somePrivilege');
+        $this->assertTrue($this->acl->isAllowed(null, null, 'somePrivilege'));
     }
 
     /**
@@ -543,9 +561,9 @@ class AclTest extends TestCase
      */
     public function testPrivilegeDeny()
     {
-        $this->_acl->allow();
-        $this->_acl->deny(null, null, 'somePrivilege');
-        $this->assertFalse($this->_acl->isAllowed(null, null, 'somePrivilege'));
+        $this->acl->allow();
+        $this->acl->deny(null, null, 'somePrivilege');
+        $this->assertFalse($this->acl->isAllowed(null, null, 'somePrivilege'));
     }
 
     /**
@@ -555,16 +573,16 @@ class AclTest extends TestCase
      */
     public function testPrivileges()
     {
-        $this->_acl->allow(null, null, ['p1', 'p2', 'p3']);
-        $this->assertTrue($this->_acl->isAllowed(null, null, 'p1'));
-        $this->assertTrue($this->_acl->isAllowed(null, null, 'p2'));
-        $this->assertTrue($this->_acl->isAllowed(null, null, 'p3'));
-        $this->assertFalse($this->_acl->isAllowed(null, null, 'p4'));
-        $this->_acl->deny(null, null, 'p1');
-        $this->assertFalse($this->_acl->isAllowed(null, null, 'p1'));
-        $this->_acl->deny(null, null, ['p2', 'p3']);
-        $this->assertFalse($this->_acl->isAllowed(null, null, 'p2'));
-        $this->assertFalse($this->_acl->isAllowed(null, null, 'p3'));
+        $this->acl->allow(null, null, ['p1', 'p2', 'p3']);
+        $this->assertTrue($this->acl->isAllowed(null, null, 'p1'));
+        $this->assertTrue($this->acl->isAllowed(null, null, 'p2'));
+        $this->assertTrue($this->acl->isAllowed(null, null, 'p3'));
+        $this->assertFalse($this->acl->isAllowed(null, null, 'p4'));
+        $this->acl->deny(null, null, 'p1');
+        $this->assertFalse($this->acl->isAllowed(null, null, 'p1'));
+        $this->acl->deny(null, null, ['p2', 'p3']);
+        $this->assertFalse($this->acl->isAllowed(null, null, 'p2'));
+        $this->assertFalse($this->acl->isAllowed(null, null, 'p3'));
     }
 
     /**
@@ -574,10 +592,10 @@ class AclTest extends TestCase
      */
     public function testPrivilegeAssert()
     {
-        $this->_acl->allow(null, null, 'somePrivilege', new TestAsset\MockAssertion(true));
-        $this->assertTrue($this->_acl->isAllowed(null, null, 'somePrivilege'));
-        $this->_acl->allow(null, null, 'somePrivilege', new TestAsset\MockAssertion(false));
-        $this->assertFalse($this->_acl->isAllowed(null, null, 'somePrivilege'));
+        $this->acl->allow(null, null, 'somePrivilege', new TestAsset\MockAssertion(true));
+        $this->assertTrue($this->acl->isAllowed(null, null, 'somePrivilege'));
+        $this->acl->allow(null, null, 'somePrivilege', new TestAsset\MockAssertion(false));
+        $this->assertFalse($this->acl->isAllowed(null, null, 'somePrivilege'));
     }
 
     /**
@@ -588,8 +606,8 @@ class AclTest extends TestCase
     public function testRoleDefaultDeny()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->_acl->addRole($roleGuest);
-        $this->assertFalse($this->_acl->isAllowed($roleGuest));
+        $this->acl->addRole($roleGuest);
+        $this->assertFalse($this->acl->isAllowed($roleGuest));
     }
 
     /**
@@ -600,11 +618,11 @@ class AclTest extends TestCase
     public function testRoleDefaultRuleSet()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->_acl->addRole($roleGuest)
+        $this->acl->addRole($roleGuest)
                    ->allow($roleGuest);
-        $this->assertTrue($this->_acl->isAllowed($roleGuest));
-        $this->_acl->deny($roleGuest);
-        $this->assertFalse($this->_acl->isAllowed($roleGuest));
+        $this->assertTrue($this->acl->isAllowed($roleGuest));
+        $this->acl->deny($roleGuest);
+        $this->assertFalse($this->acl->isAllowed($roleGuest));
     }
 
     /**
@@ -615,8 +633,8 @@ class AclTest extends TestCase
     public function testRoleDefaultPrivilegeDeny()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->_acl->addRole($roleGuest);
-        $this->assertFalse($this->_acl->isAllowed($roleGuest, null, 'somePrivilege'));
+        $this->acl->addRole($roleGuest);
+        $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
     }
 
     /**
@@ -627,11 +645,11 @@ class AclTest extends TestCase
     public function testRoleDefaultRuleSetPrivilege()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->_acl->addRole($roleGuest)
+        $this->acl->addRole($roleGuest)
                    ->allow($roleGuest);
-        $this->assertTrue($this->_acl->isAllowed($roleGuest, null, 'somePrivilege'));
-        $this->_acl->deny($roleGuest);
-        $this->assertFalse($this->_acl->isAllowed($roleGuest, null, 'somePrivilege'));
+        $this->assertTrue($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
+        $this->acl->deny($roleGuest);
+        $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
     }
 
     /**
@@ -642,9 +660,9 @@ class AclTest extends TestCase
     public function testRolePrivilegeAllow()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->_acl->addRole($roleGuest)
+        $this->acl->addRole($roleGuest)
                    ->allow($roleGuest, null, 'somePrivilege');
-        $this->assertTrue($this->_acl->isAllowed($roleGuest, null, 'somePrivilege'));
+        $this->assertTrue($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
     }
 
     /**
@@ -655,10 +673,10 @@ class AclTest extends TestCase
     public function testRolePrivilegeDeny()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->_acl->addRole($roleGuest)
+        $this->acl->addRole($roleGuest)
                    ->allow($roleGuest)
                    ->deny($roleGuest, null, 'somePrivilege');
-        $this->assertFalse($this->_acl->isAllowed($roleGuest, null, 'somePrivilege'));
+        $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
     }
 
     /**
@@ -669,17 +687,17 @@ class AclTest extends TestCase
     public function testRolePrivileges()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->_acl->addRole($roleGuest)
+        $this->acl->addRole($roleGuest)
                    ->allow($roleGuest, null, ['p1', 'p2', 'p3']);
-        $this->assertTrue($this->_acl->isAllowed($roleGuest, null, 'p1'));
-        $this->assertTrue($this->_acl->isAllowed($roleGuest, null, 'p2'));
-        $this->assertTrue($this->_acl->isAllowed($roleGuest, null, 'p3'));
-        $this->assertFalse($this->_acl->isAllowed($roleGuest, null, 'p4'));
-        $this->_acl->deny($roleGuest, null, 'p1');
-        $this->assertFalse($this->_acl->isAllowed($roleGuest, null, 'p1'));
-        $this->_acl->deny($roleGuest, null, ['p2', 'p3']);
-        $this->assertFalse($this->_acl->isAllowed($roleGuest, null, 'p2'));
-        $this->assertFalse($this->_acl->isAllowed($roleGuest, null, 'p3'));
+        $this->assertTrue($this->acl->isAllowed($roleGuest, null, 'p1'));
+        $this->assertTrue($this->acl->isAllowed($roleGuest, null, 'p2'));
+        $this->assertTrue($this->acl->isAllowed($roleGuest, null, 'p3'));
+        $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'p4'));
+        $this->acl->deny($roleGuest, null, 'p1');
+        $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'p1'));
+        $this->acl->deny($roleGuest, null, ['p2', 'p3']);
+        $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'p2'));
+        $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'p3'));
     }
 
     /**
@@ -690,11 +708,11 @@ class AclTest extends TestCase
     public function testRolePrivilegeAssert()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->_acl->addRole($roleGuest)
+        $this->acl->addRole($roleGuest)
                    ->allow($roleGuest, null, 'somePrivilege', new TestAsset\MockAssertion(true));
-        $this->assertTrue($this->_acl->isAllowed($roleGuest, null, 'somePrivilege'));
-        $this->_acl->allow($roleGuest, null, 'somePrivilege', new TestAsset\MockAssertion(false));
-        $this->assertFalse($this->_acl->isAllowed($roleGuest, null, 'somePrivilege'));
+        $this->assertTrue($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
+        $this->acl->allow($roleGuest, null, 'somePrivilege', new TestAsset\MockAssertion(false));
+        $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
     }
 
     /**
@@ -704,9 +722,9 @@ class AclTest extends TestCase
      */
     public function testRemoveDefaultDeny()
     {
-        $this->assertFalse($this->_acl->isAllowed());
-        $this->_acl->removeDeny();
-        $this->assertFalse($this->_acl->isAllowed());
+        $this->assertFalse($this->acl->isAllowed());
+        $this->acl->removeDeny();
+        $this->assertFalse($this->acl->isAllowed());
     }
 
     /**
@@ -716,10 +734,10 @@ class AclTest extends TestCase
      */
     public function testRemoveDefaultDenyAssert()
     {
-        $this->_acl->deny(null, null, null, new TestAsset\MockAssertion(false));
-        $this->assertTrue($this->_acl->isAllowed());
-        $this->_acl->removeDeny();
-        $this->assertFalse($this->_acl->isAllowed());
+        $this->acl->deny(null, null, null, new TestAsset\MockAssertion(false));
+        $this->assertTrue($this->acl->isAllowed());
+        $this->acl->removeDeny();
+        $this->assertFalse($this->acl->isAllowed());
     }
 
     /**
@@ -729,10 +747,10 @@ class AclTest extends TestCase
      */
     public function testRemoveDefaultAllow()
     {
-        $this->_acl->allow();
-        $this->assertTrue($this->_acl->isAllowed());
-        $this->_acl->removeAllow();
-        $this->assertFalse($this->_acl->isAllowed());
+        $this->acl->allow();
+        $this->assertTrue($this->acl->isAllowed());
+        $this->acl->removeAllow();
+        $this->assertFalse($this->acl->isAllowed());
     }
 
     /**
@@ -742,8 +760,8 @@ class AclTest extends TestCase
      */
     public function testRemoveDefaultAllowNonExistent()
     {
-        $this->_acl->removeAllow();
-        $this->assertFalse($this->_acl->isAllowed());
+        $this->acl->removeAllow();
+        $this->assertFalse($this->acl->isAllowed());
     }
 
     /**
@@ -753,9 +771,9 @@ class AclTest extends TestCase
      */
     public function testRemoveDefaultDenyNonExistent()
     {
-        $this->_acl->allow()
+        $this->acl->allow()
                    ->removeDeny();
-        $this->assertTrue($this->_acl->isAllowed());
+        $this->assertTrue($this->acl->isAllowed());
     }
 
     /**
@@ -766,14 +784,14 @@ class AclTest extends TestCase
      */
     public function testRoleDefaultAllowRuleWithResourceDenyRule()
     {
-        $this->_acl->addRole(new Role\GenericRole('guest'))
+        $this->acl->addRole(new Role\GenericRole('guest'))
                    ->addRole(new Role\GenericRole('staff'), 'guest')
                    ->addResource(new Resource\GenericResource('area1'))
                    ->addResource(new Resource\GenericResource('area2'))
                    ->deny()
                    ->allow('staff')
                    ->deny('staff', ['area1', 'area2']);
-        $this->assertFalse($this->_acl->isAllowed('staff', 'area1'));
+        $this->assertFalse($this->acl->isAllowed('staff', 'area1'));
     }
 
     /**
@@ -784,12 +802,12 @@ class AclTest extends TestCase
      */
     public function testRoleDefaultAllowRuleWithPrivilegeDenyRule()
     {
-        $this->_acl->addRole(new Role\GenericRole('guest'))
+        $this->acl->addRole(new Role\GenericRole('guest'))
                    ->addRole(new Role\GenericRole('staff'), 'guest')
                    ->deny()
                    ->allow('staff')
                    ->deny('staff', null, ['privilege1', 'privilege2']);
-        $this->assertFalse($this->_acl->isAllowed('staff', null, 'privilege1'));
+        $this->assertFalse($this->acl->isAllowed('staff', null, 'privilege1'));
     }
 
     /**
@@ -799,13 +817,13 @@ class AclTest extends TestCase
      */
     public function testRulesRemove()
     {
-        $this->_acl->allow(null, null, ['privilege1', 'privilege2']);
-        $this->assertFalse($this->_acl->isAllowed());
-        $this->assertTrue($this->_acl->isAllowed(null, null, 'privilege1'));
-        $this->assertTrue($this->_acl->isAllowed(null, null, 'privilege2'));
-        $this->_acl->removeAllow(null, null, 'privilege1');
-        $this->assertFalse($this->_acl->isAllowed(null, null, 'privilege1'));
-        $this->assertTrue($this->_acl->isAllowed(null, null, 'privilege2'));
+        $this->acl->allow(null, null, ['privilege1', 'privilege2']);
+        $this->assertFalse($this->acl->isAllowed());
+        $this->assertTrue($this->acl->isAllowed(null, null, 'privilege1'));
+        $this->assertTrue($this->acl->isAllowed(null, null, 'privilege2'));
+        $this->acl->removeAllow(null, null, 'privilege1');
+        $this->assertFalse($this->acl->isAllowed(null, null, 'privilege1'));
+        $this->assertTrue($this->acl->isAllowed(null, null, 'privilege2'));
     }
 
     /**
@@ -815,18 +833,20 @@ class AclTest extends TestCase
      */
     public function testRuleRoleRemove()
     {
-        $this->_acl->addRole(new Role\GenericRole('guest'))
+        $this->acl->addRole(new Role\GenericRole('guest'))
                    ->allow('guest');
-        $this->assertTrue($this->_acl->isAllowed('guest'));
-        $this->_acl->removeRole('guest');
+        $this->assertTrue($this->acl->isAllowed('guest'));
+        $this->acl->removeRole('guest');
         try {
-            $this->_acl->isAllowed('guest');
-            $this->fail('Expected Zend\Permissions\Acl\Role\Exception not thrown upon isAllowed() on non-existent Role');
+            $this->acl->isAllowed('guest');
+            $this->fail(
+                'Expected Zend\Permissions\Acl\Role\Exception not thrown upon isAllowed() on non-existent Role'
+            );
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertContains('not found', $e->getMessage());
         }
-        $this->_acl->addRole(new Role\GenericRole('guest'));
-        $this->assertFalse($this->_acl->isAllowed('guest'));
+        $this->acl->addRole(new Role\GenericRole('guest'));
+        $this->assertFalse($this->acl->isAllowed('guest'));
     }
 
     /**
@@ -836,18 +856,20 @@ class AclTest extends TestCase
      */
     public function testRuleRoleRemoveAll()
     {
-        $this->_acl->addRole(new Role\GenericRole('guest'))
+        $this->acl->addRole(new Role\GenericRole('guest'))
                    ->allow('guest');
-        $this->assertTrue($this->_acl->isAllowed('guest'));
-        $this->_acl->removeRoleAll();
+        $this->assertTrue($this->acl->isAllowed('guest'));
+        $this->acl->removeRoleAll();
         try {
-            $this->_acl->isAllowed('guest');
-            $this->fail('Expected Zend\Permissions\Acl\Role\Exception not thrown upon isAllowed() on non-existent Role');
+            $this->acl->isAllowed('guest');
+            $this->fail(
+                'Expected Zend\Permissions\Acl\Role\Exception not thrown upon isAllowed() on non-existent Role'
+            );
         } catch (Acl\Exception\InvalidArgumentException $e) {
             $this->assertContains('not found', $e->getMessage());
         }
-        $this->_acl->addRole(new Role\GenericRole('guest'));
-        $this->assertFalse($this->_acl->isAllowed('guest'));
+        $this->acl->addRole(new Role\GenericRole('guest'));
+        $this->assertFalse($this->acl->isAllowed('guest'));
     }
 
     /**
@@ -857,18 +879,20 @@ class AclTest extends TestCase
      */
     public function testRulesResourceRemove()
     {
-        $this->_acl->addResource(new Resource\GenericResource('area'))
+        $this->acl->addResource(new Resource\GenericResource('area'))
                    ->allow(null, 'area');
-        $this->assertTrue($this->_acl->isAllowed(null, 'area'));
-        $this->_acl->removeResource('area');
+        $this->assertTrue($this->acl->isAllowed(null, 'area'));
+        $this->acl->removeResource('area');
         try {
-            $this->_acl->isAllowed(null, 'area');
-            $this->fail('Expected Zend\Permissions\Acl\Exception not thrown upon isAllowed() on non-existent Resource');
+            $this->acl->isAllowed(null, 'area');
+            $this->fail(
+                'Expected Zend\Permissions\Acl\Exception not thrown upon isAllowed() on non-existent Resource'
+            );
         } catch (Acl\Exception\ExceptionInterface $e) {
             $this->assertContains('not found', $e->getMessage());
         }
-        $this->_acl->addResource(new Resource\GenericResource('area'));
-        $this->assertFalse($this->_acl->isAllowed(null, 'area'));
+        $this->acl->addResource(new Resource\GenericResource('area'));
+        $this->assertFalse($this->acl->isAllowed(null, 'area'));
     }
 
     /**
@@ -878,18 +902,21 @@ class AclTest extends TestCase
      */
     public function testRulesResourceRemoveAll()
     {
-        $this->_acl->addResource(new Resource\GenericResource('area'))
+        $this->acl->addResource(new Resource\GenericResource('area'))
                    ->allow(null, 'area');
-        $this->assertTrue($this->_acl->isAllowed(null, 'area'));
-        $this->_acl->removeResourceAll();
+        $this->assertTrue($this->acl->isAllowed(null, 'area'));
+        $this->acl->removeResourceAll();
         try {
-            $this->_acl->isAllowed(null, 'area');
-            $this->fail('Expected Zend\Permissions\Acl\Exception\ExceptionInterface not thrown upon isAllowed() on non-existent Resource');
+            $this->acl->isAllowed(null, 'area');
+            $this->fail(
+                'Expected Zend\Permissions\Acl\Exception\ExceptionInterface not thrown upon '
+                . 'isAllowed() on non-existent Resource'
+            );
         } catch (Acl\Exception\ExceptionInterface $e) {
             $this->assertContains('not found', $e->getMessage());
         }
-        $this->_acl->addResource(new Resource\GenericResource('area'));
-        $this->assertFalse($this->_acl->isAllowed(null, 'area'));
+        $this->acl->addResource(new Resource\GenericResource('area'));
+        $this->assertFalse($this->acl->isAllowed(null, 'area'));
     }
 
     /**
@@ -900,162 +927,162 @@ class AclTest extends TestCase
     public function testCMSExample()
     {
         // Add some roles to the Role registry
-        $this->_acl->addRole(new Role\GenericRole('guest'))
+        $this->acl->addRole(new Role\GenericRole('guest'))
                    ->addRole(new Role\GenericRole('staff'), 'guest')  // staff inherits permissions from guest
                    ->addRole(new Role\GenericRole('editor'), 'staff') // editor inherits permissions from staff
                    ->addRole(new Role\GenericRole('administrator'));
 
         // Guest may only view content
-        $this->_acl->allow('guest', null, 'view');
+        $this->acl->allow('guest', null, 'view');
 
         // Staff inherits view privilege from guest, but also needs additional privileges
-        $this->_acl->allow('staff', null, ['edit', 'submit', 'revise']);
+        $this->acl->allow('staff', null, ['edit', 'submit', 'revise']);
 
         // Editor inherits view, edit, submit, and revise privileges, but also needs additional privileges
-        $this->_acl->allow('editor', null, ['publish', 'archive', 'delete']);
+        $this->acl->allow('editor', null, ['publish', 'archive', 'delete']);
 
         // Administrator inherits nothing but is allowed all privileges
-        $this->_acl->allow('administrator');
+        $this->acl->allow('administrator');
 
         // Access control checks based on above permission sets
 
-        $this->assertTrue($this->_acl->isAllowed('guest', null, 'view'));
-        $this->assertFalse($this->_acl->isAllowed('guest', null, 'edit'));
-        $this->assertFalse($this->_acl->isAllowed('guest', null, 'submit'));
-        $this->assertFalse($this->_acl->isAllowed('guest', null, 'revise'));
-        $this->assertFalse($this->_acl->isAllowed('guest', null, 'publish'));
-        $this->assertFalse($this->_acl->isAllowed('guest', null, 'archive'));
-        $this->assertFalse($this->_acl->isAllowed('guest', null, 'delete'));
-        $this->assertFalse($this->_acl->isAllowed('guest', null, 'unknown'));
-        $this->assertFalse($this->_acl->isAllowed('guest'));
+        $this->assertTrue($this->acl->isAllowed('guest', null, 'view'));
+        $this->assertFalse($this->acl->isAllowed('guest', null, 'edit'));
+        $this->assertFalse($this->acl->isAllowed('guest', null, 'submit'));
+        $this->assertFalse($this->acl->isAllowed('guest', null, 'revise'));
+        $this->assertFalse($this->acl->isAllowed('guest', null, 'publish'));
+        $this->assertFalse($this->acl->isAllowed('guest', null, 'archive'));
+        $this->assertFalse($this->acl->isAllowed('guest', null, 'delete'));
+        $this->assertFalse($this->acl->isAllowed('guest', null, 'unknown'));
+        $this->assertFalse($this->acl->isAllowed('guest'));
 
-        $this->assertTrue($this->_acl->isAllowed('staff', null, 'view'));
-        $this->assertTrue($this->_acl->isAllowed('staff', null, 'edit'));
-        $this->assertTrue($this->_acl->isAllowed('staff', null, 'submit'));
-        $this->assertTrue($this->_acl->isAllowed('staff', null, 'revise'));
-        $this->assertFalse($this->_acl->isAllowed('staff', null, 'publish'));
-        $this->assertFalse($this->_acl->isAllowed('staff', null, 'archive'));
-        $this->assertFalse($this->_acl->isAllowed('staff', null, 'delete'));
-        $this->assertFalse($this->_acl->isAllowed('staff', null, 'unknown'));
-        $this->assertFalse($this->_acl->isAllowed('staff'));
+        $this->assertTrue($this->acl->isAllowed('staff', null, 'view'));
+        $this->assertTrue($this->acl->isAllowed('staff', null, 'edit'));
+        $this->assertTrue($this->acl->isAllowed('staff', null, 'submit'));
+        $this->assertTrue($this->acl->isAllowed('staff', null, 'revise'));
+        $this->assertFalse($this->acl->isAllowed('staff', null, 'publish'));
+        $this->assertFalse($this->acl->isAllowed('staff', null, 'archive'));
+        $this->assertFalse($this->acl->isAllowed('staff', null, 'delete'));
+        $this->assertFalse($this->acl->isAllowed('staff', null, 'unknown'));
+        $this->assertFalse($this->acl->isAllowed('staff'));
 
-        $this->assertTrue($this->_acl->isAllowed('editor', null, 'view'));
-        $this->assertTrue($this->_acl->isAllowed('editor', null, 'edit'));
-        $this->assertTrue($this->_acl->isAllowed('editor', null, 'submit'));
-        $this->assertTrue($this->_acl->isAllowed('editor', null, 'revise'));
-        $this->assertTrue($this->_acl->isAllowed('editor', null, 'publish'));
-        $this->assertTrue($this->_acl->isAllowed('editor', null, 'archive'));
-        $this->assertTrue($this->_acl->isAllowed('editor', null, 'delete'));
-        $this->assertFalse($this->_acl->isAllowed('editor', null, 'unknown'));
-        $this->assertFalse($this->_acl->isAllowed('editor'));
+        $this->assertTrue($this->acl->isAllowed('editor', null, 'view'));
+        $this->assertTrue($this->acl->isAllowed('editor', null, 'edit'));
+        $this->assertTrue($this->acl->isAllowed('editor', null, 'submit'));
+        $this->assertTrue($this->acl->isAllowed('editor', null, 'revise'));
+        $this->assertTrue($this->acl->isAllowed('editor', null, 'publish'));
+        $this->assertTrue($this->acl->isAllowed('editor', null, 'archive'));
+        $this->assertTrue($this->acl->isAllowed('editor', null, 'delete'));
+        $this->assertFalse($this->acl->isAllowed('editor', null, 'unknown'));
+        $this->assertFalse($this->acl->isAllowed('editor'));
 
-        $this->assertTrue($this->_acl->isAllowed('administrator', null, 'view'));
-        $this->assertTrue($this->_acl->isAllowed('administrator', null, 'edit'));
-        $this->assertTrue($this->_acl->isAllowed('administrator', null, 'submit'));
-        $this->assertTrue($this->_acl->isAllowed('administrator', null, 'revise'));
-        $this->assertTrue($this->_acl->isAllowed('administrator', null, 'publish'));
-        $this->assertTrue($this->_acl->isAllowed('administrator', null, 'archive'));
-        $this->assertTrue($this->_acl->isAllowed('administrator', null, 'delete'));
-        $this->assertTrue($this->_acl->isAllowed('administrator', null, 'unknown'));
-        $this->assertTrue($this->_acl->isAllowed('administrator'));
+        $this->assertTrue($this->acl->isAllowed('administrator', null, 'view'));
+        $this->assertTrue($this->acl->isAllowed('administrator', null, 'edit'));
+        $this->assertTrue($this->acl->isAllowed('administrator', null, 'submit'));
+        $this->assertTrue($this->acl->isAllowed('administrator', null, 'revise'));
+        $this->assertTrue($this->acl->isAllowed('administrator', null, 'publish'));
+        $this->assertTrue($this->acl->isAllowed('administrator', null, 'archive'));
+        $this->assertTrue($this->acl->isAllowed('administrator', null, 'delete'));
+        $this->assertTrue($this->acl->isAllowed('administrator', null, 'unknown'));
+        $this->assertTrue($this->acl->isAllowed('administrator'));
 
         // Some checks on specific areas, which inherit access controls from the root ACL node
-        $this->_acl->addResource(new Resource\GenericResource('newsletter'))
+        $this->acl->addResource(new Resource\GenericResource('newsletter'))
                    ->addResource(new Resource\GenericResource('pending'), 'newsletter')
                    ->addResource(new Resource\GenericResource('gallery'))
                    ->addResource(new Resource\GenericResource('profiles', 'gallery'))
                    ->addResource(new Resource\GenericResource('config'))
                    ->addResource(new Resource\GenericResource('hosts'), 'config');
-        $this->assertTrue($this->_acl->isAllowed('guest', 'pending', 'view'));
-        $this->assertTrue($this->_acl->isAllowed('staff', 'profiles', 'revise'));
-        $this->assertTrue($this->_acl->isAllowed('staff', 'pending', 'view'));
-        $this->assertTrue($this->_acl->isAllowed('staff', 'pending', 'edit'));
-        $this->assertFalse($this->_acl->isAllowed('staff', 'pending', 'publish'));
-        $this->assertFalse($this->_acl->isAllowed('staff', 'pending'));
-        $this->assertFalse($this->_acl->isAllowed('editor', 'hosts', 'unknown'));
-        $this->assertTrue($this->_acl->isAllowed('administrator', 'pending'));
+        $this->assertTrue($this->acl->isAllowed('guest', 'pending', 'view'));
+        $this->assertTrue($this->acl->isAllowed('staff', 'profiles', 'revise'));
+        $this->assertTrue($this->acl->isAllowed('staff', 'pending', 'view'));
+        $this->assertTrue($this->acl->isAllowed('staff', 'pending', 'edit'));
+        $this->assertFalse($this->acl->isAllowed('staff', 'pending', 'publish'));
+        $this->assertFalse($this->acl->isAllowed('staff', 'pending'));
+        $this->assertFalse($this->acl->isAllowed('editor', 'hosts', 'unknown'));
+        $this->assertTrue($this->acl->isAllowed('administrator', 'pending'));
 
         // Add a new group, marketing, which bases its permissions on staff
-        $this->_acl->addRole(new Role\GenericRole('marketing'), 'staff');
+        $this->acl->addRole(new Role\GenericRole('marketing'), 'staff');
 
         // Refine the privilege sets for more specific needs
 
         // Allow marketing to publish and archive newsletters
-        $this->_acl->allow('marketing', 'newsletter', ['publish', 'archive']);
+        $this->acl->allow('marketing', 'newsletter', ['publish', 'archive']);
 
         // Allow marketing to publish and archive latest news
-        $this->_acl->addResource(new Resource\GenericResource('news'))
+        $this->acl->addResource(new Resource\GenericResource('news'))
                    ->addResource(new Resource\GenericResource('latest'), 'news');
-        $this->_acl->allow('marketing', 'latest', ['publish', 'archive']);
+        $this->acl->allow('marketing', 'latest', ['publish', 'archive']);
 
         // Deny staff (and marketing, by inheritance) rights to revise latest news
-        $this->_acl->deny('staff', 'latest', 'revise');
+        $this->acl->deny('staff', 'latest', 'revise');
 
         // Deny everyone access to archive news announcements
-        $this->_acl->addResource(new Resource\GenericResource('announcement'), 'news');
-        $this->_acl->deny(null, 'announcement', 'archive');
+        $this->acl->addResource(new Resource\GenericResource('announcement'), 'news');
+        $this->acl->deny(null, 'announcement', 'archive');
 
         // Access control checks for the above refined permission sets
 
-        $this->assertTrue($this->_acl->isAllowed('marketing', null, 'view'));
-        $this->assertTrue($this->_acl->isAllowed('marketing', null, 'edit'));
-        $this->assertTrue($this->_acl->isAllowed('marketing', null, 'submit'));
-        $this->assertTrue($this->_acl->isAllowed('marketing', null, 'revise'));
-        $this->assertFalse($this->_acl->isAllowed('marketing', null, 'publish'));
-        $this->assertFalse($this->_acl->isAllowed('marketing', null, 'archive'));
-        $this->assertFalse($this->_acl->isAllowed('marketing', null, 'delete'));
-        $this->assertFalse($this->_acl->isAllowed('marketing', null, 'unknown'));
-        $this->assertFalse($this->_acl->isAllowed('marketing'));
+        $this->assertTrue($this->acl->isAllowed('marketing', null, 'view'));
+        $this->assertTrue($this->acl->isAllowed('marketing', null, 'edit'));
+        $this->assertTrue($this->acl->isAllowed('marketing', null, 'submit'));
+        $this->assertTrue($this->acl->isAllowed('marketing', null, 'revise'));
+        $this->assertFalse($this->acl->isAllowed('marketing', null, 'publish'));
+        $this->assertFalse($this->acl->isAllowed('marketing', null, 'archive'));
+        $this->assertFalse($this->acl->isAllowed('marketing', null, 'delete'));
+        $this->assertFalse($this->acl->isAllowed('marketing', null, 'unknown'));
+        $this->assertFalse($this->acl->isAllowed('marketing'));
 
-        $this->assertTrue($this->_acl->isAllowed('marketing', 'newsletter', 'publish'));
-        $this->assertFalse($this->_acl->isAllowed('staff', 'pending', 'publish'));
-        $this->assertTrue($this->_acl->isAllowed('marketing', 'pending', 'publish'));
-        $this->assertTrue($this->_acl->isAllowed('marketing', 'newsletter', 'archive'));
-        $this->assertFalse($this->_acl->isAllowed('marketing', 'newsletter', 'delete'));
-        $this->assertFalse($this->_acl->isAllowed('marketing', 'newsletter'));
+        $this->assertTrue($this->acl->isAllowed('marketing', 'newsletter', 'publish'));
+        $this->assertFalse($this->acl->isAllowed('staff', 'pending', 'publish'));
+        $this->assertTrue($this->acl->isAllowed('marketing', 'pending', 'publish'));
+        $this->assertTrue($this->acl->isAllowed('marketing', 'newsletter', 'archive'));
+        $this->assertFalse($this->acl->isAllowed('marketing', 'newsletter', 'delete'));
+        $this->assertFalse($this->acl->isAllowed('marketing', 'newsletter'));
 
-        $this->assertTrue($this->_acl->isAllowed('marketing', 'latest', 'publish'));
-        $this->assertTrue($this->_acl->isAllowed('marketing', 'latest', 'archive'));
-        $this->assertFalse($this->_acl->isAllowed('marketing', 'latest', 'delete'));
-        $this->assertFalse($this->_acl->isAllowed('marketing', 'latest', 'revise'));
-        $this->assertFalse($this->_acl->isAllowed('marketing', 'latest'));
+        $this->assertTrue($this->acl->isAllowed('marketing', 'latest', 'publish'));
+        $this->assertTrue($this->acl->isAllowed('marketing', 'latest', 'archive'));
+        $this->assertFalse($this->acl->isAllowed('marketing', 'latest', 'delete'));
+        $this->assertFalse($this->acl->isAllowed('marketing', 'latest', 'revise'));
+        $this->assertFalse($this->acl->isAllowed('marketing', 'latest'));
 
-        $this->assertFalse($this->_acl->isAllowed('marketing', 'announcement', 'archive'));
-        $this->assertFalse($this->_acl->isAllowed('staff', 'announcement', 'archive'));
-        $this->assertFalse($this->_acl->isAllowed('administrator', 'announcement', 'archive'));
+        $this->assertFalse($this->acl->isAllowed('marketing', 'announcement', 'archive'));
+        $this->assertFalse($this->acl->isAllowed('staff', 'announcement', 'archive'));
+        $this->assertFalse($this->acl->isAllowed('administrator', 'announcement', 'archive'));
 
-        $this->assertFalse($this->_acl->isAllowed('staff', 'latest', 'publish'));
-        $this->assertFalse($this->_acl->isAllowed('editor', 'announcement', 'archive'));
+        $this->assertFalse($this->acl->isAllowed('staff', 'latest', 'publish'));
+        $this->assertFalse($this->acl->isAllowed('editor', 'announcement', 'archive'));
 
         // Remove some previous permission specifications
 
         // Marketing can no longer publish and archive newsletters
-        $this->_acl->removeAllow('marketing', 'newsletter', ['publish', 'archive']);
+        $this->acl->removeAllow('marketing', 'newsletter', ['publish', 'archive']);
 
         // Marketing can no longer archive the latest news
-        $this->_acl->removeAllow('marketing', 'latest', 'archive');
+        $this->acl->removeAllow('marketing', 'latest', 'archive');
 
         // Now staff (and marketing, by inheritance) may revise latest news
-        $this->_acl->removeDeny('staff', 'latest', 'revise');
+        $this->acl->removeDeny('staff', 'latest', 'revise');
 
         // Access control checks for the above refinements
 
-        $this->assertFalse($this->_acl->isAllowed('marketing', 'newsletter', 'publish'));
-        $this->assertFalse($this->_acl->isAllowed('marketing', 'newsletter', 'archive'));
+        $this->assertFalse($this->acl->isAllowed('marketing', 'newsletter', 'publish'));
+        $this->assertFalse($this->acl->isAllowed('marketing', 'newsletter', 'archive'));
 
-        $this->assertFalse($this->_acl->isAllowed('marketing', 'latest', 'archive'));
+        $this->assertFalse($this->acl->isAllowed('marketing', 'latest', 'archive'));
 
-        $this->assertTrue($this->_acl->isAllowed('staff', 'latest', 'revise'));
-        $this->assertTrue($this->_acl->isAllowed('marketing', 'latest', 'revise'));
+        $this->assertTrue($this->acl->isAllowed('staff', 'latest', 'revise'));
+        $this->assertTrue($this->acl->isAllowed('marketing', 'latest', 'revise'));
 
         // Grant marketing all permissions on the latest news
-        $this->_acl->allow('marketing', 'latest');
+        $this->acl->allow('marketing', 'latest');
 
         // Access control checks for the above refinement
-        $this->assertTrue($this->_acl->isAllowed('marketing', 'latest', 'archive'));
-        $this->assertTrue($this->_acl->isAllowed('marketing', 'latest', 'publish'));
-        $this->assertTrue($this->_acl->isAllowed('marketing', 'latest', 'edit'));
-        $this->assertTrue($this->_acl->isAllowed('marketing', 'latest'));
+        $this->assertTrue($this->acl->isAllowed('marketing', 'latest', 'archive'));
+        $this->assertTrue($this->acl->isAllowed('marketing', 'latest', 'publish'));
+        $this->assertTrue($this->acl->isAllowed('marketing', 'latest', 'edit'));
+        $this->assertTrue($this->acl->isAllowed('marketing', 'latest'));
     }
 
     /**
@@ -1066,10 +1093,10 @@ class AclTest extends TestCase
      */
     public function testRoleInheritanceSupportsCheckingOnlyParents()
     {
-        $this->_acl->addRole(new Role\GenericRole('grandparent'))
+        $this->acl->addRole(new Role\GenericRole('grandparent'))
                    ->addRole(new Role\GenericRole('parent'), 'grandparent')
                    ->addRole(new Role\GenericRole('child'), 'parent');
-        $this->assertFalse($this->_acl->inheritsRole('child', 'grandparent', true));
+        $this->assertFalse($this->acl->inheritsRole('child', 'grandparent', true));
     }
 
     /**
@@ -1126,7 +1153,7 @@ class AclTest extends TestCase
      */
     public function testAclAssertionsGetProperRoleWhenInheritenceIsUsed()
     {
-        $acl = $this->_loadUseCase1();
+        $acl = $this->loadUseCase1();
 
         $user = new Role\GenericRole('publisher');
         $blogPost = new Resource\GenericResource('blogPost');
@@ -1147,7 +1174,7 @@ class AclTest extends TestCase
      */
     public function testAclAssertionsGetOriginalIsAllowedObjects()
     {
-        $acl = $this->_loadUseCase1();
+        $acl = $this->loadUseCase1();
 
         $user     = new TestAsset\UseCase1\User();
         $blogPost = new TestAsset\UseCase1\BlogPost();
@@ -1166,15 +1193,23 @@ class AclTest extends TestCase
         $this->assertFalse($acl->isAllowed($user, $blogPost, 'modify'), 'Assertion should return false');
 
         // check to see if the last assertion has the proper objects
-        $this->assertInstanceOf('ZendTest\Permissions\Acl\TestAsset\UseCase1\User', $assertion->lastAssertRole, 'Assertion did not receive proper role object');
-        $this->assertInstanceOf('ZendTest\Permissions\Acl\TestAsset\UseCase1\BlogPost', $assertion->lastAssertResource, 'Assertion did not receive proper resource object');
+        $this->assertInstanceOf(
+            'ZendTest\Permissions\Acl\TestAsset\UseCase1\User',
+            $assertion->lastAssertRole,
+            'Assertion did not receive proper role object'
+        );
+        $this->assertInstanceOf(
+            'ZendTest\Permissions\Acl\TestAsset\UseCase1\BlogPost',
+            $assertion->lastAssertResource,
+            'Assertion did not receive proper resource object'
+        );
     }
 
     /**
      *
      * @return Zend_Acl_UseCase1_Acl
      */
-    protected function _loadUseCase1()
+    protected function loadUseCase1()
     {
         return new TestAsset\UseCase1\Acl();
     }
@@ -1252,16 +1287,16 @@ class AclTest extends TestCase
      */
     public function testgetRoles()
     {
-        $this->assertEquals([], $this->_acl->getRoles());
+        $this->assertEquals([], $this->acl->getRoles());
 
         $roleGuest = new Role\GenericRole('guest');
-        $this->_acl->addRole($roleGuest);
-        $this->_acl->addRole(new Role\GenericRole('staff'), $roleGuest);
-        $this->_acl->addRole(new Role\GenericRole('editor'), 'staff');
-        $this->_acl->addRole(new Role\GenericRole('administrator'));
+        $this->acl->addRole($roleGuest);
+        $this->acl->addRole(new Role\GenericRole('staff'), $roleGuest);
+        $this->acl->addRole(new Role\GenericRole('editor'), 'staff');
+        $this->acl->addRole(new Role\GenericRole('administrator'));
 
         $expected = ['guest', 'staff','editor','administrator'];
-        $this->assertEquals($expected, $this->_acl->getRoles());
+        $this->assertEquals($expected, $this->acl->getRoles());
     }
 
     /**
@@ -1269,13 +1304,13 @@ class AclTest extends TestCase
      */
     public function testgetResources()
     {
-        $this->assertEquals([], $this->_acl->getResources());
+        $this->assertEquals([], $this->acl->getResources());
 
-        $this->_acl->addResource(new Resource\GenericResource('someResource'));
-        $this->_acl->addResource(new Resource\GenericResource('someOtherResource'));
+        $this->acl->addResource(new Resource\GenericResource('someResource'));
+        $this->acl->addResource(new Resource\GenericResource('someOtherResource'));
 
         $expected = ['someResource', 'someOtherResource'];
-        $this->assertEquals($expected, $this->_acl->getResources());
+        $this->assertEquals($expected, $this->acl->getResources());
     }
 
     /**
@@ -1283,26 +1318,26 @@ class AclTest extends TestCase
      */
     public function testRemoveAllowWithNullResourceAppliesToAllResources()
     {
-        $this->_acl->addRole('guest');
-        $this->_acl->addResource('blogpost');
-        $this->_acl->addResource('newsletter');
-        $this->_acl->allow('guest', 'blogpost', 'read');
-        $this->_acl->allow('guest', 'newsletter', 'read');
-        $this->assertTrue($this->_acl->isAllowed('guest', 'blogpost', 'read'));
-        $this->assertTrue($this->_acl->isAllowed('guest', 'newsletter', 'read'));
+        $this->acl->addRole('guest');
+        $this->acl->addResource('blogpost');
+        $this->acl->addResource('newsletter');
+        $this->acl->allow('guest', 'blogpost', 'read');
+        $this->acl->allow('guest', 'newsletter', 'read');
+        $this->assertTrue($this->acl->isAllowed('guest', 'blogpost', 'read'));
+        $this->assertTrue($this->acl->isAllowed('guest', 'newsletter', 'read'));
 
-        $this->_acl->removeAllow('guest', 'newsletter', 'read');
-        $this->assertTrue($this->_acl->isAllowed('guest', 'blogpost', 'read'));
-        $this->assertFalse($this->_acl->isAllowed('guest', 'newsletter', 'read'));
+        $this->acl->removeAllow('guest', 'newsletter', 'read');
+        $this->assertTrue($this->acl->isAllowed('guest', 'blogpost', 'read'));
+        $this->assertFalse($this->acl->isAllowed('guest', 'newsletter', 'read'));
 
-        $this->_acl->removeAllow('guest', null, 'read');
-        $this->assertFalse($this->_acl->isAllowed('guest', 'blogpost', 'read'));
-        $this->assertFalse($this->_acl->isAllowed('guest', 'newsletter', 'read'));
+        $this->acl->removeAllow('guest', null, 'read');
+        $this->assertFalse($this->acl->isAllowed('guest', 'blogpost', 'read'));
+        $this->assertFalse($this->acl->isAllowed('guest', 'newsletter', 'read'));
 
         // ensure allow null/all resoures works
-        $this->_acl->allow('guest', null, 'read');
-        $this->assertTrue($this->_acl->isAllowed('guest', 'blogpost', 'read'));
-        $this->assertTrue($this->_acl->isAllowed('guest', 'newsletter', 'read'));
+        $this->acl->allow('guest', null, 'read');
+        $this->assertTrue($this->acl->isAllowed('guest', 'blogpost', 'read'));
+        $this->assertTrue($this->acl->isAllowed('guest', 'newsletter', 'read'));
     }
 
     /**
@@ -1310,28 +1345,28 @@ class AclTest extends TestCase
      */
     public function testRemoveDenyWithNullResourceAppliesToAllResources()
     {
-        $this->_acl->addRole('guest');
-        $this->_acl->addResource('blogpost');
-        $this->_acl->addResource('newsletter');
+        $this->acl->addRole('guest');
+        $this->acl->addResource('blogpost');
+        $this->acl->addResource('newsletter');
 
-        $this->_acl->allow();
-        $this->_acl->deny('guest', 'blogpost', 'read');
-        $this->_acl->deny('guest', 'newsletter', 'read');
-        $this->assertFalse($this->_acl->isAllowed('guest', 'blogpost', 'read'));
-        $this->assertFalse($this->_acl->isAllowed('guest', 'newsletter', 'read'));
+        $this->acl->allow();
+        $this->acl->deny('guest', 'blogpost', 'read');
+        $this->acl->deny('guest', 'newsletter', 'read');
+        $this->assertFalse($this->acl->isAllowed('guest', 'blogpost', 'read'));
+        $this->assertFalse($this->acl->isAllowed('guest', 'newsletter', 'read'));
 
-        $this->_acl->removeDeny('guest', 'newsletter', 'read');
-        $this->assertFalse($this->_acl->isAllowed('guest', 'blogpost', 'read'));
-        $this->assertTrue($this->_acl->isAllowed('guest', 'newsletter', 'read'));
+        $this->acl->removeDeny('guest', 'newsletter', 'read');
+        $this->assertFalse($this->acl->isAllowed('guest', 'blogpost', 'read'));
+        $this->assertTrue($this->acl->isAllowed('guest', 'newsletter', 'read'));
 
-        $this->_acl->removeDeny('guest', null, 'read');
-        $this->assertTrue($this->_acl->isAllowed('guest', 'blogpost', 'read'));
-        $this->assertTrue($this->_acl->isAllowed('guest', 'newsletter', 'read'));
+        $this->acl->removeDeny('guest', null, 'read');
+        $this->assertTrue($this->acl->isAllowed('guest', 'blogpost', 'read'));
+        $this->assertTrue($this->acl->isAllowed('guest', 'newsletter', 'read'));
 
         // ensure deny null/all resources works
-        $this->_acl->deny('guest', null, 'read');
-        $this->assertFalse($this->_acl->isAllowed('guest', 'blogpost', 'read'));
-        $this->assertFalse($this->_acl->isAllowed('guest', 'newsletter', 'read'));
+        $this->acl->deny('guest', null, 'read');
+        $this->assertFalse($this->acl->isAllowed('guest', 'blogpost', 'read'));
+        $this->assertFalse($this->acl->isAllowed('guest', 'newsletter', 'read'));
     }
 
     /**
@@ -1339,36 +1374,36 @@ class AclTest extends TestCase
      */
     public function testAclResourcePermissionsAreInheritedWithMultilevelResourcesAndDenyPolicy()
     {
-        $this->_acl->addRole('guest');
-        $this->_acl->addResource('blogposts');
-        $this->_acl->addResource('feature', 'blogposts');
-        $this->_acl->addResource('post_1', 'feature');
-        $this->_acl->addResource('post_2', 'feature');
+        $this->acl->addRole('guest');
+        $this->acl->addResource('blogposts');
+        $this->acl->addResource('feature', 'blogposts');
+        $this->acl->addResource('post_1', 'feature');
+        $this->acl->addResource('post_2', 'feature');
 
         // Allow a guest to read feature posts and
         // comment on everything except feature posts.
-        $this->_acl->deny();
-        $this->_acl->allow('guest', 'feature', 'read');
-        $this->_acl->allow('guest', null, 'comment');
-        $this->_acl->deny('guest', 'feature', 'comment');
+        $this->acl->deny();
+        $this->acl->allow('guest', 'feature', 'read');
+        $this->acl->allow('guest', null, 'comment');
+        $this->acl->deny('guest', 'feature', 'comment');
 
-        $this->assertFalse($this->_acl->isAllowed('guest', 'feature', 'write'));
-        $this->assertTrue($this->_acl->isAllowed('guest', 'post_1', 'read'));
-        $this->assertTrue($this->_acl->isAllowed('guest', 'post_2', 'read'));
+        $this->assertFalse($this->acl->isAllowed('guest', 'feature', 'write'));
+        $this->assertTrue($this->acl->isAllowed('guest', 'post_1', 'read'));
+        $this->assertTrue($this->acl->isAllowed('guest', 'post_2', 'read'));
 
-        $this->assertFalse($this->_acl->isAllowed('guest', 'post_1', 'comment'));
-        $this->assertFalse($this->_acl->isAllowed('guest', 'post_2', 'comment'));
+        $this->assertFalse($this->acl->isAllowed('guest', 'post_1', 'comment'));
+        $this->assertFalse($this->acl->isAllowed('guest', 'post_2', 'comment'));
     }
 
     public function testSetRuleWorksWithResourceInterface()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->_acl->addRole($roleGuest);
+        $this->acl->addRole($roleGuest);
 
         $resourceFoo = new Resource\GenericResource('foo');
-        $this->_acl->addResource($resourceFoo);
+        $this->acl->addResource($resourceFoo);
 
-        $this->_acl->setRule(Acl\Acl::OP_ADD, Acl\Acl::TYPE_ALLOW, $roleGuest, $resourceFoo);
+        $this->acl->setRule(Acl\Acl::OP_ADD, Acl\Acl::TYPE_ALLOW, $roleGuest, $resourceFoo);
 
         $this->assertTrue(true);
     }
@@ -1378,9 +1413,9 @@ class AclTest extends TestCase
      */
     public function testAllowNullPermissionAfterResourcesExistShouldAllowAllPermissionsForRole()
     {
-        $this->_acl->addRole('admin');
-        $this->_acl->addResource('newsletter');
-        $this->_acl->allow('admin');
-        $this->assertTrue($this->_acl->isAllowed('admin'));
+        $this->acl->addRole('admin');
+        $this->acl->addResource('newsletter');
+        $this->acl->allow('admin');
+        $this->assertTrue($this->acl->isAllowed('admin'));
     }
 }
