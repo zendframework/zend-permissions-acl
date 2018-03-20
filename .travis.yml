@@ -45,6 +45,14 @@ matrix:
     - php: 7.1
       env:
         - SERVICE_MANAGER_VERSION="^2.7.5"
+    - php: 7.2
+      env:
+        - EXECUTE_CS_CHECK=true
+    - php: 7.2
+      env:
+        - SERVICE_MANAGER_VERSION="^2.7.5"
+  allowed_failures:
+    - php: 7.2
 
 notifications:
   irc: "irc.freenode.org#zftalk.dev"
