@@ -8,10 +8,17 @@
  */
 namespace ZendTest\Permissions\Acl\Assertion;
 
-use InvalidArgumentException;
+use InvalidArgumentException as PHPInvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 use Zend\Permissions\Acl\Assertion\AssertionAggregate;
+use Zend\Permissions\Acl\Exception\InvalidArgumentException;
+use Zend\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
+use Zend\Permissions\Acl\Exception\RuntimeException;
+use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\Role\GenericRole;
+use Zend\Permissions\Acl\Resource\GenericResource;
 
-class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
+class AssertionAggregateTest extends TestCase
 {
     protected $assertionAggregate;
 
@@ -80,7 +87,7 @@ class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
     public function testSetMode($mode, $exception = false)
     {
         if ($exception) {
-            $this->setExpectedException('\Zend\Permissions\Acl\Exception\InvalidArgumentException');
+            $this->expectException(InvalidArgumentException::class);
             $this->assertionAggregate->setMode($mode);
         } else {
             $this->assertionAggregate->setMode($mode);
@@ -118,13 +125,19 @@ class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
 
     public function testCallingAssertWillFetchAssertionFromManager()
     {
-        $acl = $this->getMock('\Zend\Permissions\Acl\Acl');
-        $role = $this->getMock('\Zend\Permissions\Acl\Role\GenericRole', [], [
-            'test.role'
-        ]);
-        $resource = $this->getMock('\Zend\Permissions\Acl\Resource\GenericResource', [], [
-            'test.resource'
-        ]);
+        $acl = $this->getMockBuilder(Acl::class)
+            ->getMock()
+            ;
+
+        $role = $this->getMockBuilder(GenericRole::class)
+            ->setConstructorArgs(['test.role'])
+            ->getMock()
+            ;
+
+        $resource = $this->getMockBuilder(GenericResource::class)
+            ->setConstructorArgs(['test.resource'])
+            ->getMock()
+            ;
 
         $assertion = $this->getMockForAbstractClass('Zend\Permissions\Acl\Assertion\AssertionInterface');
         $assertion->expects($this->once())
@@ -148,13 +161,19 @@ class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
 
     public function testAssertThrowsAnExceptionWhenReferingToNonExistentAssertion()
     {
-        $acl = $this->getMock('\Zend\Permissions\Acl\Acl');
-        $role = $this->getMock('\Zend\Permissions\Acl\Role\GenericRole', [], [
-            'test.role'
-        ]);
-        $resource = $this->getMock('\Zend\Permissions\Acl\Resource\GenericResource', [], [
-            'test.resource'
-        ]);
+        $acl = $this->getMockBuilder(Acl::class)
+            ->getMock()
+            ;
+
+        $role = $this->getMockBuilder(GenericRole::class)
+            ->setConstructorArgs(['test.role'])
+            ->getMock()
+            ;
+
+        $resource = $this->getMockBuilder(GenericResource::class)
+            ->setConstructorArgs(['test.resource'])
+            ->getMock()
+            ;
 
         $manager = $this->getMockBuilder('Zend\Permissions\Acl\Assertion\AssertionManager')
                         ->disableOriginalConstructor()
@@ -163,24 +182,30 @@ class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
         $manager->expects($this->once())
             ->method('get')
             ->with('assertion')
-            ->will($this->throwException(new InvalidArgumentException()));
+            ->will($this->throwException(new PHPInvalidArgumentException()));
 
         $this->assertionAggregate->setAssertionManager($manager);
 
-        $this->setExpectedException('Zend\Permissions\Acl\Assertion\Exception\InvalidAssertionException');
+        $this->expectException(InvalidAssertionException::class);
         $this->assertionAggregate->addAssertion('assertion');
         $this->assertionAggregate->assert($acl, $role, $resource, 'privilege');
     }
 
     public function testAssertWithModeAll()
     {
-        $acl = $this->getMock('\Zend\Permissions\Acl\Acl');
-        $role = $this->getMock('\Zend\Permissions\Acl\Role\GenericRole', [], [
-            'test.role'
-        ]);
-        $resource = $this->getMock('\Zend\Permissions\Acl\Resource\GenericResource', [], [
-            'test.resource'
-        ]);
+        $acl = $this->getMockBuilder(Acl::class)
+            ->getMock()
+            ;
+
+        $role = $this->getMockBuilder(GenericRole::class)
+            ->setConstructorArgs(['test.role'])
+            ->getMock()
+            ;
+
+        $resource = $this->getMockBuilder(GenericResource::class)
+            ->setConstructorArgs(['test.resource'])
+            ->getMock()
+            ;
 
         $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
         $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
@@ -208,13 +233,19 @@ class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
 
     public function testAssertWithModeAtLeastOne()
     {
-        $acl = $this->getMock('\Zend\Permissions\Acl\Acl');
-        $role = $this->getMock('\Zend\Permissions\Acl\Role\GenericRole', [], [
-            'test.role'
-        ]);
-        $resource = $this->getMock('\Zend\Permissions\Acl\Resource\GenericResource', [], [
-            'test.resource'
-        ]);
+        $acl = $this->getMockBuilder(Acl::class)
+            ->getMock()
+            ;
+
+        $role = $this->getMockBuilder(GenericRole::class)
+            ->setConstructorArgs(['test.role'])
+            ->getMock()
+            ;
+
+        $resource = $this->getMockBuilder(GenericResource::class)
+            ->setConstructorArgs(['test.resource'])
+            ->getMock()
+            ;
 
         $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
         $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
@@ -243,17 +274,21 @@ class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
 
     public function testDoesNotAssertWithModeAll()
     {
-        $acl = $this->getMock('\Zend\Permissions\Acl\Acl');
-        $role = $this->getMock('\Zend\Permissions\Acl\Role\GenericRole', [
-            'assert'
-        ], [
-            'test.role'
-        ]);
-        $resource = $this->getMock('\Zend\Permissions\Acl\Resource\GenericResource', [
-            'assert'
-        ], [
-            'test.resource'
-        ]);
+        $acl = $this->getMockBuilder(Acl::class)
+            ->getMock()
+            ;
+
+        $role = $this->getMockBuilder(GenericRole::class)
+            ->setConstructorArgs(['test.role'])
+            ->setMethods(['assert'])
+            ->getMock()
+            ;
+
+        $resource = $this->getMockBuilder(GenericResource::class)
+            ->setConstructorArgs(['test.resource'])
+            ->setMethods(['assert'])
+            ->getMock()
+            ;
 
         $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
         $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
@@ -281,17 +316,21 @@ class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
 
     public function testDoesNotAssertWithModeAtLeastOne()
     {
-        $acl = $this->getMock('\Zend\Permissions\Acl\Acl');
-        $role = $this->getMock('\Zend\Permissions\Acl\Role\GenericRole', [
-            'assert'
-        ], [
-            'test.role'
-        ]);
-        $resource = $this->getMock('\Zend\Permissions\Acl\Resource\GenericResource', [
-            'assert'
-        ], [
-            'test.resource'
-        ]);
+        $acl = $this->getMockBuilder(Acl::class)
+            ->getMock()
+            ;
+
+        $role = $this->getMockBuilder(GenericRole::class)
+            ->setConstructorArgs(['test.role'])
+            ->setMethods(['assert'])
+            ->getMock()
+            ;
+
+        $resource = $this->getMockBuilder(GenericResource::class)
+            ->setConstructorArgs(['test.resource'])
+            ->setMethods(['assert'])
+            ->getMock()
+            ;
 
         $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
         $assertions[] = $this->getMockForAbstractClass('\Zend\Permissions\Acl\Assertion\AssertionInterface');
@@ -320,19 +359,23 @@ class AssertionAggregateTest extends \PHPUnit_Framework_TestCase
 
     public function testAssertThrowsAnExceptionWhenNoAssertionIsAggregated()
     {
-        $acl = $this->getMock('\Zend\Permissions\Acl\Acl');
-        $role = $this->getMock('\Zend\Permissions\Acl\Role\GenericRole', [
-            'assert'
-        ], [
-            'test.role'
-        ]);
-        $resource = $this->getMock('\Zend\Permissions\Acl\Resource\GenericResource', [
-            'assert'
-        ], [
-            'test.resource'
-        ]);
+        $acl = $this->getMockBuilder(Acl::class)
+            ->getMock()
+            ;
 
-        $this->setExpectedException('Zend\Permissions\Acl\Exception\RuntimeException');
+        $role = $this->getMockBuilder(GenericRole::class)
+            ->setConstructorArgs(['test.role'])
+            ->setMethods(['assert'])
+            ->getMock()
+            ;
+
+        $resource = $this->getMockBuilder(GenericResource::class)
+            ->setConstructorArgs(['test.resource'])
+            ->setMethods(['assert'])
+            ->getMock()
+            ;
+
+        $this->expectException(RuntimeException::class);
 
         $this->assertionAggregate->assert($acl, $role, $resource, 'privilege');
     }

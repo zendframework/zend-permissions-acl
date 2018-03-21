@@ -14,8 +14,12 @@ use Zend\Permissions\Acl;
 
 class AssertionZF7973 implements AssertionInterface
 {
-    public function assert(Acl\Acl $acl, Acl\Role\RoleInterface $role = null, Acl\Resource\ResourceInterface $resource = null, $privilege = null)
-    {
+    public function assert(
+        Acl\Acl $acl,
+        Acl\Role\RoleInterface $role = null,
+        Acl\Resource\ResourceInterface $resource = null,
+        $privilege = null
+    ) {
         if ($privilege != 'privilege') {
             return false;
         }

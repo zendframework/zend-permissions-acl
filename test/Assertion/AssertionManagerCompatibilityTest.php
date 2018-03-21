@@ -8,16 +8,23 @@
  */
 namespace ZendTest\Permissions\Acl\Assertion;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use Exception;
+use PHPUnit\Framework\TestCase;
 use Zend\Permissions\Acl\Assertion\AssertionInterface;
 use Zend\Permissions\Acl\Assertion\AssertionManager;
 use Zend\Permissions\Acl\Exception\InvalidArgumentException;
 use Zend\ServiceManager\ServiceManager;
 use Zend\ServiceManager\Test\CommonPluginManagerTrait;
+use Zend\ServiceManager\Exception\InvalidServiceException;
 
 class AssertionManagerCompatibilityTest extends TestCase
 {
     use CommonPluginManagerTrait;
+
+    public function setExpectedException($exception, $message = '', $code = null)
+    {
+        $this->expectException($exception, $message, $code);
+    }
 
     protected function getPluginManager()
     {
