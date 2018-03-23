@@ -913,20 +913,27 @@ class Acl implements AclInterface
             'stack'   => []
         ];
 
-        if (null !== ($result = $this->roleDFSVisitOnePrivilege($role, $resource, $privilege, $dfs))) {
-            return $result;
+        $returnResult = $this->roleDFSVisitOnePrivilege($role, $resource, $privilege, $dfs);
+        if ($returnResult === true) {
+            return $returnResult;
         }
 
-        // This comment is needed due to a strange php-cs-fixer bug
-        while (null !== ($role = array_pop($dfs['stack']))) {
+        while ($role = array_pop($dfs['stack'])) {
             if (! isset($dfs['visited'][$role->getRoleId()])) {
-                if (null !== ($result = $this->roleDFSVisitOnePrivilege($role, $resource, $privilege, $dfs))) {
-                    return $result;
+                $result = $this->roleDFSVisitOnePrivilege($role, $resource, $privilege, $dfs);
+                switch ($result) {
+                    case true:
+                        return true;
+                    case false:
+                        $returnResult = false;
+                        break;
+                    default;
+                        break;
                 }
             }
         }
 
-        return;
+        return $returnResult;
     }
 
     /**
