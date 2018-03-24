@@ -1147,6 +1147,15 @@ class AclTest extends TestCase
         }
     }
 
+    public function testRolesAreEvaluatedFIFO()
+    {
+        $acl = $this->loadUseCase1();
+
+        $user = new Role\GenericRole('hierarchy-admin');
+        $blogPost = new Resource\GenericResource('hierarchy-resource');
+
+        $this->assertTrue($acl->isAllowed($user, $blogPost, 'assert'));
+    }
 
     /**
      * @group ZF-1721
