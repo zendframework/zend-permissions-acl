@@ -30,7 +30,10 @@ class Acl extends \Zend\Permissions\Acl\Acl
 
         $this->addRole(new \Zend\Permissions\Acl\Role\GenericRole('hierarchy-guest'));
         $this->addRole(new \Zend\Permissions\Acl\Role\GenericRole('hierarchy-user'), 'hierarchy-guest');
-        $this->addRole(new \Zend\Permissions\Acl\Role\GenericRole('hierarchy-admin'), ['hierarchy-user', 'hierarchy-guest']);
+        $this->addRole(
+            new \Zend\Permissions\Acl\Role\GenericRole('hierarchy-admin'),
+            ['hierarchy-user', 'hierarchy-guest']
+        );
         $this->addResource(new \Zend\Permissions\Acl\Resource\GenericResource('hierarchy-resource'));
         $this->allow('hierarchy-user', 'hierarchy-resource', 'assert');
         $this->deny('hierarchy-guest', 'hierarchy-resource', 'assert');
