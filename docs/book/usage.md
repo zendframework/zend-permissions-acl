@@ -103,10 +103,26 @@ having inherited conflicting rules from different parent roles.
 rule that is directly applicable to the query. In this case, since the "member" role is examined
 before the "guest" role, the example code would print "allowed".
 
-> #### LIFO Order for role queries
->
-> When specifying multiple parents for a role, keep in mind that the last parent listed is the first
-> one searched for rules applicable to an authorization query.
+
+### LIFO/FILO order for Role parents
+
+When specifying multiple parents for a role the last parent listed is the first
+one searched for rules applicable to an authorization query.  This Last-In-First-Out
+(aka First-In-Last-Out) strategy is represented with this example.
+Here the `first` role is the highest order:
+
+```
+$acl->addRole(new Role('first'), ['last', 'third', 'second']);
+```
+
+Less-permissioned roles will be first in the parents array.  For instance, where a`guest`
+role is unauthenticated, a `user` role is authenticated, and an `admin` role has the highest
+permissions, adding the `admin` role is as follows:
+
+```
+$acl->addRole(new Role('admin'), ['guest', 'user']);
+```
+
 
 ## Creating the Access Control List
 
