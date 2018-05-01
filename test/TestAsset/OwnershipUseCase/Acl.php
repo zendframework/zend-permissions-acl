@@ -5,12 +5,12 @@
  * @license   https://github.com/zendframework/zend-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Permissions\Acl\TestAsset\UseCase2;
+namespace ZendTest\Permissions\Acl\TestAsset\OwnershipUseCase;
 
-use Zend\Permissions\Acl\Acl as ZendAcl;
+use Zend\Permissions\Acl\Acl as BaseAcl;
 use Zend\Permissions\Acl\Assertion\OwnershipAssertion;
 
-class Acl extends ZendAcl
+class Acl extends BaseAcl
 {
     public function __construct()
     {

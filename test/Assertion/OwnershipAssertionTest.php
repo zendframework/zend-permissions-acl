@@ -8,13 +8,13 @@
 namespace ZendTest\Permissions\Acl\Assertion;
 
 use PHPUnit\Framework\TestCase;
-use ZendTest\Permissions\Acl\TestAsset\UseCase2;
+use ZendTest\Permissions\Acl\TestAsset\OwnershipUseCase;
 
 class OwnershipAssertionTest extends TestCase
 {
     public function testAssertPassesIfRoleIsNotProprietary()
     {
-        $acl = new UseCase2\Acl();
+        $acl = new OwnershipUseCase\Acl();
 
         $this->assertTrue($acl->isAllowed('guest', 'blogPost', 'view'));
         $this->assertFalse($acl->isAllowed('guest', 'blogPost', 'delete'));
@@ -22,9 +22,9 @@ class OwnershipAssertionTest extends TestCase
 
     public function testAssertPassesIfResourceIsNotProprietary()
     {
-        $acl = new UseCase2\Acl();
+        $acl = new OwnershipUseCase\Acl();
 
-        $author = new UseCase2\Author1();
+        $author = new OwnershipUseCase\Author1();
 
         $this->assertTrue($acl->isAllowed($author, 'comment', 'view'));
         $this->assertFalse($acl->isAllowed($author, 'comment', 'delete'));
@@ -32,11 +32,11 @@ class OwnershipAssertionTest extends TestCase
 
     public function testAssertPassesIfResourceDoesNotHaveOwner()
     {
-        $acl = new UseCase2\Acl();
+        $acl = new OwnershipUseCase\Acl();
 
-        $author = new UseCase2\Author1();
+        $author = new OwnershipUseCase\Author1();
 
-        $blogPost = new UseCase2\BlogPost();
+        $blogPost = new OwnershipUseCase\BlogPost();
         $blogPost->author = null;
 
         $this->assertTrue($acl->isAllowed($author, 'blogPost', 'write'));
@@ -45,12 +45,12 @@ class OwnershipAssertionTest extends TestCase
 
     public function testAssertFailsIfResourceHasOwnerOtherThanRoleOwner()
     {
-        $acl = new UseCase2\Acl();
+        $acl = new OwnershipUseCase\Acl();
 
-        $author1 = new UseCase2\Author1();
-        $author2 = new UseCase2\Author2();
+        $author1 = new OwnershipUseCase\Author1();
+        $author2 = new OwnershipUseCase\Author2();
 
-        $blogPost = new UseCase2\BlogPost();
+        $blogPost = new OwnershipUseCase\BlogPost();
         $blogPost->author = $author1;
 
         $this->assertTrue($acl->isAllowed($author2, 'blogPost', 'write'));

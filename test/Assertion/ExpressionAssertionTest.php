@@ -12,8 +12,8 @@ use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
 use Zend\Permissions\Acl\Assertion\ExpressionAssertion;
 use Zend\Permissions\Acl\Exception\RuntimeException;
-use ZendTest\Permissions\Acl\TestAsset\UseCase3\User;
-use ZendTest\Permissions\Acl\TestAsset\UseCase3\BlogPost;
+use ZendTest\Permissions\Acl\TestAsset\ExpressionUseCase\User;
+use ZendTest\Permissions\Acl\TestAsset\ExpressionUseCase\BlogPost;
 
 class ExpressionAssertionTest extends TestCase
 {

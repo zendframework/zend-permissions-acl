@@ -5,7 +5,7 @@
  * @license   https://github.com/zendframework/zend-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Permissions\Acl\TestAsset\UseCase2;
+namespace ZendTest\Permissions\Acl\TestAsset\OwnershipUseCase;
 
 class Author1 extends User
 {

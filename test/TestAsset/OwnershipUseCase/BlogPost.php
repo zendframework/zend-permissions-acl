@@ -5,24 +5,26 @@
  * @license   https://github.com/zendframework/zend-permissions-acl/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Permissions\Acl\TestAsset\UseCase2;
+namespace ZendTest\Permissions\Acl\TestAsset\OwnershipUseCase;
 
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\ProprietaryInterface;
-use Zend\Permissions\Acl\Role\RoleInterface;
 
-class User implements RoleInterface, ProprietaryInterface
+class BlogPost implements ResourceInterface, ProprietaryInterface
 {
-    public $id;
+    public $author = null;
 
-    public $role = 'guest';
-
-    public function getRoleId()
+    public function getResourceId()
     {
-        return $this->role;
+        return 'blogPost';
     }
 
     public function getOwnerId()
     {
-        return $this->id;
+        if ($this->author === null) {
+            return null;
+        }
+
+        return $this->author->getOwnerId();
     }
 }
