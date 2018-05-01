@@ -6,7 +6,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#3](https://github.com/zendframework/zend-permissions-acl/pull/3) adds two new interfaces designed to allow creation of ownership-based assertions easier:
+  - `Zend\Permissions\Acl\ProprietaryInterface` is applicable to both roles and resources, and provides the method `getOwnerId()` for retrieving the owner role of an object.
+  - `Zend\Permissions\Acl\Assertion\OwnershipAssertion` ensures that the owner of a proprietary resource matches that of the role.
 
 ### Changed
 
