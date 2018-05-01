@@ -2,12 +2,12 @@
     "docs": [
         {
             "location": "/",
-            "text": "zend-permissions-acl\n\n\n\n\n\n\nProvides a lightweight and flexible access control list (ACL) implementation for\nprivileges management.\n\n\n\n\nFile issues at https://github.com/zendframework/zend-permissions-acl/issues\n\n\nDocumentation is at https://zendframework.github.io/zend-permissions-acl/",
+            "text": "zend-permissions-acl\n\n\n\n\n\n\nProvides a lightweight and flexible access control list (ACL) implementation for\nprivileges management.\n\n\n\n\nFile issues at https://github.com/zendframework/zend-permissions-acl/issues\n\n\nDocumentation is at https://docs.zendframework.com/zend-permissions-acl/",
             "title": "zend-permissions-acl"
         },
         {
             "location": "/#zend-permissions-acl",
-            "text": "Provides a lightweight and flexible access control list (ACL) implementation for\nprivileges management.   File issues at https://github.com/zendframework/zend-permissions-acl/issues  Documentation is at https://zendframework.github.io/zend-permissions-acl/",
+            "text": "Provides a lightweight and flexible access control list (ACL) implementation for\nprivileges management.   File issues at https://github.com/zendframework/zend-permissions-acl/issues  Documentation is at https://docs.zendframework.com/zend-permissions-acl/",
             "title": "zend-permissions-acl"
         },
         {
