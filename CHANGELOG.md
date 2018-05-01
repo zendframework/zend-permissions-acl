@@ -40,7 +40,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#29](https://github.com/zendframework/zend-permissions-acl/pull/29) provides a change to `Acl::removeResourceAll()` that increases performance by a factor of 100.
 
 ## 2.6.0 - 2016-02-03
 

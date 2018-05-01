@@ -405,11 +405,7 @@ class Acl implements AclInterface
     public function removeResourceAll()
     {
         foreach ($this->resources as $resourceId => $resource) {
-            foreach ($this->rules['byResourceId'] as $resourceIdCurrent => $rules) {
-                if ($resourceId === $resourceIdCurrent) {
-                    unset($this->rules['byResourceId'][$resourceIdCurrent]);
-                }
-            }
+            unset($this->rules['byResourceId'][$resourceId]);
         }
 
         $this->resources = [];
