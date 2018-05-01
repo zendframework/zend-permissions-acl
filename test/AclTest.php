@@ -1334,7 +1334,7 @@ class AclTest extends TestCase
         $this->assertFalse($this->acl->isAllowed('guest', 'blogpost', 'read'));
         $this->assertFalse($this->acl->isAllowed('guest', 'newsletter', 'read'));
 
-        // ensure allow null/all resoures works
+        // ensure allow null/all resources works
         $this->acl->allow('guest', null, 'read');
         $this->assertTrue($this->acl->isAllowed('guest', 'blogpost', 'read'));
         $this->assertTrue($this->acl->isAllowed('guest', 'newsletter', 'read'));
