@@ -10,15 +10,13 @@
 namespace ZendTest\Permissions\Acl;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Zend\Permissions\Acl;
 use Zend\Permissions\Acl\Exception\ExceptionInterface;
 use Zend\Permissions\Acl\Exception\InvalidArgumentException;
 use Zend\Permissions\Acl\Resource;
 use Zend\Permissions\Acl\Role;
 
-/**
- * @group      Zend_Acl
- */
 class AclTest extends TestCase
 {
     /**
@@ -59,9 +57,10 @@ class AclTest extends TestCase
      */
     public function testRoleAddAndGetOneByString()
     {
-        $role = $this->acl->addRole('area')
-                           ->getRole('area');
-        $this->assertInstanceOf('Zend\Permissions\Acl\Role\RoleInterface', $role);
+        $role = $this->acl
+            ->addRole('area')
+            ->getRole('area');
+        $this->assertInstanceOf(Role\RoleInterface::class, $role);
         $this->assertEquals('area', $role->getRoleId());
     }
 
@@ -73,8 +72,9 @@ class AclTest extends TestCase
     public function testRoleRegistryRemoveOne()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->acl->addRole($roleGuest)
-                   ->removeRole($roleGuest);
+        $this->acl
+            ->addRole($roleGuest)
+            ->removeRole($roleGuest);
         $this->assertFalse($this->acl->hasRole($roleGuest));
     }
 
@@ -97,8 +97,9 @@ class AclTest extends TestCase
     public function testRoleRegistryRemoveAll()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->acl->addRole($roleGuest)
-                   ->removeRoleAll();
+        $this->acl
+            ->addRole($roleGuest)
+            ->removeRoleAll();
         $this->assertFalse($this->acl->hasRole($roleGuest));
     }
 
@@ -120,10 +121,8 @@ class AclTest extends TestCase
      */
     public function testRoleRegistryAddNotRole()
     {
-        $this->expectException(
-            InvalidArgumentException::class,
-            'addRole() expects $role to be of type Zend\Permissions\Acl\Role'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('addRole() expects $role to be of type Zend\Permissions\Acl\Role');
         $this->acl->addRole(new \stdClass, 'guest');
     }
 
@@ -165,9 +164,10 @@ class AclTest extends TestCase
         $roleMember = new Role\GenericRole('member');
         $roleEditor = new Role\GenericRole('editor');
         $roleRegistry = new Role\Registry();
-        $roleRegistry->add($roleGuest)
-                     ->add($roleMember, $roleGuest->getRoleId())
-                     ->add($roleEditor, $roleMember);
+        $roleRegistry
+            ->add($roleGuest)
+            ->add($roleMember, $roleGuest->getRoleId())
+            ->add($roleEditor, $roleMember);
         $this->assertEmpty($roleRegistry->getParents($roleGuest));
         $roleMemberParents = $roleRegistry->getParents($roleMember);
         $this->assertCount(1, $roleMemberParents);
@@ -197,9 +197,10 @@ class AclTest extends TestCase
         $roleParent2 = new Role\GenericRole('parent2');
         $roleChild   = new Role\GenericRole('child');
         $roleRegistry = new Role\Registry();
-        $roleRegistry->add($roleParent1)
-                     ->add($roleParent2)
-                     ->add($roleChild, [$roleParent1, $roleParent2]);
+        $roleRegistry
+            ->add($roleParent1)
+            ->add($roleParent2)
+            ->add($roleChild, [$roleParent1, $roleParent2]);
         $roleChildParents = $roleRegistry->getParents($roleChild);
         $this->assertCount(2, $roleChildParents);
         $i = 1;
@@ -227,7 +228,8 @@ class AclTest extends TestCase
         $roleParent2 = new Role\GenericRole('parent2');
         $roleChild   = new Role\GenericRole('child');
         $roleRegistry = new Role\Registry();
-        $roleRegistry->add($roleParent1)
+        $roleRegistry
+            ->add($roleParent1)
             ->add($roleParent2)
             ->add(
                 $roleChild,
@@ -259,8 +261,9 @@ class AclTest extends TestCase
         $roleGuest = new Role\GenericRole('guest');
         $roleRegistry = new Role\Registry();
         $this->expectException(InvalidArgumentException::class, 'already exists');
-        $roleRegistry->add($roleGuest)
-                     ->add($roleGuest);
+        $roleRegistry
+            ->add($roleGuest)
+            ->add($roleGuest);
     }
 
     /**
@@ -274,8 +277,9 @@ class AclTest extends TestCase
         $roleGuest2 = new Role\GenericRole('guest');
         $roleRegistry = new Role\Registry();
         $this->expectException(InvalidArgumentException::class, 'already exists');
-        $roleRegistry->add($roleGuest1)
-                     ->add($roleGuest2);
+        $roleRegistry
+            ->add($roleGuest1)
+            ->add($roleGuest2);
     }
 
     /**
@@ -286,8 +290,9 @@ class AclTest extends TestCase
     public function testResourceAddAndGetOne()
     {
         $resourceArea = new Resource\GenericResource('area');
-        $resource = $this->acl->addResource($resourceArea)
-                          ->getResource($resourceArea->getResourceId());
+        $resource = $this->acl
+            ->addResource($resourceArea)
+            ->getResource($resourceArea->getResourceId());
         $this->assertEquals($resourceArea, $resource);
         $resource = $this->acl->getResource($resourceArea);
         $this->assertEquals($resourceArea, $resource);
@@ -298,9 +303,10 @@ class AclTest extends TestCase
      */
     public function testResourceAddAndGetOneByString()
     {
-        $resource = $this->acl->addResource('area')
-                          ->getResource('area');
-        $this->assertInstanceOf('Zend\Permissions\Acl\Resource\ResourceInterface', $resource);
+        $resource = $this->acl
+            ->addResource('area')
+            ->getResource('area');
+        $this->assertInstanceOf(Resource\ResourceInterface::class, $resource);
         $this->assertEquals('area', $resource->getResourceId());
     }
 
@@ -312,8 +318,9 @@ class AclTest extends TestCase
     public function testResourceAddAndGetOneWithAddResourceMethod()
     {
         $resourceArea = new Resource\GenericResource('area');
-        $resource = $this->acl->addResource($resourceArea)
-                               ->getResource($resourceArea->getResourceId());
+        $resource = $this->acl
+            ->addResource($resourceArea)
+            ->getResource($resourceArea->getResourceId());
         $this->assertEquals($resourceArea, $resource);
         $resource = $this->acl->getResource($resourceArea);
         $this->assertEquals($resourceArea, $resource);
@@ -327,8 +334,9 @@ class AclTest extends TestCase
     public function testResourceRemoveOne()
     {
         $resourceArea = new Resource\GenericResource('area');
-        $this->acl->addResource($resourceArea)
-                   ->removeResource($resourceArea);
+        $this->acl
+            ->addResource($resourceArea)
+            ->removeResource($resourceArea);
         $this->assertFalse($this->acl->hasResource($resourceArea));
     }
 
@@ -339,7 +347,8 @@ class AclTest extends TestCase
      */
     public function testResourceRemoveOneNonExistent()
     {
-        $this->expectException(ExceptionInterface::class, 'not found');
+        $this->expectException(ExceptionInterface::class);
+        $this->expectExceptionMessage('not found');
         $this->acl->removeResource('nonexistent');
     }
 
@@ -351,8 +360,9 @@ class AclTest extends TestCase
     public function testResourceRemoveAll()
     {
         $resourceArea = new Resource\GenericResource('area');
-        $this->acl->addResource($resourceArea)
-                   ->removeResourceAll();
+        $this->acl
+            ->addResource($resourceArea)
+            ->removeResourceAll();
         $this->assertFalse($this->acl->hasResource($resourceArea));
     }
 
@@ -363,7 +373,8 @@ class AclTest extends TestCase
      */
     public function testResourceAddInheritsNonExistent()
     {
-        $this->expectException(InvalidArgumentException::class, 'does not exist');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('does not exist');
         $this->acl->addResource(new Resource\GenericResource('area'), 'nonexistent');
     }
 
@@ -374,11 +385,9 @@ class AclTest extends TestCase
      */
     public function testResourceRegistryAddNotResource()
     {
-        $this->expectException(
-            InvalidArgumentException::class,
-            'addResource() expects $resource to be of type Zend\Permissions\Acl\Resource'
-        );
-        $this->acl->addResource(new \stdClass);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('addResource() expects $resource to be of type Zend\Permissions\Acl\Resource');
+        $this->acl->addResource(new stdClass);
     }
 
     /**
@@ -393,8 +402,8 @@ class AclTest extends TestCase
         try {
             $this->acl->inheritsResource('nonexistent', $resourceArea);
             $this->fail(
-                'Expected Zend\Permissions\Acl\Exception\ExceptionInterface not '
-                . 'thrown upon specifying a non-existent child Resource'
+                'Expected Zend\Permissions\Acl\Exception\ExceptionInterface not'
+                . ' thrown upon specifying a non-existent child Resource'
             );
         } catch (Acl\Exception\ExceptionInterface $e) {
             $this->assertContains('not found', $e->getMessage());
@@ -420,9 +429,10 @@ class AclTest extends TestCase
         $resourceCity     = new Resource\GenericResource('city');
         $resourceBuilding = new Resource\GenericResource('building');
         $resourceRoom     = new Resource\GenericResource('room');
-        $this->acl->addResource($resourceCity)
-                   ->addResource($resourceBuilding, $resourceCity->getResourceId())
-                   ->addResource($resourceRoom, $resourceBuilding);
+        $this->acl
+            ->addResource($resourceCity)
+            ->addResource($resourceBuilding, $resourceCity->getResourceId())
+            ->addResource($resourceRoom, $resourceBuilding);
         $this->assertTrue($this->acl->inheritsResource($resourceBuilding, $resourceCity, true));
         $this->assertTrue($this->acl->inheritsResource($resourceRoom, $resourceBuilding, true));
         $this->assertTrue($this->acl->inheritsResource($resourceRoom, $resourceCity));
@@ -440,10 +450,14 @@ class AclTest extends TestCase
      */
     public function testResourceDuplicate()
     {
-        $this->expectException(ExceptionInterface::class, 'already exists');
         $resourceArea = new Resource\GenericResource('area');
-        $this->acl->addResource($resourceArea)
-                   ->addResource($resourceArea);
+
+        $this->expectException(ExceptionInterface::class);
+        $this->expectExceptionMessage('already exists');
+
+        $this->acl
+            ->addResource($resourceArea)
+            ->addResource($resourceArea);
     }
 
     /**
@@ -453,11 +467,15 @@ class AclTest extends TestCase
      */
     public function testResourceDuplicateId()
     {
-        $this->expectException(ExceptionInterface::class, 'already exists');
         $resourceArea1 = new Resource\GenericResource('area');
         $resourceArea2 = new Resource\GenericResource('area');
-        $this->acl->addResource($resourceArea1)
-                   ->addResource($resourceArea2);
+
+        $this->expectException(ExceptionInterface::class);
+        $this->expectExceptionMessage('already exists');
+
+        $this->acl
+            ->addResource($resourceArea1)
+            ->addResource($resourceArea2);
     }
 
     /**
@@ -578,8 +596,10 @@ class AclTest extends TestCase
         $this->assertTrue($this->acl->isAllowed(null, null, 'p2'));
         $this->assertTrue($this->acl->isAllowed(null, null, 'p3'));
         $this->assertFalse($this->acl->isAllowed(null, null, 'p4'));
+
         $this->acl->deny(null, null, 'p1');
         $this->assertFalse($this->acl->isAllowed(null, null, 'p1'));
+
         $this->acl->deny(null, null, ['p2', 'p3']);
         $this->assertFalse($this->acl->isAllowed(null, null, 'p2'));
         $this->assertFalse($this->acl->isAllowed(null, null, 'p3'));
@@ -594,6 +614,7 @@ class AclTest extends TestCase
     {
         $this->acl->allow(null, null, 'somePrivilege', new TestAsset\MockAssertion(true));
         $this->assertTrue($this->acl->isAllowed(null, null, 'somePrivilege'));
+
         $this->acl->allow(null, null, 'somePrivilege', new TestAsset\MockAssertion(false));
         $this->assertFalse($this->acl->isAllowed(null, null, 'somePrivilege'));
     }
@@ -618,9 +639,11 @@ class AclTest extends TestCase
     public function testRoleDefaultRuleSet()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->acl->addRole($roleGuest)
-                   ->allow($roleGuest);
+        $this->acl
+            ->addRole($roleGuest)
+            ->allow($roleGuest);
         $this->assertTrue($this->acl->isAllowed($roleGuest));
+
         $this->acl->deny($roleGuest);
         $this->assertFalse($this->acl->isAllowed($roleGuest));
     }
@@ -645,9 +668,12 @@ class AclTest extends TestCase
     public function testRoleDefaultRuleSetPrivilege()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->acl->addRole($roleGuest)
-                   ->allow($roleGuest);
+
+        $this->acl
+            ->addRole($roleGuest)
+            ->allow($roleGuest);
         $this->assertTrue($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
+
         $this->acl->deny($roleGuest);
         $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
     }
@@ -660,8 +686,9 @@ class AclTest extends TestCase
     public function testRolePrivilegeAllow()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->acl->addRole($roleGuest)
-                   ->allow($roleGuest, null, 'somePrivilege');
+        $this->acl
+            ->addRole($roleGuest)
+            ->allow($roleGuest, null, 'somePrivilege');
         $this->assertTrue($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
     }
 
@@ -673,9 +700,10 @@ class AclTest extends TestCase
     public function testRolePrivilegeDeny()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->acl->addRole($roleGuest)
-                   ->allow($roleGuest)
-                   ->deny($roleGuest, null, 'somePrivilege');
+        $this->acl
+            ->addRole($roleGuest)
+            ->allow($roleGuest)
+            ->deny($roleGuest, null, 'somePrivilege');
         $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
     }
 
@@ -687,14 +715,17 @@ class AclTest extends TestCase
     public function testRolePrivileges()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->acl->addRole($roleGuest)
-                   ->allow($roleGuest, null, ['p1', 'p2', 'p3']);
+        $this->acl
+            ->addRole($roleGuest)
+            ->allow($roleGuest, null, ['p1', 'p2', 'p3']);
         $this->assertTrue($this->acl->isAllowed($roleGuest, null, 'p1'));
         $this->assertTrue($this->acl->isAllowed($roleGuest, null, 'p2'));
         $this->assertTrue($this->acl->isAllowed($roleGuest, null, 'p3'));
         $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'p4'));
+
         $this->acl->deny($roleGuest, null, 'p1');
         $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'p1'));
+
         $this->acl->deny($roleGuest, null, ['p2', 'p3']);
         $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'p2'));
         $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'p3'));
@@ -708,9 +739,11 @@ class AclTest extends TestCase
     public function testRolePrivilegeAssert()
     {
         $roleGuest = new Role\GenericRole('guest');
-        $this->acl->addRole($roleGuest)
-                   ->allow($roleGuest, null, 'somePrivilege', new TestAsset\MockAssertion(true));
+        $this->acl
+            ->addRole($roleGuest)
+            ->allow($roleGuest, null, 'somePrivilege', new TestAsset\MockAssertion(true));
         $this->assertTrue($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
+
         $this->acl->allow($roleGuest, null, 'somePrivilege', new TestAsset\MockAssertion(false));
         $this->assertFalse($this->acl->isAllowed($roleGuest, null, 'somePrivilege'));
     }
@@ -771,8 +804,9 @@ class AclTest extends TestCase
      */
     public function testRemoveDefaultDenyNonExistent()
     {
-        $this->acl->allow()
-                   ->removeDeny();
+        $this->acl
+            ->allow()
+            ->removeDeny();
         $this->assertTrue($this->acl->isAllowed());
     }
 
@@ -784,13 +818,14 @@ class AclTest extends TestCase
      */
     public function testRoleDefaultAllowRuleWithResourceDenyRule()
     {
-        $this->acl->addRole(new Role\GenericRole('guest'))
-                   ->addRole(new Role\GenericRole('staff'), 'guest')
-                   ->addResource(new Resource\GenericResource('area1'))
-                   ->addResource(new Resource\GenericResource('area2'))
-                   ->deny()
-                   ->allow('staff')
-                   ->deny('staff', ['area1', 'area2']);
+        $this->acl
+            ->addRole(new Role\GenericRole('guest'))
+            ->addRole(new Role\GenericRole('staff'), 'guest')
+            ->addResource(new Resource\GenericResource('area1'))
+            ->addResource(new Resource\GenericResource('area2'))
+            ->deny()
+            ->allow('staff')
+            ->deny('staff', ['area1', 'area2']);
         $this->assertFalse($this->acl->isAllowed('staff', 'area1'));
     }
 
@@ -802,11 +837,12 @@ class AclTest extends TestCase
      */
     public function testRoleDefaultAllowRuleWithPrivilegeDenyRule()
     {
-        $this->acl->addRole(new Role\GenericRole('guest'))
-                   ->addRole(new Role\GenericRole('staff'), 'guest')
-                   ->deny()
-                   ->allow('staff')
-                   ->deny('staff', null, ['privilege1', 'privilege2']);
+        $this->acl
+            ->addRole(new Role\GenericRole('guest'))
+            ->addRole(new Role\GenericRole('staff'), 'guest')
+            ->deny()
+            ->allow('staff')
+            ->deny('staff', null, ['privilege1', 'privilege2']);
         $this->assertFalse($this->acl->isAllowed('staff', null, 'privilege1'));
     }
 
@@ -821,6 +857,7 @@ class AclTest extends TestCase
         $this->assertFalse($this->acl->isAllowed());
         $this->assertTrue($this->acl->isAllowed(null, null, 'privilege1'));
         $this->assertTrue($this->acl->isAllowed(null, null, 'privilege2'));
+
         $this->acl->removeAllow(null, null, 'privilege1');
         $this->assertFalse($this->acl->isAllowed(null, null, 'privilege1'));
         $this->assertTrue($this->acl->isAllowed(null, null, 'privilege2'));
@@ -833,8 +870,9 @@ class AclTest extends TestCase
      */
     public function testRuleRoleRemove()
     {
-        $this->acl->addRole(new Role\GenericRole('guest'))
-                   ->allow('guest');
+        $this->acl
+            ->addRole(new Role\GenericRole('guest'))
+            ->allow('guest');
         $this->assertTrue($this->acl->isAllowed('guest'));
         $this->acl->removeRole('guest');
         try {
@@ -856,9 +894,11 @@ class AclTest extends TestCase
      */
     public function testRuleRoleRemoveAll()
     {
-        $this->acl->addRole(new Role\GenericRole('guest'))
-                   ->allow('guest');
+        $this->acl
+            ->addRole(new Role\GenericRole('guest'))
+            ->allow('guest');
         $this->assertTrue($this->acl->isAllowed('guest'));
+
         $this->acl->removeRoleAll();
         try {
             $this->acl->isAllowed('guest');
@@ -879,8 +919,9 @@ class AclTest extends TestCase
      */
     public function testRulesResourceRemove()
     {
-        $this->acl->addResource(new Resource\GenericResource('area'))
-                   ->allow(null, 'area');
+        $this->acl
+            ->addResource(new Resource\GenericResource('area'))
+            ->allow(null, 'area');
         $this->assertTrue($this->acl->isAllowed(null, 'area'));
         $this->acl->removeResource('area');
         try {
@@ -902,8 +943,9 @@ class AclTest extends TestCase
      */
     public function testRulesResourceRemoveAll()
     {
-        $this->acl->addResource(new Resource\GenericResource('area'))
-                   ->allow(null, 'area');
+        $this->acl
+            ->addResource(new Resource\GenericResource('area'))
+            ->allow(null, 'area');
         $this->assertTrue($this->acl->isAllowed(null, 'area'));
         $this->acl->removeResourceAll();
         try {
@@ -927,10 +969,11 @@ class AclTest extends TestCase
     public function testCMSExample()
     {
         // Add some roles to the Role registry
-        $this->acl->addRole(new Role\GenericRole('guest'))
-                   ->addRole(new Role\GenericRole('staff'), 'guest')  // staff inherits permissions from guest
-                   ->addRole(new Role\GenericRole('editor'), 'staff') // editor inherits permissions from staff
-                   ->addRole(new Role\GenericRole('administrator'));
+        $this->acl
+            ->addRole(new Role\GenericRole('guest'))
+            ->addRole(new Role\GenericRole('staff'), 'guest')  // staff inherits permissions from guest
+            ->addRole(new Role\GenericRole('editor'), 'staff') // editor inherits permissions from staff
+            ->addRole(new Role\GenericRole('administrator'));
 
         // Guest may only view content
         $this->acl->allow('guest', null, 'view');
@@ -987,12 +1030,13 @@ class AclTest extends TestCase
         $this->assertTrue($this->acl->isAllowed('administrator'));
 
         // Some checks on specific areas, which inherit access controls from the root ACL node
-        $this->acl->addResource(new Resource\GenericResource('newsletter'))
-                   ->addResource(new Resource\GenericResource('pending'), 'newsletter')
-                   ->addResource(new Resource\GenericResource('gallery'))
-                   ->addResource(new Resource\GenericResource('profiles', 'gallery'))
-                   ->addResource(new Resource\GenericResource('config'))
-                   ->addResource(new Resource\GenericResource('hosts'), 'config');
+        $this->acl
+            ->addResource(new Resource\GenericResource('newsletter'))
+            ->addResource(new Resource\GenericResource('pending'), 'newsletter')
+            ->addResource(new Resource\GenericResource('gallery'))
+            ->addResource(new Resource\GenericResource('profiles', 'gallery'))
+            ->addResource(new Resource\GenericResource('config'))
+            ->addResource(new Resource\GenericResource('hosts'), 'config');
         $this->assertTrue($this->acl->isAllowed('guest', 'pending', 'view'));
         $this->assertTrue($this->acl->isAllowed('staff', 'profiles', 'revise'));
         $this->assertTrue($this->acl->isAllowed('staff', 'pending', 'view'));
@@ -1093,9 +1137,10 @@ class AclTest extends TestCase
      */
     public function testRoleInheritanceSupportsCheckingOnlyParents()
     {
-        $this->acl->addRole(new Role\GenericRole('grandparent'))
-                   ->addRole(new Role\GenericRole('parent'), 'grandparent')
-                   ->addRole(new Role\GenericRole('child'), 'parent');
+        $this->acl
+            ->addRole(new Role\GenericRole('grandparent'))
+            ->addRole(new Role\GenericRole('parent'), 'grandparent')
+            ->addRole(new Role\GenericRole('child'), 'parent');
         $this->assertFalse($this->acl->inheritsRole('child', 'grandparent', true));
     }
 
@@ -1153,13 +1198,13 @@ class AclTest extends TestCase
      */
     public function testAclAssertionsGetProperRoleWhenInheritenceIsUsed()
     {
-        $acl = $this->loadUseCase1();
+        $acl = $this->loadStandardUseCase();
 
         $user = new Role\GenericRole('publisher');
         $blogPost = new Resource\GenericResource('blogPost');
 
         /**
-         * @var ZendTest\Permissions\Acl\UseCase1\UserIsBlogPostOwnerAssertion
+         * @var ZendTest\Permissions\Acl\StandardUseCase\UserIsBlogPostOwnerAssertion
          */
         $assertion = $acl->customAssertion;
 
@@ -1174,15 +1219,15 @@ class AclTest extends TestCase
      */
     public function testAclAssertionsGetOriginalIsAllowedObjects()
     {
-        $acl = $this->loadUseCase1();
+        $acl = $this->loadStandardUseCase();
 
-        $user     = new TestAsset\UseCase1\User();
-        $blogPost = new TestAsset\UseCase1\BlogPost();
+        $user     = new TestAsset\StandardUseCase\User();
+        $blogPost = new TestAsset\StandardUseCase\BlogPost();
 
         $this->assertTrue($acl->isAllowed($user, $blogPost, 'view'));
 
         /**
-         * @var ZendTest\Permissions\Acl\UseCase1\UserIsBlogPostOwnerAssertion
+         * @var ZendTest\Permissions\Acl\StandardUseCase\UserIsBlogPostOwnerAssertion
          */
         $assertion = $acl->customAssertion;
 
@@ -1194,12 +1239,12 @@ class AclTest extends TestCase
 
         // check to see if the last assertion has the proper objects
         $this->assertInstanceOf(
-            'ZendTest\Permissions\Acl\TestAsset\UseCase1\User',
+            TestAsset\StandardUseCase\User::class,
             $assertion->lastAssertRole,
             'Assertion did not receive proper role object'
         );
         $this->assertInstanceOf(
-            'ZendTest\Permissions\Acl\TestAsset\UseCase1\BlogPost',
+            TestAsset\StandardUseCase\BlogPost::class,
             $assertion->lastAssertResource,
             'Assertion did not receive proper resource object'
         );
@@ -1207,11 +1252,11 @@ class AclTest extends TestCase
 
     /**
      *
-     * @return Zend_Acl_UseCase1_Acl
+     * @return TestAsset\StandardUseCase\Acl
      */
-    protected function loadUseCase1()
+    protected function loadStandardUseCase()
     {
-        return new TestAsset\UseCase1\Acl();
+        return new TestAsset\StandardUseCase\Acl();
     }
 
     /**

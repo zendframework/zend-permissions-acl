@@ -6,6 +6,7 @@ pages:
     - 'Refining ACLs': refining.md
     - Reference:
       - 'Ownership Assertions': ownership.md
+      - 'Expression Assertions': expression.md
       - 'Advanced Usage': advanced.md
 site_name: zend-permissions-acl
 site_description: 'Provides a lightweight and flexible access control list (ACL) implementation for privileges management'
