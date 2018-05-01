@@ -11,10 +11,10 @@ namespace ZendTest\Permissions\Acl;
 
 use PHPUnit\Framework\TestCase;
 use Zend\Permissions\Acl;
-use Zend\Permissions\Acl\Role;
-use Zend\Permissions\Acl\Resource;
-use Zend\Permissions\Acl\Exception\InvalidArgumentException;
 use Zend\Permissions\Acl\Exception\ExceptionInterface;
+use Zend\Permissions\Acl\Exception\InvalidArgumentException;
+use Zend\Permissions\Acl\Resource;
+use Zend\Permissions\Acl\Role;
 
 /**
  * @group      Zend_Acl
@@ -33,7 +33,7 @@ class AclTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->acl = new Acl\Acl();
     }

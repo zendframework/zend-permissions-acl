@@ -9,8 +9,8 @@
 
 namespace ZendTest\Permissions\Acl\TestAsset;
 
-use Zend\Permissions\Acl\Assertion\AssertionInterface;
 use Zend\Permissions\Acl;
+use Zend\Permissions\Acl\Assertion\AssertionInterface;
 
 class AssertionZF7973 implements AssertionInterface
 {

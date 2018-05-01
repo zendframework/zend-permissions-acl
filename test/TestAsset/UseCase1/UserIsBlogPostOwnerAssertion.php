@@ -9,8 +9,8 @@
 
 namespace ZendTest\Permissions\Acl\TestAsset\UseCase1;
 
-use Zend\Permissions\Acl\Assertion\AssertionInterface;
 use Zend\Permissions\Acl as ZendAcl;
+use Zend\Permissions\Acl\Assertion\AssertionInterface;
 
 class UserIsBlogPostOwnerAssertion implements AssertionInterface
 {
