@@ -10,19 +10,19 @@ namespace ZendTest\Permissions\Acl\Assertion;
 
 use InvalidArgumentException as PHPInvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Zend\Permissions\Acl\Assertion\AssertionAggregate;
-use Zend\Permissions\Acl\Exception\InvalidArgumentException;
-use Zend\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
-use Zend\Permissions\Acl\Exception\RuntimeException;
 use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Role\GenericRole;
+use Zend\Permissions\Acl\Assertion\AssertionAggregate;
+use Zend\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
+use Zend\Permissions\Acl\Exception\InvalidArgumentException;
+use Zend\Permissions\Acl\Exception\RuntimeException;
 use Zend\Permissions\Acl\Resource\GenericResource;
+use Zend\Permissions\Acl\Role\GenericRole;
 
 class AssertionAggregateTest extends TestCase
 {
     protected $assertionAggregate;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->assertionAggregate = new AssertionAggregate();
     }

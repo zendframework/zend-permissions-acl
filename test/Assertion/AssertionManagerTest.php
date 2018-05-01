@@ -9,16 +9,16 @@
 namespace ZendTest\Permissions\Acl\Assertion;
 
 use PHPUnit\Framework\TestCase;
-use Zend\Permissions\Acl\Assertion\AssertionManager;
-use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
 use Zend\Permissions\Acl\Assertion\AssertionInterface;
+use Zend\Permissions\Acl\Assertion\AssertionManager;
+use Zend\ServiceManager\Exception\InvalidServiceException;
+use Zend\ServiceManager\ServiceManager;
 
 class AssertionManagerTest extends TestCase
 {
     protected $manager;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->manager = new AssertionManager(new ServiceManager);
     }
