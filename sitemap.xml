@@ -26,11 +26,25 @@
     
 
     
+        
+    <url>
+     <loc>/ownership/</loc>
+     <lastmod>2018-05-01</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/expression/</loc>
+     <lastmod>2018-05-01</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
     <url>
      <loc>/advanced/</loc>
      <lastmod>2018-05-01</lastmod>
      <changefreq>daily</changefreq>
     </url>
+        
     
 
 </urlset>

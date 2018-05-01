@@ -9,7 +9,7 @@
     <meta name="description" content="Provides a lightweight and flexible access control list (ACL) implementation for privileges management">  
     <link rel="shortcut icon" href="../img/favicon.ico">
 
-    <title>Advanced Usage - zend-permissions-acl</title>
+    <title>Expression Assertions - zend-permissions-acl</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
@@ -88,16 +88,16 @@
                         
                             
 
-<li >
-    <a href="../expression/">Expression Assertions</a>
+<li class="active">
+    <a href="./">Expression Assertions</a>
 </li>
 
 
                         
                             
 
-<li class="active">
-    <a href="./">Advanced Usage</a>
+<li >
+    <a href="../advanced/">Advanced Usage</a>
 </li>
 
 
@@ -143,15 +143,28 @@
         <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#advanced-usage">Advanced Usage</a></li>
+        <li class="main active"><a href="#expression-assertions">Expression Assertions</a></li>
         
-            <li><a href="#storing-acl-data-for-persistence">Storing ACL Data for Persistence</a></li>
+            <li><a href="#operands">Operands</a></li>
         
-            <li><a href="#writing-conditional-acl-rules-with-assertions">Writing Conditional ACL Rules with Assertions</a></li>
+            <li><a href="#operators">Operators</a></li>
+        
+            <li><a href="#constructors">Constructors</a></li>
+        
+            <li><a href="#examples">Examples</a></li>
         
     
     </ul>
 
+    
+    <ul class="pager hidden-print">
+      <li class="previous">
+        <a rel="prev" href="../ownership/"><i class="fa fa-arrow-left"></i> Previous</a>
+      </li>
+      <li class="next">
+        <a rel="next" href="../advanced/">Next <i class="fa fa-arrow-right"></i></a>
+      </li>
+    </ul>
     
 </div></div>
         <div class="col-md-9" role="main">
@@ -165,79 +178,203 @@
       
     
   
-  <li class="active">Advanced Usage</li>
+  <li class="active">Expression Assertions</li>
 </ol>
 
-<h1 id="advanced-usage">Advanced Usage</h1>
-<h2 id="storing-acl-data-for-persistence">Storing ACL Data for Persistence</h2>
-<p>zend-permissions-acl was designed in such a way that it does not require any
-particular backend technology such as a database or cache server for storage of the ACL data. Its
-complete PHP implementation enables customized administration tools to be built upon
-<code>Zend\Permissions\Acl\Acl</code> with relative ease and flexibility. Many situations require some form of
-interactive maintenance of the ACL, and <code>Zend\Permissions\Acl\Acl</code> provides methods for setting
-up, and querying against, the access controls of an application.</p>
-<p>Storage of ACL data is therefore left as a task for the developer, since use cases are expected to
-vary widely for various situations. Because <code>Zend\Permissions\Acl\Acl</code> is serializable, ACL
-objects may be serialized with PHP's <a href="http://php.net/serialize">serialize() function</a>, and the
-results may be stored anywhere the developer should desire, such as a file, database, or caching
-mechanism.</p>
-<h2 id="writing-conditional-acl-rules-with-assertions">Writing Conditional ACL Rules with Assertions</h2>
-<p>Sometimes a rule for allowing or denying a role access to a resource should not
-be absolute, but dependent upon various criteria. For example, suppose that
-certain access should be allowed, but only between the hours of 8:00am and
-5:00pm. Another example would be denying access because a request comes from an
-IP address that has been flagged as a source of abuse.
-<code>Zend\Permissions\Acl\Acl</code> has built-in support for implementing rules based
-on whatever conditions the developer needs.</p>
-<p><code>Zend\Permissions\Acl\Acl</code> provides support for conditional rules with
-<code>Zend\Permissions\Acl\Assertion\AssertionInterface</code>. In order to use the rule assertion interface, a
-developer writes a class that implements the <code>assert()</code> method of the interface:</p>
-<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Assertion\AssertionInterface;
-use Zend\Permissions\Acl\Role\RoleInterface;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+<h1 id="expression-assertions">Expression Assertions</h1>
+<ul>
+<li>Since 2.7.0</li>
+</ul>
+<p>Many custom assertions are doing basic comparisons:</p>
+<ul>
+<li>Equality of a role property to a value or property of the resource.</li>
+<li>Other comparisons (<code>&gt;</code>, <code>&lt;</code>, <code>in_array</code>, etc.) of a role property to a value
+  or values (potentially a property of the resource).</li>
+<li>Regular expressions.</li>
+</ul>
+<p>While these can be easily accommodated by the <code>CallbackAssertion</code>, such
+assertions have one notable problem: they cannot be easily serialized.</p>
+<p>To facilitate such assertions, we now provide
+<code>Zend\Permissions\Acl\Assertion\ExpressionAssertion</code>. This class provides two
+static factory methods for creating an instance, each expecting the following:</p>
+<ul>
+<li>The left operand</li>
+<li>An operator</li>
+<li>The right operand</li>
+</ul>
+<p>When the assertion is executed, it uses the operator to determine how to compare
+the two operands, and thus answer the assertion.</p>
+<h2 id="operands">Operands</h2>
+<p>The operands can be any PHP value.</p>
+<p>Additionally, they can be an associative array containing the key
+<code>ExpressionAssertion::OPERAND_CONTEXT_PROPERTY</code> (<code>__context</code>), with a string
+value.</p>
+<p>That value can be one of the following:</p>
+<ul>
+<li>
+<p>A string matching the values "acl", "privilege", "role", or "resource", with
+  the latter two being most common. When one of these is provided, the
+  corresponding argument to the <code>assert()</code> method will be used.</p>
+</li>
+<li>
+<p>A dot-separated string with the first segment being one of the above values,
+  and the second being a property or field of that object. The
+  <code>ExpressionAssertion</code> will test for:</p>
+</li>
+<li>
+<p>a method matching <code>get&lt;field&gt;()</code></p>
+</li>
+<li>a method matching <code>is&lt;field&gt;()</code></li>
+<li>a public property named <code>&lt;field&gt;</code></li>
+</ul>
+<p>in that specific order. In the first two cases, <code>&lt;field&gt;</code> will be normalized
+  to WordCase when creating the method name to test.</p>
+<h2 id="operators">Operators</h2>
+<p><code>ExpressionAssertion</code> supports the following operators:</p>
+<pre class="codehilite"><code class="language-php">    const OPERATOR_EQ     = '=';
+    const OPERATOR_NEQ    = '!=';
+    const OPERATOR_LT     = '&lt;';
+    const OPERATOR_LTE    = '&lt;=';
+    const OPERATOR_GT     = '&gt;';
+    const OPERATOR_GTE    = '&gt;=';
+    const OPERATOR_IN     = 'in';
+    const OPERATOR_NIN    = '!in';
+    const OPERATOR_REGEX  = 'regex';
+    const OPERATOR_NREGEX = '!regex';
+    const OPERATOR_SAME   = '===';
+    const OPERATOR_NSAME  = '!==';</code></pre>
 
-class CleanIPAssertion implements AssertionInterface
+<p>In most cases, these will operate using the operators as listed above, with the
+following exceptions:</p>
+<ul>
+<li><code>OPERATOR_EQ</code> will use <code>==</code> as the comparison operator; <code>OPERATOR_NEQ</code> will
+  likewise use <code>!=</code>.</li>
+<li><code>OPERATOR_IN</code> and <code>OPERATOR_NIN</code> use <code>in_array()</code> (with the latter negating
+  the result), both doing strict comparisons. The right hand operand is expected
+  to be the array in which to look for results, and the left hand operand is
+  expected to be the needle to look for.</li>
+<li><code>OPERATOR_REGEX</code> and <code>OPERATOR_NREGEX</code> will perform a <code>preg_match()</code>
+  operation, using the right hand operand as the regular expression, and the
+  left hand operand as the value to compare.</li>
+</ul>
+<h2 id="constructors">Constructors</h2>
+<p>The constructor of <code>ExpressionAssertion</code> is private. Instead, you will use one
+of two static methods in order to create instances:</p>
+<ul>
+<li><code>fromProperties($left, $operator, $right)</code></li>
+<li><code>fromArray(array $expression)</code> (expects keys for "left", "operator", and "right")</li>
+</ul>
+<p>When creating expressions manually, the first is generally the best choice. When
+storing expressions in configuration or a database, the latter is useful, as you
+can pass a row of data at a time to the method to get expression instances.</p>
+<h2 id="examples">Examples</h2>
+<p>First, we'll define both a role and a resource:</p>
+<pre class="codehilite"><code class="language-php">namespace Blog\Entity;
+
+use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Zend\Permissions\Acl\Role\RoleInterface;
+
+class BlogPost implements ResourceInterface
 {
-    public function assert(
-        Acl $acl,
-        RoleInterface $role = null,
-        ResourceInterface $resource = null,
-        $privilege = null
-    ) {
-        return $this-&gt;_isCleanIP($_SERVER['REMOTE_ADDR']);
+    public $title;
+
+    public $shortDescription;
+
+    public $content;
+
+    public $author;
+
+    public function __construct(array $data = [])
+    {
+        foreach ($data as $property =&gt; $value) {
+            $this-&gt;$property = $value;
+        }
     }
 
-    protected function _isCleanIP($ip)
+    public function getResourceId()
     {
-        // ...
+        return 'blogPost';
+    }
+
+    public function getShortDescription()
+    {
+        return $this-&gt;shortDescription;
+    }
+
+    public function getAuthorName()
+    {
+        return $this-&gt;author ? $this-&gt;author-&gt;username : '';
+    }
+}
+
+class User implements RoleInterface
+{
+    public $username;
+
+    public $role = 'guest';
+
+    public $age;
+
+    public function __construct(array $data = [])
+    {
+        foreach ($data as $property =&gt; $value) {
+            $this-&gt;$property = $value;
+        }
+    }
+
+    public function getRoleId()
+    {
+        return $this-&gt;role;
+    }
+
+    public function isAdult()
+    {
+        return $this-&gt;age &gt;= 18;
     }
 }</code></pre>
 
-<p>Once an assertion class is available, the developer must supply an instance of
-the assertion class when assigning conditional rules. A rule that is created
-with an assertion only applies when the assertion method returns <code>TRUE</code>.</p>
-<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Acl;
+<p>Next, let's define some assertions.</p>
+<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Assertion\ExpressionAssertion;
 
-$acl = new Acl();
-$acl-&gt;allow(null, null, null, new CleanIPAssertion());</code></pre>
+// Username of role must be &quot;test&quot;:
+// Will access $username property on the role instance.
+$isTestUser = ExpressionAssertion::fromProperties(
+  [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY =&gt; 'role.username'],
+  '===',
+  'test'
+);
 
-<p>The above code creates a conditional allow rule that allows access to all
-privileges on everything by everyone, except when the requesting IP is
-"blacklisted". If a request comes in from an IP that is not considered "clean",
-then the allow rule does not apply. Since the rule applies to all roles, all
-resources, and all privileges, an "unclean" IP would result in a denial of
-access. This is a special case, however, and it should be understood that in all
-other cases (i.e., where a specific role, resource, or privilege is specified
-for the rule), a failed assertion results in the rule not applying, and other
-rules would be used to determine whether access is allowed or denied.</p>
-<p>The <code>assert()</code> method of an assertion object is passed the ACL, role,
-resource, and privilege to which the authorization query (i.e., <code>isAllowed()</code>)
-applies, in order to provide a context for the assertion class to determine its
-conditions where needed.</p>
+
+// Role must be at least 18 years old:
+// Will execute `isAdult()` on the role instance.
+$isOfLegalAge = ExpressionAssertion::fromProperties(
+  [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY =&gt; 'role.adult'],
+  '===',
+  true
+);
+
+// Must have edited text:
+// Will do a regex comparison on the shortDescription of the blog post
+// to ensure we do not have filler text.
+$isEditedDescription = ExpressionAssertion::fromArray([
+  'left'     =&gt; [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY =&gt; 'resource.shortDescription'],
+  'operator' =&gt; '!regex',
+  'right'    =&gt; '/lorem ipsum/i',
+]);</code></pre>
 
 <hr />
 
+
+<nav>
+  <ul class="pager hidden-print">
+    <li class="previous">
+      <a rel="prev" href="../ownership/"><i class="fa fa-arrow-left"></i> Previous</a>
+    </li>
+    <li class="next">
+      <a rel="next" href="../advanced/">Next <i class="fa fa-arrow-right"></i></a>
+    </li>
+  </ul>
+</nav>
 </div>
         
     </div>

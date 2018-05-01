@@ -9,7 +9,7 @@
     <meta name="description" content="Provides a lightweight and flexible access control list (ACL) implementation for privileges management">  
     <link rel="shortcut icon" href="../img/favicon.ico">
 
-    <title>Advanced Usage - zend-permissions-acl</title>
+    <title>Ownership Assertions - zend-permissions-acl</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
@@ -80,8 +80,8 @@
                         
                             
 
-<li >
-    <a href="../ownership/">Ownership Assertions</a>
+<li class="active">
+    <a href="./">Ownership Assertions</a>
 </li>
 
 
@@ -96,8 +96,8 @@
                         
                             
 
-<li class="active">
-    <a href="./">Advanced Usage</a>
+<li >
+    <a href="../advanced/">Advanced Usage</a>
 </li>
 
 
@@ -143,15 +143,22 @@
         <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#advanced-usage">Advanced Usage</a></li>
+        <li class="main active"><a href="#ownership-assertions">Ownership Assertions</a></li>
         
-            <li><a href="#storing-acl-data-for-persistence">Storing ACL Data for Persistence</a></li>
-        
-            <li><a href="#writing-conditional-acl-rules-with-assertions">Writing Conditional ACL Rules with Assertions</a></li>
+            <li><a href="#example">Example</a></li>
         
     
     </ul>
 
+    
+    <ul class="pager hidden-print">
+      <li class="previous">
+        <a rel="prev" href="../refining/"><i class="fa fa-arrow-left"></i> Previous</a>
+      </li>
+      <li class="next">
+        <a rel="next" href="../expression/">Next <i class="fa fa-arrow-right"></i></a>
+      </li>
+    </ul>
     
 </div></div>
         <div class="col-md-9" role="main">
@@ -165,79 +172,139 @@
       
     
   
-  <li class="active">Advanced Usage</li>
+  <li class="active">Ownership Assertions</li>
 </ol>
 
-<h1 id="advanced-usage">Advanced Usage</h1>
-<h2 id="storing-acl-data-for-persistence">Storing ACL Data for Persistence</h2>
-<p>zend-permissions-acl was designed in such a way that it does not require any
-particular backend technology such as a database or cache server for storage of the ACL data. Its
-complete PHP implementation enables customized administration tools to be built upon
-<code>Zend\Permissions\Acl\Acl</code> with relative ease and flexibility. Many situations require some form of
-interactive maintenance of the ACL, and <code>Zend\Permissions\Acl\Acl</code> provides methods for setting
-up, and querying against, the access controls of an application.</p>
-<p>Storage of ACL data is therefore left as a task for the developer, since use cases are expected to
-vary widely for various situations. Because <code>Zend\Permissions\Acl\Acl</code> is serializable, ACL
-objects may be serialized with PHP's <a href="http://php.net/serialize">serialize() function</a>, and the
-results may be stored anywhere the developer should desire, such as a file, database, or caching
-mechanism.</p>
-<h2 id="writing-conditional-acl-rules-with-assertions">Writing Conditional ACL Rules with Assertions</h2>
-<p>Sometimes a rule for allowing or denying a role access to a resource should not
-be absolute, but dependent upon various criteria. For example, suppose that
-certain access should be allowed, but only between the hours of 8:00am and
-5:00pm. Another example would be denying access because a request comes from an
-IP address that has been flagged as a source of abuse.
-<code>Zend\Permissions\Acl\Acl</code> has built-in support for implementing rules based
-on whatever conditions the developer needs.</p>
-<p><code>Zend\Permissions\Acl\Acl</code> provides support for conditional rules with
-<code>Zend\Permissions\Acl\Assertion\AssertionInterface</code>. In order to use the rule assertion interface, a
-developer writes a class that implements the <code>assert()</code> method of the interface:</p>
-<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Assertion\AssertionInterface;
-use Zend\Permissions\Acl\Role\RoleInterface;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+<h1 id="ownership-assertions">Ownership Assertions</h1>
+<ul>
+<li>Since 2.7.0</li>
+</ul>
+<p>When setting up permissions for an application, site owners common will want to
+allow roles to manipulate resources owned by the user with that role.  For
+example, a blog author should have permission to <em>write</em> new posts, and also to
+<em>modify</em> his or her <strong>own</strong> posts, but <strong>not</strong> posts of other authors.</p>
+<p>To accomodate this use case, we provide two interfaces:</p>
+<ul>
+<li>
+<p><strong><code>Zend\Acl\ProprietaryInterface</code></strong> is applicable to <em>resources</em> and <em>roles</em>.
+  It provides information about the <em>owner</em> of an object. Objects implementing
+  this interface are used in conjunction with the <code>OwnershipAssertion</code>.</p>
+</li>
+<li>
+<p><strong><code>Zend\Acl\Assertion\OwnershipAssertion</code></strong> ensures that a resource is owned
+  by a specific role by comparing it to owners provided by
+  <code>ProprietaryInterface</code> implementations.</p>
+</li>
+</ul>
+<h3 id="example">Example</h3>
+<p>Consider the following entities:</p>
+<pre class="codehilite"><code class="language-php">namespace MyApp\Entity;
 
-class CleanIPAssertion implements AssertionInterface
+use Zend\Permissions\Acl\ProprietaryInterface;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Zend\Permissions\Acl\Role\RoleInterface;
+
+class User implements RoleInterface, ProprietaryInterface
 {
-    public function assert(
-        Acl $acl,
-        RoleInterface $role = null,
-        ResourceInterface $resource = null,
-        $privilege = null
-    ) {
-        return $this-&gt;_isCleanIP($_SERVER['REMOTE_ADDR']);
+    protected $id;
+
+    protected $role = 'guest';
+
+    public function __construct($id, $role)
+    {
+        $this-&gt;id = $id;
+        $this-&gt;role = $role;
     }
 
-    protected function _isCleanIP($ip)
+    public function getRoleId()
     {
-        // ...
+        return $this-&gt;role;
+    }
+
+    public function getOwnerId()
+    {
+        return $this-&gt;id;
+    }
+}
+
+class BlogPost implements ResourceInterface, ProprietaryInterface
+{
+    public $author = null;
+
+    public function getResourceId()
+    {
+        return 'blogPost';
+    }
+
+    public function getOwnerId()
+    {
+        if ($this-&gt;author === null) {
+            return null;
+        }
+
+        return $this-&gt;author-&gt;getOwnerId();
     }
 }</code></pre>
 
-<p>Once an assertion class is available, the developer must supply an instance of
-the assertion class when assigning conditional rules. A rule that is created
-with an assertion only applies when the assertion method returns <code>TRUE</code>.</p>
-<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Acl;
+<p>The <code>User</code> marks itself as an <em>owner</em> by implementing <code>ProprietaryInterface</code>;
+its <code>getOwnerId()</code> method will return the user identifier provided during
+instantiation.</p>
+<p>A <code>BlogPost</code> marks itself as a resource and an <em>owner</em> by also implementing
+<code>ProprietaryInterface</code>; in its case, it returns the author identifier, if
+present, but <code>null</code> otherwise.</p>
+<p>Now let's wire these up into an ACL:</p>
+<pre class="codehilite"><code class="language-php">namespace MyApp;
+
+use MyApp\Entity;
+use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\Assertion\OwnershipAssertion;
 
 $acl = new Acl();
-$acl-&gt;allow(null, null, null, new CleanIPAssertion());</code></pre>
+$acl-&gt;addRole('guest');
+$acl-&gt;addRole('member', 'guest');
+$acl-&gt;addRole('author', 'member');
+$acl-&gt;addRole('admin');
 
-<p>The above code creates a conditional allow rule that allows access to all
-privileges on everything by everyone, except when the requesting IP is
-"blacklisted". If a request comes in from an IP that is not considered "clean",
-then the allow rule does not apply. Since the rule applies to all roles, all
-resources, and all privileges, an "unclean" IP would result in a denial of
-access. This is a special case, however, and it should be understood that in all
-other cases (i.e., where a specific role, resource, or privilege is specified
-for the rule), a failed assertion results in the rule not applying, and other
-rules would be used to determine whether access is allowed or denied.</p>
-<p>The <code>assert()</code> method of an assertion object is passed the ACL, role,
-resource, and privilege to which the authorization query (i.e., <code>isAllowed()</code>)
-applies, in order to provide a context for the assertion class to determine its
-conditions where needed.</p>
+$acl-&gt;addResource('blogPost');
+$acl-&gt;addResource('comment');
+
+$acl-&gt;allow('guest', 'blogPost', 'view');
+$acl-&gt;allow('guest', 'comment', array('view', 'submit'));
+$acl-&gt;allow('author', 'blogPost', 'write');
+$acl-&gt;allow('author', 'blogPost', 'edit', new OwnershipAssertion());
+$acl-&gt;allow('admin');
+
+$author1 = new User(1, 'author');
+$author2 = new User(2, 'author');
+
+$blogPost = new BlogPost();
+$blogPost-&gt;author = $author1;</code></pre>
+
+<p>The takeaways from the above should be:</p>
+<ul>
+<li>An <code>author</code> can <em>write</em> blog posts, and <em>edit</em> posts it owns.</li>
+<li><code>$author1</code> and <code>$author2</code> are both authors.</li>
+<li><code>$author1</code> is the author of <code>$blogPost</code>.</li>
+</ul>
+<p>Knowing these facts, we can expect the following assertion results:</p>
+<pre class="codehilite"><code class="language-php">$acl-&gt;isAllowed($author1, 'blogPost', 'write'); // true
+$acl-&gt;isAllowed($author1, $blogPost, 'edit');   // true
+$acl-&gt;isAllowed($author2, 'blogPost', 'write'); // true
+$acl-&gt;isAllowed($author2, $blogPost, 'edit');   // false</code></pre>
 
 <hr />
 
+
+<nav>
+  <ul class="pager hidden-print">
+    <li class="previous">
+      <a rel="prev" href="../refining/"><i class="fa fa-arrow-left"></i> Previous</a>
+    </li>
+    <li class="next">
+      <a rel="next" href="../expression/">Next <i class="fa fa-arrow-right"></i></a>
+    </li>
+  </ul>
+</nav>
 </div>
         
     </div>
