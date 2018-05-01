@@ -24,7 +24,7 @@ final class ExpressionAssertion implements AssertionInterface
     const OPERATOR_GT = '>';
     const OPERATOR_GTE = '>=';
     const OPERATOR_IN = 'in';
-    const OPERATOR_NIN = 'nin';
+    const OPERATOR_NIN = '!in';
     const OPERATOR_REGEX = 'regex';
 
     /**

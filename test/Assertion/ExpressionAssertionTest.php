@@ -32,7 +32,7 @@ class ExpressionAssertionTest extends TestCase
     {
         $assertion = ExpressionAssertion::fromArray([
             'left' => 'foo',
-            'operator' => '=',
+            'operator' => ExpressionAssertion::OPERATOR_EQ,
             'right' => 'bar'
         ]);
 
@@ -54,7 +54,7 @@ class ExpressionAssertionTest extends TestCase
 
         ExpressionAssertion::fromProperties(
             [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 123],
-            'in',
+            ExpressionAssertion::OPERATOR_IN,
             'test'
         );
     }
@@ -97,7 +97,7 @@ class ExpressionAssertionTest extends TestCase
             'equality' => [
                 'expression' => [
                     'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
-                    'operator' => '=',
+                    'operator' => ExpressionAssertion::OPERATOR_EQ,
                     'right' => 'test',
                 ],
                 'role' => new User([
@@ -110,7 +110,7 @@ class ExpressionAssertionTest extends TestCase
             'inequality' => [
                 'expression' => [
                     'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
-                    'operator' => '!=',
+                    'operator' => ExpressionAssertion::OPERATOR_NEQ,
                     'right' => 'test',
                 ],
                 'role' => new User([
@@ -123,7 +123,7 @@ class ExpressionAssertionTest extends TestCase
             'boolean-equality' => [
                 'expression' => [
                     'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
-                    'operator' => '=',
+                    'operator' => ExpressionAssertion::OPERATOR_EQ,
                     'right' => true,
                 ],
                 'role' => $author3,
@@ -134,7 +134,7 @@ class ExpressionAssertionTest extends TestCase
             'greater-than' => [
                 'expression' => [
                     'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age'],
-                    'operator' => '>',
+                    'operator' => ExpressionAssertion::OPERATOR_GT,
                     'right' => 20,
                 ],
                 'role' => new User([
@@ -148,7 +148,7 @@ class ExpressionAssertionTest extends TestCase
             'greater-than-or-equal' => [
                 'expression' => [
                     'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age'],
-                    'operator' => '>=',
+                    'operator' => ExpressionAssertion::OPERATOR_GTE,
                     'right' => 20,
                 ],
                 'role' => new User([
@@ -162,7 +162,7 @@ class ExpressionAssertionTest extends TestCase
             'less-than' => [
                 'expression' => [
                     'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age'],
-                    'operator' => '<',
+                    'operator' => ExpressionAssertion::OPERATOR_LT,
                     'right' => 30,
                 ],
                 'role' => new User([
@@ -176,7 +176,7 @@ class ExpressionAssertionTest extends TestCase
             'less-than-or-equal' => [
                 'expression' => [
                     'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age'],
-                    'operator' => '<=',
+                    'operator' => ExpressionAssertion::OPERATOR_LTE,
                     'right' => 30,
                 ],
                 'role' => new User([
@@ -190,7 +190,7 @@ class ExpressionAssertionTest extends TestCase
             'in' => [
                 'expression' => [
                     'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
-                    'operator' => 'in',
+                    'operator' => ExpressionAssertion::OPERATOR_IN,
                     'right' => ['foo', 'bar'],
                 ],
                 'role' => new User([
@@ -203,7 +203,7 @@ class ExpressionAssertionTest extends TestCase
             'not-in' => [
                 'expression' => [
                     'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
-                    'operator' => 'nin',
+                    'operator' => ExpressionAssertion::OPERATOR_NIN,
                     'right' => ['foo', 'bar'],
                 ],
                 'role' => new User([
@@ -216,7 +216,7 @@ class ExpressionAssertionTest extends TestCase
             'regex' => [
                 'expression' => [
                     'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
-                    'operator' => 'regex',
+                    'operator' => ExpressionAssertion::OPERATOR_REGEX,
                     'right' => '/foobar/',
                 ],
                 'role' => new User([
@@ -246,7 +246,7 @@ class ExpressionAssertionTest extends TestCase
             'equality-calculated-property' => [
                 'expression' => [
                     'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.adult'],
-                    'operator' => '=',
+                    'operator' => ExpressionAssertion::OPERATOR_EQ,
                     'right' => true,
                 ],
                 'role' => new User([
@@ -260,7 +260,7 @@ class ExpressionAssertionTest extends TestCase
             'privilege' => [
                 'expression' => [
                     'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'privilege'],
-                    'operator' => '=',
+                    'operator' => ExpressionAssertion::OPERATOR_EQ,
                     'right' => 'read',
                 ],
                 'role' => new User([
@@ -277,7 +277,7 @@ class ExpressionAssertionTest extends TestCase
     {
         $assertion = ExpressionAssertion::fromProperties(
             [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'foobar'],
-            '=',
+            ExpressionAssertion::OPERATOR_EQ,
             'test'
         );
 
@@ -291,7 +291,7 @@ class ExpressionAssertionTest extends TestCase
     {
         $assertion = ExpressionAssertion::fromProperties(
             [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'foo.bar'],
-            '=',
+            ExpressionAssertion::OPERATOR_EQ,
             'test'
         );
 
@@ -305,7 +305,7 @@ class ExpressionAssertionTest extends TestCase
     {
         $assertion = ExpressionAssertion::fromProperties(
             [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.age123'],
-            '=',
+            ExpressionAssertion::OPERATOR_EQ,
             30
         );
 
@@ -319,7 +319,7 @@ class ExpressionAssertionTest extends TestCase
     {
         $assertion = ExpressionAssertion::fromProperties(
             [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
-            '=',
+            ExpressionAssertion::OPERATOR_EQ,
             'test'
         );
 
@@ -333,7 +333,7 @@ class ExpressionAssertionTest extends TestCase
     {
         $assertion = ExpressionAssertion::fromProperties(
             'foo',
-            '=',
+            ExpressionAssertion::OPERATOR_EQ,
             'bar'
         );
 
@@ -351,7 +351,7 @@ class ExpressionAssertionTest extends TestCase
     {
         $assertion = ExpressionAssertion::fromProperties(
             'foo',
-            '=',
+            ExpressionAssertion::OPERATOR_EQ,
             'bar'
         );
 
