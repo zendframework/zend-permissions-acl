@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
+- [#23](https://github.com/zendframework/zend-permissions-acl/pull/23) adds a new assertion, `ExpressionAssertion`, to allow programatically or
+  automatically (from configuration) building standard comparison assertions using a variety of operators,
+  including `=` (`==`), `!=`, `<`, `<=`, `>`, `>=`, `===`, `!==`, `in` (`in_array`), `!in` (`! in_array`),
+  `regex` (`preg_match`), and `!regex` (`! preg_match`). See https://docs.zendframework.com/zend-permissions-acl/expression/
+  for details on usage.
+
 - [#3](https://github.com/zendframework/zend-permissions-acl/pull/3) adds two new interfaces designed to allow creation of ownership-based assertions easier:
   - `Zend\Permissions\Acl\ProprietaryInterface` is applicable to both roles and resources, and provides the method `getOwnerId()` for retrieving the owner role of an object.
   - `Zend\Permissions\Acl\Assertion\OwnershipAssertion` ensures that the owner of a proprietary resource matches that of the role.
