@@ -7,25 +7,70 @@
 
 namespace Zend\Permissions\Acl\Assertion;
 
+use ReflectionProperty;
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Role\RoleInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Assertion\Exception\InvalidAssertionException;
 use Zend\Permissions\Acl\Exception\RuntimeException;
 
+/**
+ * Create an assertion based on expression rules.
+ *
+ * Each of the constructor, fromProperties, and fromArray methods allow you to
+ * define expression rules, and these include the left hand side, operator, and
+ * right hand side of the expression.
+ *
+ * The left and right hand sides of the expression are the values to compare.
+ * These values can be either an exact value to match, or an array with the key
+ * OPERAND_CONTEXT_PROPERTY pointing to one of two value types.
+ *
+ * First, it can be a string value matching one of "acl", "privilege", "role",
+ * or "resource", with the latter two values being the most common. In those
+ * cases, the matching value passed to `assert()` will be used in the
+ * comparison.
+ *
+ * Second, it can be a dot-separated property path string of the format
+ * "object.property", representing the associated object (role, resource, acl,
+ * or privilege) and its property to test against.  The property may refer to a
+ * public property, or a public `get` or `is` method (following
+ * canonicalization of the property by replacing underscore separated values
+ * with camelCase values).
+ */
 final class ExpressionAssertion implements AssertionInterface
 {
     const OPERAND_CONTEXT_PROPERTY = '__context';
 
-    const OPERATOR_EQ = '=';
-    const OPERATOR_NEQ = '!=';
-    const OPERATOR_LT = '<';
-    const OPERATOR_LTE = '<=';
-    const OPERATOR_GT = '>';
-    const OPERATOR_GTE = '>=';
-    const OPERATOR_IN = 'in';
-    const OPERATOR_NIN = '!in';
-    const OPERATOR_REGEX = 'regex';
+    const OPERATOR_EQ     = '=';
+    const OPERATOR_NEQ    = '!=';
+    const OPERATOR_LT     = '<';
+    const OPERATOR_LTE    = '<=';
+    const OPERATOR_GT     = '>';
+    const OPERATOR_GTE    = '>=';
+    const OPERATOR_IN     = 'in';
+    const OPERATOR_NIN    = '!in';
+    const OPERATOR_REGEX  = 'regex';
+    const OPERATOR_NREGEX = '!regex';
+    const OPERATOR_SAME   = '===';
+    const OPERATOR_NSAME  = '!==';
+
+    /**
+     * @var array
+     */
+    private static $validOperators = [
+        self::OPERATOR_EQ,
+        self::OPERATOR_NEQ,
+        self::OPERATOR_LT,
+        self::OPERATOR_LTE,
+        self::OPERATOR_GT,
+        self::OPERATOR_GTE,
+        self::OPERATOR_IN,
+        self::OPERATOR_NIN,
+        self::OPERATOR_REGEX,
+        self::OPERATOR_NREGEX,
+        self::OPERATOR_SAME,
+        self::OPERATOR_NSAME,
+    ];
 
     /**
      * @var mixed
@@ -43,25 +88,15 @@ final class ExpressionAssertion implements AssertionInterface
     private $right;
 
     /**
-     * @var array
+     * Constructor
+     *
+     * Note that the constructor is marked private; use `fromProperties()` or
+     * `fromArray()` to create an instance.
+     *
+     * @param mixed|array $left See the class description for valid values.
+     * @param string $operator One of the OPERATOR constants (or their values)
+     * @param mixed|array $right See the class description for valid values.
      */
-    private $assertContext = [];
-
-    /**
-     * @var array
-     */
-    private static $validOperators = [
-        self::OPERATOR_EQ,
-        self::OPERATOR_NEQ,
-        self::OPERATOR_LT,
-        self::OPERATOR_LTE,
-        self::OPERATOR_GT,
-        self::OPERATOR_GTE,
-        self::OPERATOR_IN,
-        self::OPERATOR_NIN,
-        self::OPERATOR_REGEX,
-    ];
-
     private function __construct($left, $operator, $right)
     {
         $this->left = $left;
@@ -70,10 +105,12 @@ final class ExpressionAssertion implements AssertionInterface
     }
 
     /**
-     * @param mixed  $left
-     * @param string $operator
-     * @param mixed  $right
+     * @param mixed|array $left See the class description for valid values.
+     * @param string $operator One of the OPERATOR constants (or their values)
+     * @param mixed|array $right See the class description for valid values.
      * @return self
+     * @throws InvalidAssertionException if either operand is invalid.
+     * @throws InvalidAssertionException if the operator is not supported.
      */
     public static function fromProperties($left, $operator, $right)
     {
@@ -87,9 +124,16 @@ final class ExpressionAssertion implements AssertionInterface
     }
 
     /**
-     * @param array $expression
-     * @throws InvalidAssertionException
+     * @param array $expression Must contain the following keys:
+     *     - left: the left-hand side of the expression
+     *     - operator: the operator to use for the comparison
+     *     - right: the right-hand side of the expression
+     *     See the class description for valid values for the left and right
+     *     hand side values.
      * @return self
+     * @throws InvalidAssertionException if missing one of the required keys.
+     * @throws InvalidAssertionException if either operand is invalid.
+     * @throws InvalidAssertionException if the operator is not supported.
      */
     public static function fromArray(array $expression)
     {
@@ -108,6 +152,10 @@ final class ExpressionAssertion implements AssertionInterface
         );
     }
 
+    /**
+     * @param mixed|array $operand
+     * @throws InvalidAssertionException if the operand is invalid.
+     */
     private static function validateOperand($operand)
     {
         if (is_array($operand) && isset($operand[self::OPERAND_CONTEXT_PROPERTY])) {
@@ -117,9 +165,13 @@ final class ExpressionAssertion implements AssertionInterface
         }
     }
 
+    /**
+     * @param string $operand
+     * @throws InvalidAssertionException if the operator is not supported.
+     */
     private static function validateOperator($operator)
     {
-        if (! in_array($operator, self::$validOperators)) {
+        if (! in_array($operator, self::$validOperators, true)) {
             throw new InvalidAssertionException('Provided expression assertion operator is not supported');
         }
     }
@@ -129,100 +181,127 @@ final class ExpressionAssertion implements AssertionInterface
      */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
-        $this->assertContext = [
-            'acl' => $acl,
-            'role' => $role,
-            'resource' => $resource,
+        return $this->evaluate([
+            'acl'       => $acl,
+            'role'      => $role,
+            'resource'  => $resource,
             'privilege' => $privilege,
-        ];
-
-        return $this->evaluate();
+        ]);
     }
 
-    private function evaluate()
+    /**
+     * @param array $context Contains the acl, privilege, role, and resource
+     *     being tested currently.
+     * @return bool
+     */
+    private function evaluate(array $context)
     {
-        $left = $this->getLeftValue();
-        $right = $this->getRightValue();
+        $left = $this->getLeftValue($context);
+        $right = $this->getRightValue($context);
 
         return static::evaluateExpression($left, $this->operator, $right);
     }
 
-    private function getLeftValue()
+    /**
+     * @param array $context Contains the acl, privilege, role, and resource
+     *     being tested currently.
+     * @return mixed
+     */
+    private function getLeftValue(array $context)
     {
-        return $this->resolveOperandValue($this->left);
+        return $this->resolveOperandValue($this->left, $context);
     }
 
-    private function getRightValue()
+    /**
+     * @param array $context Contains the acl, privilege, role, and resource
+     *     being tested currently.
+     * @return mixed
+     */
+    private function getRightValue(array $context)
     {
-        return $this->resolveOperandValue($this->right);
+        return $this->resolveOperandValue($this->right, $context);
     }
 
-    private function resolveOperandValue($operand)
+    /**
+     * @param mixed|array
+     * @param array $context Contains the acl, privilege, role, and resource
+     *     being tested currently.
+     * @return mixed
+     * @throws RuntimeException if object cannot be resolved in context.
+     * @throws RuntimeException if property cannot be resolved.
+     */
+    private function resolveOperandValue($operand, array $context)
     {
-        if (is_array($operand) && isset($operand[self::OPERAND_CONTEXT_PROPERTY])) {
-            $contextProperty = $operand[self::OPERAND_CONTEXT_PROPERTY];
-
-            if (strpos($contextProperty, '.') !== false) { //property path?
-                list($objectName, $objectField) = explode('.', $contextProperty, 2);
-
-                if (! isset($this->assertContext[$objectName])) {
-                    throw new RuntimeException(sprintf(
-                        "'%s' is not available in the assertion context",
-                        $objectName
-                    ));
-                }
-
-                try {
-                    return $this->getObjectFieldValue($this->assertContext[$objectName], $objectField);
-                } catch (\RuntimeException $ex) {
-                    throw new RuntimeException(sprintf(
-                        "'%s' property cannot be resolved on the '%s' object",
-                        $objectField,
-                        $objectName
-                    ));
-                }
-            }
-
-            if (! isset($this->assertContext[$contextProperty])) {
-                throw new RuntimeException(sprintf(
-                    "'%s' is not available in the assertion context",
-                    $contextProperty
-                ));
-            }
-
-            return $this->assertContext[$contextProperty];
+        if (! is_array($operand) || ! isset($operand[self::OPERAND_CONTEXT_PROPERTY])) {
+            return $operand;
         }
 
-        return $operand;
+        $contextProperty = $operand[self::OPERAND_CONTEXT_PROPERTY];
+
+        if (strpos($contextProperty, '.') !== false) { // property path?
+            list($objectName, $objectField) = explode('.', $contextProperty, 2);
+            return $this->getObjectFieldValue($context, $objectName, $objectField);
+        }
+
+        if (! isset($context[$contextProperty])) {
+            throw new RuntimeException(sprintf(
+                "'%s' is not available in the assertion context",
+                $contextProperty
+            ));
+        }
+
+        return $context[$contextProperty];
     }
 
-    private function getObjectFieldValue($object, $field)
+    /**
+     * @param array $context Contains the acl, privilege, role, and resource
+     *     being tested currently.
+     * @param string $objectName Name of object in context to use.
+     * @param string $field
+     * @return mixed
+     * @throws RuntimeException if object cannot be resolved in context.
+     * @throws RuntimeException if property cannot be resolved.
+     */
+    private function getObjectFieldValue(array $context, $objectName, $field)
     {
+        if (! isset($context[$objectName])) {
+            throw new RuntimeException(sprintf(
+                "'%s' is not available in the assertion context",
+                $objectName
+            ));
+        }
+
+        $object = $context[$objectName];
         $accessors = ['get', 'is'];
-
-        $fieldAccessor = $field;
-
-        if (false !== strpos($field, '_')) {
-            $fieldAccessor = str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
-        }
+        $fieldAccessor = false === strpos($field, '_')
+            ? $field
+            : str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
 
         foreach ($accessors as $accessor) {
             $accessor .= $fieldAccessor;
 
-            if (! method_exists($object, $accessor)) {
-                continue;
+            if (method_exists($object, $accessor)) {
+                return $object->$accessor();
             }
-
-            return $object->$accessor();
         }
 
-        if (! property_exists($object, $field)) {
-            throw new \RuntimeException('Object property cannot be resolved');
+        if (! $this->propertyExists($object, $field)) {
+            throw new RuntimeException(sprintf(
+                "'%s' property cannot be resolved on the '%s' object",
+                $field,
+                $objectName
+            ));
         }
 
         return $object->$field;
     }
 
+    /**
+     * @param mixed $left
+     * @param string $right
+     * @param mixed $right
+     * @throws RuntimeException if operand is not supported.
+     */
     private static function evaluateExpression($left, $operator, $right)
     {
         switch ($operator) {
@@ -244,20 +323,27 @@ final class ExpressionAssertion implements AssertionInterface
                 return ! in_array($left, $right);
             case self::OPERATOR_REGEX:
                 return (bool) preg_match($right, $left);
-            default:
-                throw new RuntimeException(sprintf(
-                    'Unsupported expression assertion operator: %s',
-                    $operator
-                ));
+            case self::OPERATOR_NREGEX:
+                return ! (bool) preg_match($right, $left);
+            case self::OPERATOR_SAME:
+                return $left === $right;
+            case self::OPERATOR_NSAME:
+                return $left !== $right;
         }
     }
 
-    public function __sleep()
+    /**
+     * @param object $object
+     * @param string $field
+     * @return mixed
+     */
+    private function propertyExists($object, $property)
     {
-        return [
-            'left',
-            'operator',
-            'right',
-        ];
+        if (! property_exists($object, $property)) {
+            return false;
+        }
+
+        $r = new ReflectionProperty($object, $property);
+        return $r->isPublic();
     }
 }

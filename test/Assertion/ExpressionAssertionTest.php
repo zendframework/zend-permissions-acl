@@ -243,6 +243,45 @@ class ExpressionAssertionTest extends TestCase
                 'privilege' => 'read',
                 'assert' => true,
             ],
+            'nregex' => [
+                'expression' => [
+                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
+                    'operator' => ExpressionAssertion::OPERATOR_NREGEX,
+                    'right' => '/barbaz/',
+                ],
+                'role' => new User([
+                    'username' => 'test',
+                ]),
+                'resource' => new BlogPost(),
+                'privilege' => 'read',
+                'assert' => true,
+            ],
+            'same' => [
+                'expression' => [
+                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
+                    'operator' => ExpressionAssertion::OPERATOR_SAME,
+                    'right' => 'test',
+                ],
+                'role' => new User([
+                    'username' => 'test',
+                ]),
+                'resource' => new BlogPost(),
+                'privilege' => 'read',
+                'assert' => true,
+            ],
+            'not-same' => [
+                'expression' => [
+                    'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.username'],
+                    'operator' => ExpressionAssertion::OPERATOR_NSAME,
+                    'right' => 'test',
+                ],
+                'role' => new User([
+                    'username' => 'foobar',
+                ]),
+                'resource' => new BlogPost(),
+                'privilege' => 'read',
+                'assert' => true,
+            ],
             'equality-calculated-property' => [
                 'expression' => [
                     'left' => [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY => 'role.adult'],
