@@ -104,22 +104,38 @@ rule that is directly applicable to the query. In this case, since the "member" 
 before the "guest" role, the example code would print "allowed".
 
 
-### LIFO/FILO order for Role parents
+### LIFO order for Role parents
 
 When specifying multiple parents for a role the last parent listed is the first
-one searched for rules applicable to an authorization query.  This Last-In-First-Out
-(aka First-In-Last-Out) strategy is represented with this example.
-Here the `first` role is the highest order:
+one searched for rules applicable to an authorization query. This Last-In-First-Out strategy is represented with this example.
+Here the `first` role inherits from `second`, `third`, and `last` and is the most permissioned role:
+```php
+use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\Role\GenericRole as Role;
+use Zend\Permissions\Acl\Resource\GenericResource as Resource;
 
-```
+$acl = new Acl();
+
+$acl->addRole(new Role('last'))
+    ->addRole(new Role('third'))
+    ->addRole(new Role('second'));
+
 $acl->addRole(new Role('first'), ['last', 'third', 'second']);
+
+$acl->addResource(new Resource('someResource'));
+
+$acl->deny('last', 'someResource');
+$acl->allow('third', 'someResource');
+
+// allowed
+echo $acl->isAllowed('first', 'someResource') ? 'allowed' : 'denied';
 ```
 
-Less-permissioned roles will be first in the parents array.  For instance, where a`guest`
+Less-permissioned roles will be first in the parents array. For instance, where a`guest`
 role is unauthenticated, a `user` role is authenticated, and an `admin` role has the highest
-permissions, adding the `admin` role is as follows:
+permissions. As soon as any ACL query returns false evaluation of `isAllowed` is terminated and false is returned.  For this reason your least permissioned roles come first in the parents array. Adding the `admin` role is as follows:
 
-```
+```php
 $acl->addRole(new Role('admin'), ['guest', 'user']);
 ```
 
