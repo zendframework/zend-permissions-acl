@@ -562,7 +562,7 @@ class Acl implements AclInterface
 
         // ensure that all specified Resources exist; normalize input to array of Resource objects or null
         if (! is_array($resources)) {
-            if (null === $resources && count($this->resources) > 0) {
+            if (null === $resources && $this->resources) {
                 $resources = array_keys($this->resources);
                 // Passing a null resource; make sure "global" permission is also set!
                 if (! in_array(null, $resources)) {
