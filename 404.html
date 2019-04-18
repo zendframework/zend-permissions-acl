@@ -7,11 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Provides a lightweight and flexible access control list (ACL) implementation for privileges management">  
-    <link rel="shortcut icon" href="../img/favicon.ico">
+    <link rel="shortcut icon" href="//img/favicon.ico">
 
-    <title>Refining ACLs - zend-permissions-acl - Zend Framework Docs</title>
+    <title>zend-permissions-acl - Zend Framework Docs</title>
 
-    <link rel="stylesheet" href="../css/styles-f3b53f5ceb.css">
+    <link rel="stylesheet" href="//css/styles-f3b53f5ceb.css">
 </head>
 <body id="page-top">
 
@@ -31,7 +31,7 @@
             
             <span class="navbar-brand">
                 <a class="logo-link" href="https://framework.zend.com/" data-tooltip data-placement="bottom" title="Go to the ZF homepage">
-                    <img src="../img/zend-framework-logo.svg" height="28" alt="Zend Framework">
+                    <img src="//img/zend-framework-logo.svg" height="28" alt="Zend Framework">
                 </a>
             </span>
         </div>
@@ -66,7 +66,7 @@
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="..">zend-permissions-acl</a>
+            <a href="/.">zend-permissions-acl</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -75,19 +75,19 @@
             
                 
                     <li class="subnavigation__list-item ">
-                        <a href=".." class="subnavigation__link">zend-permissions-acl</a>
+                        <a href="/." class="subnavigation__link">zend-permissions-acl</a>
                     </li>
                 
             
                 
                     <li class="subnavigation__list-item ">
-                        <a href="../usage/" class="subnavigation__link">Theory and Usage</a>
+                        <a href="/usage/" class="subnavigation__link">Theory and Usage</a>
                     </li>
                 
             
                 
-                    <li class="subnavigation__list-item subnavigation__list-item--active">
-                        <a href="./" class="subnavigation__link">Refining ACLs</a>
+                    <li class="subnavigation__list-item ">
+                        <a href="/refining/" class="subnavigation__link">Refining ACLs</a>
                     </li>
                 
             
@@ -98,19 +98,19 @@
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../ownership/" class="subnavigation__link">Ownership Assertions</a>
+        <a href="/ownership/" class="subnavigation__link">Ownership Assertions</a>
     </li>
 
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../expression/" class="subnavigation__link">Expression Assertions</a>
+        <a href="/expression/" class="subnavigation__link">Expression Assertions</a>
     </li>
 
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../advanced/" class="subnavigation__link">Advanced Usage</a>
+        <a href="/advanced/" class="subnavigation__link">Advanced Usage</a>
     </li>
 
                             
@@ -187,235 +187,18 @@
             <div class="col-md-9 col-xs-12 content" role="main">
             <!-- content:begin -->
                 
-                    <ol class="breadcrumb" role="navigation" aria-label="breadcrumbs navigation">
-    <li><a href="https://framework.zend.com/">Home</a></li>
 
-    
-        <li><a href="https://docs.zendframework.com/">Documentation</a></li>
+<h1 class="content__title">404</h1>
+<blockquote>
+    <h3>Something went wrong!</h3>
+    <p>
+        We're sorry, but the page you are looking for does not exist.
+    </p>
+</blockquote>
 
-        
-            <li><a href="..">zend-permissions-acl</a></li>
-
-            
-
-            <li class="active">Refining ACLs</li>
-        
-    
-</ol>
+<a href="/" class="btn btn-default" role="button">Go to homepage</a>
 
 
-    
-
-    
-    
-
-    
-    
-        <div class="toc">
-            <h6 class="toc__headline">In This Article</h6>
-            <ul class="toc__list">
-                
-                    <li class="toc__entry">
-                        <a href="#precise-access-controls" class="toc__link">Precise Access Controls</a>
-                    </li>
-                
-                    <li class="toc__entry">
-                        <a href="#removing-access-controls" class="toc__link">Removing Access Controls</a>
-                    </li>
-                
-            </ul>
-        </div>
-    
-
-
-    <h1 id="refining-access-controls">Refining Access Controls</h1>
-<h2 id="precise-access-controls">Precise Access Controls</h2>
-<p>The basic ACL as defined in the [previous section](zend.permissions.acl.introduction) shows how
-various privileges may be allowed upon the entire ACL (all resources). In practice, however,
-access controls tend to have exceptions and varying degrees of complexity.
-<code>Zend\Permissions\Acl\Acl</code> allows to you accomplish these refinements in a straightforward and
-flexible manner.</p>
-<p>For the example CMS, it has been determined that whilst the 'staff' group covers the needs of the
-vast majority of users, there is a need for a new 'marketing' group that requires access to the
-newsletter and latest news in the CMS. The group is fairly self-sufficient and will have the
-ability to publish and archive both newsletters and the latest news.</p>
-<p>In addition, it has also been requested that the 'staff' group be allowed to view news stories but
-not to revise the latest news. Finally, it should be impossible for anyone (administrators included)
-to archive any 'announcement' news stories since they only have a lifespan of 1-2 days.</p>
-<p>First we revise the role registry to reflect these changes. We have determined that the 'marketing'
-group has the same basic permissions as 'staff', so we define 'marketing' in such a way that it
-inherits permissions from 'staff':</p>
-<pre class="codehilite"><code class="language-php">// The new marketing group inherits permissions from staff
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Role\GenericRole as Role;
-use Zend\Permissions\Acl\Resource\GenericResource as Resource;
-
-$acl = new Acl();
-
-$acl-&gt;addRole(new Role('marketing'), 'staff');</code></pre>
-
-<p>Next, note that the above access controls refer to specific resources (e.g., "newsletter", "latest
-news", "announcement news"). Now we add these resources:</p>
-<pre class="codehilite"><code class="language-php">// Create Resources for the rules
-
-// newsletter
-$acl-&gt;addResource(new Resource('newsletter'));
-
-// news
-$acl-&gt;addResource(new Resource('news'));
-
-// latest news
-$acl-&gt;addResource(new Resource('latest'), 'news');
-
-// announcement news
-$acl-&gt;addResource(new Resource('announcement'), 'news');</code></pre>
-
-<p>Then it is simply a matter of defining these more specific rules on the target areas of the ACL:</p>
-<pre class="codehilite"><code class="language-php">// Marketing must be able to publish and archive newsletters and the
-// latest news
-$acl-&gt;allow(
-    'marketing',
-    ['newsletter', 'latest'],
-    ['publish', 'archive']
-);
-
-// Staff (and marketing, by inheritance), are denied permission to
-// revise the latest news
-$acl-&gt;deny('staff', 'latest', 'revise');
-
-// Everyone (including administrators) are denied permission to
-// archive news announcements
-$acl-&gt;deny(null, 'announcement', 'archive');</code></pre>
-
-<p>We can now query the ACL with respect to the latest changes:</p>
-<pre class="codehilite"><code class="language-php">echo $acl-&gt;isAllowed('staff', 'newsletter', 'publish')
-    ? 'allowed'
-    : 'denied';
-// denied
-
-echo $acl-&gt;isAllowed('marketing', 'newsletter', 'publish')
-    ? 'allowed'
-    : 'denied';
-// allowed
-
-echo $acl-&gt;isAllowed('staff', 'latest', 'publish')
-    ? 'allowed'
-    : 'denied';
-// denied
-
-echo $acl-&gt;isAllowed('marketing', 'latest', 'publish')
-    ? 'allowed'
-    : 'denied';
-// allowed
-
-echo $acl-&gt;isAllowed('marketing', 'latest', 'archive')
-    ? 'allowed'
-    : 'denied';
-// allowed
-
-echo $acl-&gt;isAllowed('marketing', 'latest', 'revise')
-    ? 'allowed'
-    : 'denied';
-// denied
-
-echo $acl-&gt;isAllowed('editor', 'announcement', 'archive')
-    ? 'allowed'
-    : 'denied';
-// denied
-
-echo $acl-&gt;isAllowed('administrator', 'announcement', 'archive')
-    ? 'allowed'
-    : 'denied';
-// denied</code></pre>
-
-<h2 id="removing-access-controls">Removing Access Controls</h2>
-<p>To remove one or more access rules from the ACL, simply use the available <code>removeAllow()</code> or
-<code>removeDeny()</code> methods. As with <code>allow()</code> and <code>deny()</code>, you may provide a <code>NULL</code> value to indicate
-application to all roles, resources, and/or privileges:</p>
-<pre class="codehilite"><code class="language-php">// Remove the denial of revising latest news to staff (and marketing,
-// by inheritance)
-$acl-&gt;removeDeny('staff', 'latest', 'revise');
-
-echo $acl-&gt;isAllowed('marketing', 'latest', 'revise')
-    ? 'allowed'
-    : 'denied';
-// allowed
-
-// Remove the allowance of publishing and archiving newsletters to
-// marketing
-$acl-&gt;removeAllow(
-    'marketing',
-    'newsletter',
-    ['publish', 'archive']
-);
-
-echo $acl-&gt;isAllowed('marketing', 'newsletter', 'publish')
-    ? 'allowed'
-    : 'denied';
-// denied
-
-echo $acl-&gt;isAllowed('marketing', 'newsletter', 'archive')
-    ? 'allowed'
-    : 'denied';
-// denied</code></pre>
-
-<p>Privileges may be modified incrementally as indicated above, but a <code>NULL</code> value for the privileges
-overrides such incremental changes:</p>
-<pre class="codehilite"><code class="language-php">// Allow marketing all permissions upon the latest news
-$acl-&gt;allow('marketing', 'latest');
-
-echo $acl-&gt;isAllowed('marketing', 'latest', 'publish')
-    ? 'allowed'
-    : 'denied';
-// allowed
-
-echo $acl-&gt;isAllowed('marketing', 'latest', 'archive')
-    ? 'allowed'
-    : 'denied';
-// allowed
-
-echo $acl-&gt;isAllowed('marketing', 'latest', 'anything')
-    ? 'allowed'
-    : 'denied';
-// allowed</code></pre>
-
-
-
-    <nav>
-    <ul class="page-nav hidden-print">
-
-        
-        <li class="page-nav__item">
-            
-                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../usage/">
-                    <i class="fa fa-chevron-left"></i> Previous
-                </a>
-            
-        </li>
-
-        
-        <li class="page-nav__item">
-            
-                <a rel="next" class="page-nav__link page-nav__link--next" href="../ownership/">
-                    Next <i class="fa fa-chevron-right"></i>
-                </a>
-            
-        </li>
-    </ul>
-</nav>
-
-
-
-    <div class="help-wanted">
-        <p>
-            Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/zendframework/zend-permissions-acl/edit/master/docs/book/refining.md" target="_blank" class="help-wanted__link">
-                Edit this page on GitHub!
-            </a>
-        </p>
-    </div>
-
-                
             <!-- content:end -->
             </div>
             <div class="col-md-3 col-xs-12 sidebar">
@@ -431,7 +214,7 @@ echo $acl-&gt;isAllowed('marketing', 'latest', 'anything')
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="..">zend-permissions-acl</a>
+            <a href="/.">zend-permissions-acl</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -440,19 +223,19 @@ echo $acl-&gt;isAllowed('marketing', 'latest', 'anything')
             
                 
                     <li class="subnavigation__list-item ">
-                        <a href=".." class="subnavigation__link">zend-permissions-acl</a>
+                        <a href="/." class="subnavigation__link">zend-permissions-acl</a>
                     </li>
                 
             
                 
                     <li class="subnavigation__list-item ">
-                        <a href="../usage/" class="subnavigation__link">Theory and Usage</a>
+                        <a href="/usage/" class="subnavigation__link">Theory and Usage</a>
                     </li>
                 
             
                 
-                    <li class="subnavigation__list-item subnavigation__list-item--active">
-                        <a href="./" class="subnavigation__link">Refining ACLs</a>
+                    <li class="subnavigation__list-item ">
+                        <a href="/refining/" class="subnavigation__link">Refining ACLs</a>
                     </li>
                 
             
@@ -463,19 +246,19 @@ echo $acl-&gt;isAllowed('marketing', 'latest', 'anything')
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../ownership/" class="subnavigation__link">Ownership Assertions</a>
+        <a href="/ownership/" class="subnavigation__link">Ownership Assertions</a>
     </li>
 
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../expression/" class="subnavigation__link">Expression Assertions</a>
+        <a href="/expression/" class="subnavigation__link">Expression Assertions</a>
     </li>
 
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../advanced/" class="subnavigation__link">Advanced Usage</a>
+        <a href="/advanced/" class="subnavigation__link">Advanced Usage</a>
     </li>
 
                             
@@ -554,11 +337,11 @@ echo $acl-&gt;isAllowed('marketing', 'latest', 'anything')
 </footer>
 
     <script>
-        var base_url = '..',
+        var base_url = '/',
             siteName = 'zend-permissions-acl';
     </script>
-    <script src="../js/scripts-8d7ae56abf.js"></script>
-        <script src="../search/main.js"></script>
+    <script src="//js/scripts-8d7ae56abf.js"></script>
+        <script src="/search/main.js"></script>
 
     
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
