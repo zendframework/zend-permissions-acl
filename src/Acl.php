@@ -546,7 +546,7 @@ class Acl implements AclInterface
         // ensure that all specified Roles exist; normalize input to array of Role objects or null
         if (! is_array($roles)) {
             $roles = [$roles];
-        } elseif (0 === count($roles)) {
+        } elseif (! $roles) {
             $roles = [null];
         }
         $rolesTemp = $roles;
@@ -562,7 +562,7 @@ class Acl implements AclInterface
 
         // ensure that all specified Resources exist; normalize input to array of Resource objects or null
         if (! is_array($resources)) {
-            if (null === $resources && count($this->resources) > 0) {
+            if (null === $resources && $this->resources) {
                 $resources = array_keys($this->resources);
                 // Passing a null resource; make sure "global" permission is also set!
                 if (! in_array(null, $resources)) {
@@ -571,7 +571,7 @@ class Acl implements AclInterface
             } else {
                 $resources = [$resources];
             }
-        } elseif (0 === count($resources)) {
+        } elseif (! $resources) {
             $resources = [null];
         }
         $resourcesTemp = $resources;
@@ -602,7 +602,7 @@ class Acl implements AclInterface
                 foreach ($resources as $resource) {
                     foreach ($roles as $role) {
                         $rules =& $this->getRules($resource, $role, true);
-                        if (0 === count($privileges)) {
+                        if (! $privileges) {
                             $rules['allPrivileges']['type']   = $type;
                             $rules['allPrivileges']['assert'] = $assert;
                             if (! isset($rules['byPrivilegeId'])) {
@@ -626,7 +626,7 @@ class Acl implements AclInterface
                         if (null === $rules) {
                             continue;
                         }
-                        if (0 === count($privileges)) {
+                        if (! $privileges) {
                             if (null === $resource && null === $role) {
                                 if ($type === $rules['allPrivileges']['type']) {
                                     $rules = [
