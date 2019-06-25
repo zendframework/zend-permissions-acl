@@ -28,7 +28,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#38](https://github.com/zendframework/zend-permissions-acl/pull/38) adds support for PHP 7.3.
 
 ### Changed
 
