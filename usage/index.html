@@ -337,14 +337,14 @@ assign rules directly to "sally".</p>
 <p>Though the ability to inherit from multiple roles is very useful, multiple inheritance also
 introduces some degree of complexity. The following example illustrates the ambiguity condition and
 how <code>Zend\Permissions\Acl\Acl</code> solves it.</p>
-<h3 id="multiple-inheritance-among-roles">Multiple Inheritance among Roles</h3>
+<h3>Multiple Inheritance among Roles</h3>
 <p>The following code defines three base roles - "guest", "member", and "admin" - from which other
 roles may inherit. Then, a role identified by "someUser" is established and inherits from the three
 other roles. The order in which these roles appear in the <code>$parents</code> array is important. When
 necessary, <code>Zend\Permissions\Acl\Acl</code> searches for access rules defined not only for the queried
 role (herein, "someUser"), but also upon the roles from which the queried role inherits (herein,
 "guest", "member", and "admin"):</p>
-<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Acl;
+<p> <pre class=codehilite><code class=language-php>use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Role\GenericRole as Role;
 use Zend\Permissions\Acl\Resource\GenericResource as Resource;
 
@@ -362,8 +362,7 @@ $acl-&gt;addResource(new Resource('someResource'));
 $acl-&gt;deny('guest', 'someResource');
 $acl-&gt;allow('member', 'someResource');
 
-echo $acl-&gt;isAllowed('someUser', 'someResource') ? 'allowed' : 'denied';</code></pre>
-
+echo $acl-&gt;isAllowed('someUser', 'someResource') ? 'allowed' : 'denied';</code></pre></p>
 <p>Since there is no rule specifically defined for the "someUser" role and "someResource",
 <code>Zend\Permissions\Acl\Acl</code> must search for rules that may be defined for roles that "someUser"
 inherits. First, the "admin" role is visited, and there is no access rule defined for it. Next, the
@@ -377,7 +376,7 @@ having inherited conflicting rules from different parent roles.</p>
 rule that is directly applicable to the query. In this case, since the "member" role is examined
 before the "guest" role, the example code would print "allowed".</p>
 <blockquote>
-<h4 id="lifo-order-for-role-queries">LIFO Order for role queries</h4>
+<h4>LIFO Order for role queries</h4>
 <p>When specifying multiple parents for a role, keep in mind that the last parent listed is the first
 one searched for rules applicable to an authorization query.</p>
 </blockquote>
@@ -386,9 +385,8 @@ one searched for rules applicable to an authorization query.</p>
 For the purposes of demonstration, however, we will create a basic Content Management System (CMS)
 ACL that maintains several tiers of groups over a wide variety of areas. To create a new ACL
 object, we instantiate the ACL with no parameters:</p>
-<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Acl;
-$acl = new Acl();</code></pre>
-
+<p> <pre class=codehilite><code class=language-php>use Zend\Permissions\Acl\Acl;
+$acl = new Acl();</code></pre></p>
 <blockquote>
 <h2 id="denied-by-default">Denied by default</h2>
 <p>Until a developer specifies an "allow" rule, <code>Zend\Permissions\Acl\Acl</code> denies access to every
@@ -438,7 +436,7 @@ group only. The permissions may be expressed as follows:</p>
 <p>For this example, <code>Zend\Permissions\Acl\Role\GenericRole</code> is used, but any object that implements
 <code>Zend\Permissions\Acl\Role\RoleInterface</code> is acceptable. These groups can be added to the role
 registry as follows:</p>
-<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Acl;
+<p> <pre class=codehilite><code class=language-php>use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Role\GenericRole as Role;
 
 $acl = new Acl();
@@ -460,8 +458,7 @@ $acl-&gt;addRole(new Role('staff'), 'guest');
 $acl-&gt;addRole(new Role('editor'), 'staff');
 
 // Administrator does not inherit access controls
-$acl-&gt;addRole(new Role('administrator'));</code></pre>
-
+$acl-&gt;addRole(new Role('administrator'));</code></pre></p>
 <h2 id="defining-access-controls">Defining Access Controls</h2>
 <p>Now that the ACL contains the relevant roles, rules can be established that define how resources
 may be accessed by roles. You may have noticed that we have not defined any particular resources for
@@ -470,13 +467,13 @@ this example, which is simplified to illustrate that the rules apply to all reso
 general to specific, minimizing the number of rules needed, because resources and roles inherit
 rules that are defined upon their ancestors.</p>
 <blockquote>
-<h3 id="specificity">Specificity</h3>
+<h3>Specificity</h3>
 <p>In general, <code>Zend\Permissions\Acl\Acl</code> obeys a given rule if and only if a
 more specific rule does not apply.</p>
 </blockquote>
 <p>Consequently, we can define a reasonably complex set of rules with a minimum amount of code. To
 apply the base permissions as defined above:</p>
-<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Acl;
+<p> <pre class=codehilite><code class=language-php>use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Role\GenericRole as Role;
 
 $acl = new Acl();
@@ -504,15 +501,14 @@ $acl-&gt;allow('staff', null, array('edit', 'submit', 'revise'));
 $acl-&gt;allow('editor', null, array('publish', 'archive', 'delete'));
 
 // Administrator inherits nothing, but is allowed all privileges
-$acl-&gt;allow('administrator');</code></pre>
-
+$acl-&gt;allow('administrator');</code></pre></p>
 <p>The <code>NULL</code> values in the above <code>allow()</code> calls are used to indicate that the allow rules apply to
 all resources.</p>
 <h2 id="querying-an-acl">Querying an ACL</h2>
 <p>We now have a flexible ACL that can be used to determine whether requesters have permission to
 perform functions throughout the web application. Performing queries is quite simple using the
 <code>isAllowed()</code> method:</p>
-<pre class="codehilite"><code class="language-php">echo $acl-&gt;isAllowed('guest', null, 'view')
+<p> <pre class=codehilite><code class=language-php>echo $acl-&gt;isAllowed('guest', null, 'view')
     ? 'allowed'
     : 'denied';
 // allowed
@@ -550,7 +546,7 @@ echo $acl-&gt;isAllowed('administrator')
 echo $acl-&gt;isAllowed('administrator', null, 'update')
     ? 'allowed'
     : 'denied';
-// allowed because administrator is allowed all privileges</code></pre>
+// allowed because administrator is allowed all privileges</code></pre></p>
 
 
 
@@ -584,7 +580,7 @@ echo $acl-&gt;isAllowed('administrator', null, 'update')
     <div class="help-wanted">
         <p>
             Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/zendframework/zend-permissions-acl/edit/master/docs/usage.md" target="_blank" class="help-wanted__link">
+            <a href="https://github.com/zendframework/zend-permissions-acl/edit/master/docs/book/usage.md" target="_blank" class="help-wanted__link">
                 Edit this page on GitHub!
             </a>
         </p>

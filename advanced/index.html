@@ -303,7 +303,7 @@ on whatever conditions the developer needs.</p>
 <p><code>Zend\Permissions\Acl\Acl</code> provides support for conditional rules with
 <code>Zend\Permissions\Acl\Assertion\AssertionInterface</code>. In order to use the rule assertion interface, a
 developer writes a class that implements the <code>assert()</code> method of the interface:</p>
-<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Acl;
+<p> <pre class=codehilite><code class=language-php>use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Assertion\AssertionInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
@@ -323,16 +323,14 @@ class CleanIPAssertion implements AssertionInterface
     {
         // ...
     }
-}</code></pre>
-
+}</code></pre></p>
 <p>Once an assertion class is available, the developer must supply an instance of
 the assertion class when assigning conditional rules. A rule that is created
 with an assertion only applies when the assertion method returns <code>TRUE</code>.</p>
-<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Acl;
+<p> <pre class=codehilite><code class=language-php>use Zend\Permissions\Acl\Acl;
 
 $acl = new Acl();
-$acl-&gt;allow(null, null, null, new CleanIPAssertion());</code></pre>
-
+$acl-&gt;allow(null, null, null, new CleanIPAssertion());</code></pre></p>
 <p>The above code creates a conditional allow rule that allows access to all
 privileges on everything by everyone, except when the requesting IP is
 "blacklisted". If a request comes in from an IP that is not considered "clean",
@@ -375,7 +373,7 @@ conditions where needed.</p>
     <div class="help-wanted">
         <p>
             Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/zendframework/zend-permissions-acl/edit/master/docs/advanced.md" target="_blank" class="help-wanted__link">
+            <a href="https://github.com/zendframework/zend-permissions-acl/edit/master/docs/book/advanced.md" target="_blank" class="help-wanted__link">
                 Edit this page on GitHub!
             </a>
         </p>

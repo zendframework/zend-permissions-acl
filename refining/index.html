@@ -287,18 +287,17 @@ to archive any 'announcement' news stories since they only have a lifespan of 1-
 <p>First we revise the role registry to reflect these changes. We have determined that the 'marketing'
 group has the same basic permissions as 'staff', so we define 'marketing' in such a way that it
 inherits permissions from 'staff':</p>
-<pre class="codehilite"><code class="language-php">// The new marketing group inherits permissions from staff
+<p> <pre class=codehilite><code class=language-php>// The new marketing group inherits permissions from staff
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Role\GenericRole as Role;
 use Zend\Permissions\Acl\Resource\GenericResource as Resource;
 
 $acl = new Acl();
 
-$acl-&gt;addRole(new Role('marketing'), 'staff');</code></pre>
-
+$acl-&gt;addRole(new Role('marketing'), 'staff');</code></pre></p>
 <p>Next, note that the above access controls refer to specific resources (e.g., "newsletter", "latest
 news", "announcement news"). Now we add these resources:</p>
-<pre class="codehilite"><code class="language-php">// Create Resources for the rules
+<p> <pre class=codehilite><code class=language-php>// Create Resources for the rules
 
 // newsletter
 $acl-&gt;addResource(new Resource('newsletter'));
@@ -310,10 +309,9 @@ $acl-&gt;addResource(new Resource('news'));
 $acl-&gt;addResource(new Resource('latest'), 'news');
 
 // announcement news
-$acl-&gt;addResource(new Resource('announcement'), 'news');</code></pre>
-
+$acl-&gt;addResource(new Resource('announcement'), 'news');</code></pre></p>
 <p>Then it is simply a matter of defining these more specific rules on the target areas of the ACL:</p>
-<pre class="codehilite"><code class="language-php">// Marketing must be able to publish and archive newsletters and the
+<p> <pre class=codehilite><code class=language-php>// Marketing must be able to publish and archive newsletters and the
 // latest news
 $acl-&gt;allow(
     'marketing',
@@ -327,10 +325,9 @@ $acl-&gt;deny('staff', 'latest', 'revise');
 
 // Everyone (including administrators) are denied permission to
 // archive news announcements
-$acl-&gt;deny(null, 'announcement', 'archive');</code></pre>
-
+$acl-&gt;deny(null, 'announcement', 'archive');</code></pre></p>
 <p>We can now query the ACL with respect to the latest changes:</p>
-<pre class="codehilite"><code class="language-php">echo $acl-&gt;isAllowed('staff', 'newsletter', 'publish')
+<p> <pre class=codehilite><code class=language-php>echo $acl-&gt;isAllowed('staff', 'newsletter', 'publish')
     ? 'allowed'
     : 'denied';
 // denied
@@ -368,13 +365,12 @@ echo $acl-&gt;isAllowed('editor', 'announcement', 'archive')
 echo $acl-&gt;isAllowed('administrator', 'announcement', 'archive')
     ? 'allowed'
     : 'denied';
-// denied</code></pre>
-
+// denied</code></pre></p>
 <h2 id="removing-access-controls">Removing Access Controls</h2>
 <p>To remove one or more access rules from the ACL, simply use the available <code>removeAllow()</code> or
 <code>removeDeny()</code> methods. As with <code>allow()</code> and <code>deny()</code>, you may provide a <code>NULL</code> value to indicate
 application to all roles, resources, and/or privileges:</p>
-<pre class="codehilite"><code class="language-php">// Remove the denial of revising latest news to staff (and marketing,
+<p> <pre class=codehilite><code class=language-php>// Remove the denial of revising latest news to staff (and marketing,
 // by inheritance)
 $acl-&gt;removeDeny('staff', 'latest', 'revise');
 
@@ -399,11 +395,10 @@ echo $acl-&gt;isAllowed('marketing', 'newsletter', 'publish')
 echo $acl-&gt;isAllowed('marketing', 'newsletter', 'archive')
     ? 'allowed'
     : 'denied';
-// denied</code></pre>
-
+// denied</code></pre></p>
 <p>Privileges may be modified incrementally as indicated above, but a <code>NULL</code> value for the privileges
 overrides such incremental changes:</p>
-<pre class="codehilite"><code class="language-php">// Allow marketing all permissions upon the latest news
+<p> <pre class=codehilite><code class=language-php>// Allow marketing all permissions upon the latest news
 $acl-&gt;allow('marketing', 'latest');
 
 echo $acl-&gt;isAllowed('marketing', 'latest', 'publish')
@@ -419,7 +414,7 @@ echo $acl-&gt;isAllowed('marketing', 'latest', 'archive')
 echo $acl-&gt;isAllowed('marketing', 'latest', 'anything')
     ? 'allowed'
     : 'denied';
-// allowed</code></pre>
+// allowed</code></pre></p>
 
 
 
@@ -453,7 +448,7 @@ echo $acl-&gt;isAllowed('marketing', 'latest', 'anything')
     <div class="help-wanted">
         <p>
             Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/zendframework/zend-permissions-acl/edit/master/docs/refining.md" target="_blank" class="help-wanted__link">
+            <a href="https://github.com/zendframework/zend-permissions-acl/edit/master/docs/book/refining.md" target="_blank" class="help-wanted__link">
                 Edit this page on GitHub!
             </a>
         </p>

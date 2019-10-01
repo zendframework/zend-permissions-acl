@@ -337,7 +337,7 @@ value.</p>
   to WordCase when creating the method name to test.</p>
 <h2 id="operators">Operators</h2>
 <p><code>ExpressionAssertion</code> supports the following operators:</p>
-<pre class="codehilite"><code class="language-php">    const OPERATOR_EQ     = '=';
+<p> <pre class=codehilite><code class=language-php>    const OPERATOR_EQ     = '=';
     const OPERATOR_NEQ    = '!=';
     const OPERATOR_LT     = '&lt;';
     const OPERATOR_LTE    = '&lt;=';
@@ -348,8 +348,7 @@ value.</p>
     const OPERATOR_REGEX  = 'regex';
     const OPERATOR_NREGEX = '!regex';
     const OPERATOR_SAME   = '===';
-    const OPERATOR_NSAME  = '!==';</code></pre>
-
+    const OPERATOR_NSAME  = '!==';</code></pre></p>
 <p>In most cases, these will operate using the operators as listed above, with the
 following exceptions:</p>
 <ul>
@@ -375,7 +374,7 @@ storing expressions in configuration or a database, the latter is useful, as you
 can pass a row of data at a time to the method to get expression instances.</p>
 <h2 id="examples">Examples</h2>
 <p>First, we'll define both a role and a resource:</p>
-<pre class="codehilite"><code class="language-php">namespace Blog\Entity;
+<p> <pre class=codehilite><code class=language-php>namespace Blog\Entity;
 
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
@@ -437,12 +436,11 @@ class User implements RoleInterface
     {
         return $this-&gt;age &gt;= 18;
     }
-}</code></pre>
-
+}</code></pre></p>
 <p>Next, let's define some assertions.</p>
-<pre class="codehilite"><code class="language-php">use Zend\Permissions\Acl\Assertion\ExpressionAssertion;
+<p> <pre class=codehilite><code class=language-php>use Zend\Permissions\Acl\Assertion\ExpressionAssertion;
 
-// Username of role must be "test":
+// Username of role must be &quot;test&quot;:
 // Will access $username property on the role instance.
 $isTestUser = ExpressionAssertion::fromProperties(
   [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY =&gt; 'role.username'],
@@ -466,7 +464,7 @@ $isEditedDescription = ExpressionAssertion::fromArray([
   'left'     =&gt; [ExpressionAssertion::OPERAND_CONTEXT_PROPERTY =&gt; 'resource.shortDescription'],
   'operator' =&gt; '!regex',
   'right'    =&gt; '/lorem ipsum/i',
-]);</code></pre>
+]);</code></pre></p>
 
 
 
@@ -500,7 +498,7 @@ $isEditedDescription = ExpressionAssertion::fromArray([
     <div class="help-wanted">
         <p>
             Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/zendframework/zend-permissions-acl/edit/master/docs/expression.md" target="_blank" class="help-wanted__link">
+            <a href="https://github.com/zendframework/zend-permissions-acl/edit/master/docs/book/expression.md" target="_blank" class="help-wanted__link">
                 Edit this page on GitHub!
             </a>
         </p>

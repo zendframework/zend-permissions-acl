@@ -261,17 +261,6 @@
 
     
     
-        <div class="toc">
-            <h6 class="toc__headline">In This Article</h6>
-            <ul class="toc__list">
-                
-                    <li class="toc__entry">
-                        <a href="#example" class="toc__link">Example</a>
-                    </li>
-                
-            </ul>
-        </div>
-    
 
     </div>
 
@@ -296,9 +285,9 @@ example, a blog author should have permission to <em>write</em> new posts, and a
   <code>ProprietaryInterface</code> implementations.</p>
 </li>
 </ul>
-<h3 id="example">Example</h3>
+<h3>Example</h3>
 <p>Consider the following entities:</p>
-<pre class="codehilite"><code class="language-php">namespace MyApp\Entity;
+<p> <pre class=codehilite><code class=language-php>namespace MyApp\Entity;
 
 use Zend\Permissions\Acl\ProprietaryInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
@@ -344,8 +333,7 @@ class BlogPost implements ResourceInterface, ProprietaryInterface
 
         return $this-&gt;author-&gt;getOwnerId();
     }
-}</code></pre>
-
+}</code></pre></p>
 <p>The <code>User</code> marks itself as an <em>owner</em> by implementing <code>ProprietaryInterface</code>;
 its <code>getOwnerId()</code> method will return the user identifier provided during
 instantiation.</p>
@@ -353,7 +341,7 @@ instantiation.</p>
 <code>ProprietaryInterface</code>; in its case, it returns the author identifier, if
 present, but <code>null</code> otherwise.</p>
 <p>Now let's wire these up into an ACL:</p>
-<pre class="codehilite"><code class="language-php">namespace MyApp;
+<p> <pre class=codehilite><code class=language-php>namespace MyApp;
 
 use MyApp\Entity;
 use Zend\Permissions\Acl\Acl;
@@ -378,8 +366,7 @@ $author1 = new User(1, 'author');
 $author2 = new User(2, 'author');
 
 $blogPost = new BlogPost();
-$blogPost-&gt;author = $author1;</code></pre>
-
+$blogPost-&gt;author = $author1;</code></pre></p>
 <p>The takeaways from the above should be:</p>
 <ul>
 <li>An <code>author</code> can <em>write</em> blog posts, and <em>edit</em> posts it owns.</li>
@@ -387,10 +374,10 @@ $blogPost-&gt;author = $author1;</code></pre>
 <li><code>$author1</code> is the author of <code>$blogPost</code>.</li>
 </ul>
 <p>Knowing these facts, we can expect the following assertion results:</p>
-<pre class="codehilite"><code class="language-php">$acl-&gt;isAllowed($author1, 'blogPost', 'write'); // true
+<p> <pre class=codehilite><code class=language-php>$acl-&gt;isAllowed($author1, 'blogPost', 'write'); // true
 $acl-&gt;isAllowed($author1, $blogPost, 'edit');   // true
 $acl-&gt;isAllowed($author2, 'blogPost', 'write'); // true
-$acl-&gt;isAllowed($author2, $blogPost, 'edit');   // false</code></pre>
+$acl-&gt;isAllowed($author2, $blogPost, 'edit');   // false</code></pre></p>
 
 
 
@@ -424,7 +411,7 @@ $acl-&gt;isAllowed($author2, $blogPost, 'edit');   // false</code></pre>
     <div class="help-wanted">
         <p>
             Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/zendframework/zend-permissions-acl/edit/master/docs/ownership.md" target="_blank" class="help-wanted__link">
+            <a href="https://github.com/zendframework/zend-permissions-acl/edit/master/docs/book/ownership.md" target="_blank" class="help-wanted__link">
                 Edit this page on GitHub!
             </a>
         </p>
