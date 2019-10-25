@@ -2,32 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>https://docs.zendframework.com/zend-permissions-acl/</loc>
-     <lastmod>2019-10-24</lastmod>
+     <lastmod>2019-10-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://docs.zendframework.com/zend-permissions-acl/usage/</loc>
-     <lastmod>2019-10-24</lastmod>
+     <lastmod>2019-10-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://docs.zendframework.com/zend-permissions-acl/refining/</loc>
-     <lastmod>2019-10-24</lastmod>
+     <lastmod>2019-10-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://docs.zendframework.com/zend-permissions-acl/ownership/</loc>
-     <lastmod>2019-10-24</lastmod>
+     <lastmod>2019-10-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://docs.zendframework.com/zend-permissions-acl/expression/</loc>
-     <lastmod>2019-10-24</lastmod>
+     <lastmod>2019-10-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://docs.zendframework.com/zend-permissions-acl/advanced/</loc>
-     <lastmod>2019-10-24</lastmod>
+     <lastmod>2019-10-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>
