@@ -53,18 +53,18 @@ That value can be one of the following:
 `ExpressionAssertion` supports the following operators:
 
 ```php
-    const OPERATOR_EQ     = '=';
-    const OPERATOR_NEQ    = '!=';
-    const OPERATOR_LT     = '<';
-    const OPERATOR_LTE    = '<=';
-    const OPERATOR_GT     = '>';
-    const OPERATOR_GTE    = '>=';
-    const OPERATOR_IN     = 'in';
-    const OPERATOR_NIN    = '!in';
-    const OPERATOR_REGEX  = 'regex';
-    const OPERATOR_NREGEX = '!regex';
-    const OPERATOR_SAME   = '===';
-    const OPERATOR_NSAME  = '!==';
+const OPERATOR_EQ     = '=';
+const OPERATOR_NEQ    = '!=';
+const OPERATOR_LT     = '<';
+const OPERATOR_LTE    = '<=';
+const OPERATOR_GT     = '>';
+const OPERATOR_GTE    = '>=';
+const OPERATOR_IN     = 'in';
+const OPERATOR_NIN    = '!in';
+const OPERATOR_REGEX  = 'regex';
+const OPERATOR_NREGEX = '!regex';
+const OPERATOR_SAME   = '===';
+const OPERATOR_NSAME  = '!==';
 ```
 
 In most cases, these will operate using the operators as listed above, with the
