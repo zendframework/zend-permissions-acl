@@ -11,4 +11,3 @@ pages:
 site_name: zend-permissions-acl
 site_description: 'Provides a lightweight and flexible access control list (ACL) implementation for privileges management'
 repo_url: 'https://github.com/zendframework/zend-permissions-acl'
-copyright: 'Copyright (c) 2005-2018 <a href="https://www.zend.com/">Zend Technologies USA Inc.</a>'
