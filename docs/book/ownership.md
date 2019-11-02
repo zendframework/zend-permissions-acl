@@ -1,6 +1,6 @@
 # Ownership Assertions
 
-- Since 2.7.0
+> Available since version 2.7.0
 
 When setting up permissions for an application, site owners common will want to
 allow roles to manipulate resources owned by the user with that role.  For

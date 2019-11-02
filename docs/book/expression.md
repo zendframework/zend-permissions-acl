@@ -1,6 +1,6 @@
 # Expression Assertions
 
-- Since 2.7.0
+> Available since version 2.7.0
 
 Many custom assertions are doing basic comparisons:
 
