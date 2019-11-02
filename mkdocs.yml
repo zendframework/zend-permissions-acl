@@ -1,9 +1,9 @@
 docs_dir: docs/book
 site_dir: docs/html
-pages:
-    - index.md
+nav:
+    - Home: index.md
     - 'Theory and Usage': usage.md
-    - 'Refining ACLs': refining.md
+    - 'Refining Access Controls': refining.md
     - Reference:
       - 'Ownership Assertions': ownership.md
       - 'Expression Assertions': expression.md
