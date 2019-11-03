@@ -103,7 +103,7 @@ having inherited conflicting rules from different parent roles.
 rule that is directly applicable to the query. In this case, since the "member" role is examined
 before the "guest" role, the example code would print "allowed".
 
-> #### LIFO Order for role queries
+> ### LIFO Order for Role Queries
 >
 > When specifying multiple parents for a role, keep in mind that the last parent listed is the first
 > one searched for rules applicable to an authorization query.
@@ -120,7 +120,7 @@ use Zend\Permissions\Acl\Acl;
 $acl = new Acl();
 ```
 
-> ## Denied by default
+> ### Denied by default
 >
 > Until a developer specifies an "allow" rule, `Zend\Permissions\Acl\Acl` denies access to every
 > privilege upon every resource by every role.
