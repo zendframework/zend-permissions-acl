@@ -2,7 +2,7 @@
 
 ## Precise Access Controls
 
-The basic ACL as defined in the \[previous section\](zend.permissions.acl.introduction) shows how
+The basic ACL as defined in the [previous section](usage.md#defining-access-controls) shows how
 various privileges may be allowed upon the entire ACL (all resources). In practice, however,
 access controls tend to have exceptions and varying degrees of complexity.
 `Zend\Permissions\Acl\Acl` allows to you accomplish these refinements in a straightforward and

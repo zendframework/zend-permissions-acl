@@ -1,14 +1,13 @@
 docs_dir: docs/book
 site_dir: docs/html
-pages:
-    - index.md
+nav:
+    - Home: index.md
     - 'Theory and Usage': usage.md
-    - 'Refining ACLs': refining.md
+    - 'Refining Access Controls': refining.md
     - Reference:
       - 'Ownership Assertions': ownership.md
       - 'Expression Assertions': expression.md
       - 'Advanced Usage': advanced.md
 site_name: zend-permissions-acl
-site_description: 'Provides a lightweight and flexible access control list (ACL) implementation for privileges management'
+site_description: 'Create, manage, and query access control lists.'
 repo_url: 'https://github.com/zendframework/zend-permissions-acl'
-copyright: 'Copyright (c) 2005-2018 <a href="https://www.zend.com/">Zend Technologies USA Inc.</a>'
