@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Provides a lightweight and flexible access control list (ACL) implementation for privileges management">  
+    <meta name="description" content="Create, manage, and query access control lists.">  
     <link rel="canonical" href="https://docs.zendframework.com/zend-permissions-acl/expression/">
     <link rel="shortcut icon" href="../img/favicon.ico">
 
@@ -82,20 +82,6 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href=".." class="subnavigation__link">zend-permissions-acl</a>
-                            </li>
-                        
-                    
-                
-            
-
-                
-                
-
-                    
-                    
-                        
-                            <li class="subnavigation__list-item ">
                                 <a href="../usage/" class="subnavigation__link">Theory and Usage</a>
                             </li>
                         
@@ -110,7 +96,7 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../refining/" class="subnavigation__link">Refining ACLs</a>
+                                <a href="../refining/" class="subnavigation__link">Refining Access Controls</a>
                             </li>
                         
                     
@@ -288,9 +274,9 @@
     </div>
 
     <h1 id="expression-assertions">Expression Assertions</h1>
-<ul>
-<li>Since 2.7.0</li>
-</ul>
+<blockquote>
+<p>Available since version 2.7.0</p>
+</blockquote>
 <p>Many custom assertions are doing basic comparisons:</p>
 <ul>
 <li>Equality of a role property to a value or property of the resource.</li>
@@ -337,18 +323,18 @@ value.</p>
   to WordCase when creating the method name to test.</p>
 <h2 id="operators">Operators</h2>
 <p><code>ExpressionAssertion</code> supports the following operators:</p>
-<p> <pre class=codehilite><code class=language-php>    const OPERATOR_EQ     = '=';
-    const OPERATOR_NEQ    = '!=';
-    const OPERATOR_LT     = '&lt;';
-    const OPERATOR_LTE    = '&lt;=';
-    const OPERATOR_GT     = '&gt;';
-    const OPERATOR_GTE    = '&gt;=';
-    const OPERATOR_IN     = 'in';
-    const OPERATOR_NIN    = '!in';
-    const OPERATOR_REGEX  = 'regex';
-    const OPERATOR_NREGEX = '!regex';
-    const OPERATOR_SAME   = '===';
-    const OPERATOR_NSAME  = '!==';</code></pre></p>
+<p> <pre class=codehilite><code class=language-php>const OPERATOR_EQ     = '=';
+const OPERATOR_NEQ    = '!=';
+const OPERATOR_LT     = '&lt;';
+const OPERATOR_LTE    = '&lt;=';
+const OPERATOR_GT     = '&gt;';
+const OPERATOR_GTE    = '&gt;=';
+const OPERATOR_IN     = 'in';
+const OPERATOR_NIN    = '!in';
+const OPERATOR_REGEX  = 'regex';
+const OPERATOR_NREGEX = '!regex';
+const OPERATOR_SAME   = '===';
+const OPERATOR_NSAME  = '!==';</code></pre></p>
 <p>In most cases, these will operate using the operators as listed above, with the
 following exceptions:</p>
 <ul>
@@ -535,20 +521,6 @@ $isEditedDescription = ExpressionAssertion::fromArray([
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href=".." class="subnavigation__link">zend-permissions-acl</a>
-                            </li>
-                        
-                    
-                
-            
-
-                
-                
-
-                    
-                    
-                        
-                            <li class="subnavigation__list-item ">
                                 <a href="../usage/" class="subnavigation__link">Theory and Usage</a>
                             </li>
                         
@@ -563,7 +535,7 @@ $isEditedDescription = ExpressionAssertion::fromArray([
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../refining/" class="subnavigation__link">Refining ACLs</a>
+                                <a href="../refining/" class="subnavigation__link">Refining Access Controls</a>
                             </li>
                         
                     

@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Provides a lightweight and flexible access control list (ACL) implementation for privileges management">  
+    <meta name="description" content="Create, manage, and query access control lists.">  
     <link rel="canonical" href="https://docs.zendframework.com/zend-permissions-acl/usage/">
     <link rel="shortcut icon" href="../img/favicon.ico">
 
@@ -81,20 +81,6 @@
                     
                     
                         
-                            <li class="subnavigation__list-item ">
-                                <a href=".." class="subnavigation__link">zend-permissions-acl</a>
-                            </li>
-                        
-                    
-                
-            
-
-                
-                
-
-                    
-                    
-                        
                             <li class="subnavigation__list-item subnavigation__list-item--active">
                                 <a href="./" class="subnavigation__link">Theory and Usage</a>
                             </li>
@@ -110,7 +96,7 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../refining/" class="subnavigation__link">Refining ACLs</a>
+                                <a href="../refining/" class="subnavigation__link">Refining Access Controls</a>
                             </li>
                         
                     
@@ -269,10 +255,6 @@
                     </li>
                 
                     <li class="toc__entry">
-                        <a href="#denied-by-default" class="toc__link">Denied by default</a>
-                    </li>
-                
-                    <li class="toc__entry">
                         <a href="#registering-roles" class="toc__link">Registering Roles</a>
                     </li>
                 
@@ -376,7 +358,7 @@ having inherited conflicting rules from different parent roles.</p>
 rule that is directly applicable to the query. In this case, since the "member" role is examined
 before the "guest" role, the example code would print "allowed".</p>
 <blockquote>
-<h4>LIFO Order for role queries</h4>
+<h3>LIFO Order for Role Queries</h3>
 <p>When specifying multiple parents for a role, keep in mind that the last parent listed is the first
 one searched for rules applicable to an authorization query.</p>
 </blockquote>
@@ -388,7 +370,7 @@ object, we instantiate the ACL with no parameters:</p>
 <p> <pre class=codehilite><code class=language-php>use Zend\Permissions\Acl\Acl;
 $acl = new Acl();</code></pre></p>
 <blockquote>
-<h2 id="denied-by-default">Denied by default</h2>
+<h3>Denied by default</h3>
 <p>Until a developer specifies an "allow" rule, <code>Zend\Permissions\Acl\Acl</code> denies access to every
 privilege upon every resource by every role.</p>
 </blockquote>
@@ -616,20 +598,6 @@ echo $acl-&gt;isAllowed('administrator', null, 'update')
                     
                     
                         
-                            <li class="subnavigation__list-item ">
-                                <a href=".." class="subnavigation__link">zend-permissions-acl</a>
-                            </li>
-                        
-                    
-                
-            
-
-                
-                
-
-                    
-                    
-                        
                             <li class="subnavigation__list-item subnavigation__list-item--active">
                                 <a href="./" class="subnavigation__link">Theory and Usage</a>
                             </li>
@@ -645,7 +613,7 @@ echo $acl-&gt;isAllowed('administrator', null, 'update')
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../refining/" class="subnavigation__link">Refining ACLs</a>
+                                <a href="../refining/" class="subnavigation__link">Refining Access Controls</a>
                             </li>
                         
                     
