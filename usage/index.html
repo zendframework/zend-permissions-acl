@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Create, manage, and query access control lists.">  
-    <link rel="canonical" href="https://docs.zendframework.com/zend-permissions-acl/usage/">
+    <link rel="canonical" href="https://docs.zendframework.com/usage/">
     <link rel="shortcut icon" href="../img/favicon.ico">
 
     <title>Theory and Usage - zend-permissions-acl - Zend Framework Docs</title>
 
-    <link rel="stylesheet" href="../css/styles-5cfabd53ee.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body id="page-top">
 
@@ -195,9 +195,9 @@
     <div class="laminas-announcement">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
-                Zend Framework transitions to the Linux Foundation. <a href="https://getlaminas.org">Learn More.</a>
-            </div>
+            <div class="col-xs-12"><strong>
+                This package has moved. Visit its replacement, <a href="https://docs.laminas.dev/laminas-permissions-acl/">laminas/laminas-permissions-acl.</a>
+            </strong></div>
         </div>
     </div>
 </div>
@@ -326,7 +326,7 @@ other roles. The order in which these roles appear in the <code>$parents</code> 
 necessary, <code>Zend\Permissions\Acl\Acl</code> searches for access rules defined not only for the queried
 role (herein, "someUser"), but also upon the roles from which the queried role inherits (herein,
 "guest", "member", and "admin"):</p>
-<p> <pre class=codehilite><code class=language-php>use Zend\Permissions\Acl\Acl;
+<pre><code class="language-php">use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Role\GenericRole as Role;
 use Zend\Permissions\Acl\Resource\GenericResource as Resource;
 
@@ -344,7 +344,9 @@ $acl-&gt;addResource(new Resource('someResource'));
 $acl-&gt;deny('guest', 'someResource');
 $acl-&gt;allow('member', 'someResource');
 
-echo $acl-&gt;isAllowed('someUser', 'someResource') ? 'allowed' : 'denied';</code></pre></p>
+echo $acl-&gt;isAllowed('someUser', 'someResource') ? 'allowed' : 'denied';
+</code></pre>
+
 <p>Since there is no rule specifically defined for the "someUser" role and "someResource",
 <code>Zend\Permissions\Acl\Acl</code> must search for rules that may be defined for roles that "someUser"
 inherits. First, the "admin" role is visited, and there is no access rule defined for it. Next, the
@@ -367,8 +369,10 @@ one searched for rules applicable to an authorization query.</p>
 For the purposes of demonstration, however, we will create a basic Content Management System (CMS)
 ACL that maintains several tiers of groups over a wide variety of areas. To create a new ACL
 object, we instantiate the ACL with no parameters:</p>
-<p> <pre class=codehilite><code class=language-php>use Zend\Permissions\Acl\Acl;
-$acl = new Acl();</code></pre></p>
+<pre><code class="language-php">use Zend\Permissions\Acl\Acl;
+$acl = new Acl();
+</code></pre>
+
 <blockquote>
 <h3>Denied by default</h3>
 <p>Until a developer specifies an "allow" rule, <code>Zend\Permissions\Acl\Acl</code> denies access to every
@@ -418,7 +422,7 @@ group only. The permissions may be expressed as follows:</p>
 <p>For this example, <code>Zend\Permissions\Acl\Role\GenericRole</code> is used, but any object that implements
 <code>Zend\Permissions\Acl\Role\RoleInterface</code> is acceptable. These groups can be added to the role
 registry as follows:</p>
-<p> <pre class=codehilite><code class=language-php>use Zend\Permissions\Acl\Acl;
+<pre><code class="language-php">use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Role\GenericRole as Role;
 
 $acl = new Acl();
@@ -440,7 +444,9 @@ $acl-&gt;addRole(new Role('staff'), 'guest');
 $acl-&gt;addRole(new Role('editor'), 'staff');
 
 // Administrator does not inherit access controls
-$acl-&gt;addRole(new Role('administrator'));</code></pre></p>
+$acl-&gt;addRole(new Role('administrator'));
+</code></pre>
+
 <h2 id="defining-access-controls">Defining Access Controls</h2>
 <p>Now that the ACL contains the relevant roles, rules can be established that define how resources
 may be accessed by roles. You may have noticed that we have not defined any particular resources for
@@ -455,7 +461,7 @@ more specific rule does not apply.</p>
 </blockquote>
 <p>Consequently, we can define a reasonably complex set of rules with a minimum amount of code. To
 apply the base permissions as defined above:</p>
-<p> <pre class=codehilite><code class=language-php>use Zend\Permissions\Acl\Acl;
+<pre><code class="language-php">use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Role\GenericRole as Role;
 
 $acl = new Acl();
@@ -483,14 +489,16 @@ $acl-&gt;allow('staff', null, array('edit', 'submit', 'revise'));
 $acl-&gt;allow('editor', null, array('publish', 'archive', 'delete'));
 
 // Administrator inherits nothing, but is allowed all privileges
-$acl-&gt;allow('administrator');</code></pre></p>
+$acl-&gt;allow('administrator');
+</code></pre>
+
 <p>The <code>NULL</code> values in the above <code>allow()</code> calls are used to indicate that the allow rules apply to
 all resources.</p>
 <h2 id="querying-an-acl">Querying an ACL</h2>
 <p>We now have a flexible ACL that can be used to determine whether requesters have permission to
 perform functions throughout the web application. Performing queries is quite simple using the
 <code>isAllowed()</code> method:</p>
-<p> <pre class=codehilite><code class=language-php>echo $acl-&gt;isAllowed('guest', null, 'view')
+<pre><code class="language-php">echo $acl-&gt;isAllowed('guest', null, 'view')
     ? 'allowed'
     : 'denied';
 // allowed
@@ -528,7 +536,8 @@ echo $acl-&gt;isAllowed('administrator')
 echo $acl-&gt;isAllowed('administrator', null, 'update')
     ? 'allowed'
     : 'denied';
-// allowed because administrator is allowed all privileges</code></pre></p>
+// allowed because administrator is allowed all privileges
+</code></pre>
 
 
 
@@ -690,7 +699,7 @@ echo $acl-&gt;isAllowed('administrator', null, 'update')
             
             <div class="col-md-9">
                 <h4 class="footer__headline">Copyright</h4>
-                <p>&copy; 2006-2019 by <a href="https://www.zend.com/">Zend</a>, a <a href="https://www.roguewave.com/">Rogue Wave Company</a>.</p>
+                <p>&copy; 2006-2020 by <a href="https://www.zend.com/">Zend</a> by <a href="https://www.perforce.com/">Perforce</a>.</p>
             </div>
 
             
@@ -698,10 +707,10 @@ echo $acl-&gt;isAllowed('administrator', null, 'update')
                 <h4 class="footer__headline">Support</h4>
                 <ul class="support__list">
                     <li class="support__list-item">
-                        <a href="https://discourse.zendframework.com" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
+                        <a href="https://discourse.laminas.dev" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
                     </li>
                     <li class="support__list-item">
-                        <a href="https://zendframework-slack.herokuapp.com" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                        <a href="https://laminas.dev/chat/" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
                     </li>
                     <li class="support__list-item">
                         <a href="https://github.com/zendframework" class="support__link" title="Github"><i class="fa fa-github"></i></a>
@@ -709,27 +718,28 @@ echo $acl-&gt;isAllowed('administrator', null, 'update')
                     <li class="support__list-item">
                         <a href="https://twitter.com/zfdevteam" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
                     </li>
-                    <li class="support__list-item">
-                        <a href="https://tinyletter.com/mwopzend" class="support__link" title="Newsletter"><i class="fa fa-envelope"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/blog/feed-rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/security/feed" class="support__link" title="Security feed"><i class="fa fa-rss-square"></i></a>
-                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
 
+<nav class="cookie-bar navbar navbar-fixed-bottom navbar-default hidden">
+    <div class="container">
+        <p class="navbar-text">
+            We use cookies to allow you to dismiss dialogs such as the Laminas
+            Project notification.
+        </p>
+        <button type="button" class="cookie-button btn btn-default navbar-btn">Allow Cookies</button>
+    </div>
+</nav>
+
     <script>
         var base_url = '..',
             siteName = 'zend-permissions-acl';
     </script>
-    <script src="../js/scripts-8d7ae56abf.js"></script>
-        <script src="../search/main.js"></script>
+    <script src="/js/scripts.js"></script>
+    <script src="../search/main.js"></script>
 
     
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">

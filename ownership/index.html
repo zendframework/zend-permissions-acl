@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Create, manage, and query access control lists.">  
-    <link rel="canonical" href="https://docs.zendframework.com/zend-permissions-acl/ownership/">
+    <link rel="canonical" href="https://docs.zendframework.com/ownership/">
     <link rel="shortcut icon" href="../img/favicon.ico">
 
     <title>Ownership Assertions - zend-permissions-acl - Zend Framework Docs</title>
 
-    <link rel="stylesheet" href="../css/styles-5cfabd53ee.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body id="page-top">
 
@@ -195,9 +195,9 @@
     <div class="laminas-announcement">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
-                Zend Framework transitions to the Linux Foundation. <a href="https://getlaminas.org">Learn More.</a>
-            </div>
+            <div class="col-xs-12"><strong>
+                This package has moved. Visit its replacement, <a href="https://docs.laminas.dev/laminas-permissions-acl/">laminas/laminas-permissions-acl.</a>
+            </strong></div>
         </div>
     </div>
 </div>
@@ -273,7 +273,7 @@ example, a blog author should have permission to <em>write</em> new posts, and a
 </ul>
 <h3>Example</h3>
 <p>Consider the following entities:</p>
-<p> <pre class=codehilite><code class=language-php>namespace MyApp\Entity;
+<pre><code class="language-php">namespace MyApp\Entity;
 
 use Zend\Permissions\Acl\ProprietaryInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
@@ -319,7 +319,9 @@ class BlogPost implements ResourceInterface, ProprietaryInterface
 
         return $this-&gt;author-&gt;getOwnerId();
     }
-}</code></pre></p>
+}
+</code></pre>
+
 <p>The <code>User</code> marks itself as an <em>owner</em> by implementing <code>ProprietaryInterface</code>;
 its <code>getOwnerId()</code> method will return the user identifier provided during
 instantiation.</p>
@@ -327,7 +329,7 @@ instantiation.</p>
 <code>ProprietaryInterface</code>; in its case, it returns the author identifier, if
 present, but <code>null</code> otherwise.</p>
 <p>Now let's wire these up into an ACL:</p>
-<p> <pre class=codehilite><code class=language-php>namespace MyApp;
+<pre><code class="language-php">namespace MyApp;
 
 use MyApp\Entity;
 use Zend\Permissions\Acl\Acl;
@@ -352,7 +354,9 @@ $author1 = new User(1, 'author');
 $author2 = new User(2, 'author');
 
 $blogPost = new BlogPost();
-$blogPost-&gt;author = $author1;</code></pre></p>
+$blogPost-&gt;author = $author1;
+</code></pre>
+
 <p>The takeaways from the above should be:</p>
 <ul>
 <li>An <code>author</code> can <em>write</em> blog posts, and <em>edit</em> posts it owns.</li>
@@ -360,10 +364,11 @@ $blogPost-&gt;author = $author1;</code></pre></p>
 <li><code>$author1</code> is the author of <code>$blogPost</code>.</li>
 </ul>
 <p>Knowing these facts, we can expect the following assertion results:</p>
-<p> <pre class=codehilite><code class=language-php>$acl-&gt;isAllowed($author1, 'blogPost', 'write'); // true
+<pre><code class="language-php">$acl-&gt;isAllowed($author1, 'blogPost', 'write'); // true
 $acl-&gt;isAllowed($author1, $blogPost, 'edit');   // true
 $acl-&gt;isAllowed($author2, 'blogPost', 'write'); // true
-$acl-&gt;isAllowed($author2, $blogPost, 'edit');   // false</code></pre></p>
+$acl-&gt;isAllowed($author2, $blogPost, 'edit');   // false
+</code></pre>
 
 
 
@@ -525,7 +530,7 @@ $acl-&gt;isAllowed($author2, $blogPost, 'edit');   // false</code></pre></p>
             
             <div class="col-md-9">
                 <h4 class="footer__headline">Copyright</h4>
-                <p>&copy; 2006-2019 by <a href="https://www.zend.com/">Zend</a>, a <a href="https://www.roguewave.com/">Rogue Wave Company</a>.</p>
+                <p>&copy; 2006-2020 by <a href="https://www.zend.com/">Zend</a> by <a href="https://www.perforce.com/">Perforce</a>.</p>
             </div>
 
             
@@ -533,10 +538,10 @@ $acl-&gt;isAllowed($author2, $blogPost, 'edit');   // false</code></pre></p>
                 <h4 class="footer__headline">Support</h4>
                 <ul class="support__list">
                     <li class="support__list-item">
-                        <a href="https://discourse.zendframework.com" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
+                        <a href="https://discourse.laminas.dev" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
                     </li>
                     <li class="support__list-item">
-                        <a href="https://zendframework-slack.herokuapp.com" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                        <a href="https://laminas.dev/chat/" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
                     </li>
                     <li class="support__list-item">
                         <a href="https://github.com/zendframework" class="support__link" title="Github"><i class="fa fa-github"></i></a>
@@ -544,27 +549,28 @@ $acl-&gt;isAllowed($author2, $blogPost, 'edit');   // false</code></pre></p>
                     <li class="support__list-item">
                         <a href="https://twitter.com/zfdevteam" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
                     </li>
-                    <li class="support__list-item">
-                        <a href="https://tinyletter.com/mwopzend" class="support__link" title="Newsletter"><i class="fa fa-envelope"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/blog/feed-rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/security/feed" class="support__link" title="Security feed"><i class="fa fa-rss-square"></i></a>
-                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
 
+<nav class="cookie-bar navbar navbar-fixed-bottom navbar-default hidden">
+    <div class="container">
+        <p class="navbar-text">
+            We use cookies to allow you to dismiss dialogs such as the Laminas
+            Project notification.
+        </p>
+        <button type="button" class="cookie-button btn btn-default navbar-btn">Allow Cookies</button>
+    </div>
+</nav>
+
     <script>
         var base_url = '..',
             siteName = 'zend-permissions-acl';
     </script>
-    <script src="../js/scripts-8d7ae56abf.js"></script>
-        <script src="../search/main.js"></script>
+    <script src="/js/scripts.js"></script>
+    <script src="../search/main.js"></script>
 
     
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
